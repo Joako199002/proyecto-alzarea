@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dos Imágenes Verticales</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="styles_general.css">
+    <!-- CSS específico de esta página -->
+    <link rel="stylesheet" href="styles_inicio.css">
+</head>
+
+<body>
+
+    <!-- Pop-up de newsletter -->
+    <div class="newsletter-popup" id="newsletterPopup">
+        <div class="popup-content">
+            <span class="close-popup" id="closePopup">&times;</span>
+            <h2>¡Únete a nuestro Newsletter!</h2>
+            <p>Suscríbete para recibir las últimas novedades, promociones exclusivas y tendencias de moda.</p>
+            <form id="newsletterForm">
+                <input type="email" id="newsletterEmail" placeholder="Ingresa tu correo electrónico" required>
+                <button type="submit">Inscribirse</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pop-up de agradecimiento -->
+    <div class="thankyou-popup" id="thankyouPopup">
+        <div class="popup-content">
+            <span class="close-popup" id="closeThankyouPopup">&times;</span>
+            <h2>¡Gracias por suscribirte!</h2>
+            <p>A partir de ahora recibirás nuestras actualizaciones y excelentes promociones directamente en tu correo.
+            </p>
+            <button id="acceptThankyou">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Fondo ensombrecido -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Menú hamburguesa -->
+    <div class="menu-hamburguesa" id="menuHamburguesa">
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+    </div>
+
+    <!-- Opciones del menú -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="inicio.html">Inicio</a></li>
+            <li><a href="quienes_somos.html">Quiénes somos</a></li>
+            <li><a href="productos.html">Productos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#newsletters">Newsletter</a></li>
+
+        </ul>
+    </div>
+
+    <header>
+        <div class="contenedor">
+            <!-- Contenedor del logo superpuesto -->
+            <div class="logo-contenedor">
+                <img src="imagenes/logo_4.png" alt="Logo" class="logo">
+            </div>
+            <!-- Mitad izquierda del encabezado -->
+
+            <div class="mitad izquierda">
+                <img src="imagenes/CENEFA.jpg" alt="Imagen 1" class="imagen">
+            </div>
+            <!-- Mitad derecha del encabezado -->
+
+            <div class="mitad derecha">
+                <img src="imagenes/LIRIA_STRIPS.jpg" alt="Imagen 2" class="imagen">
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Sección de descripción -->
+    <section class="descripcion">
+        <h2>Bienvenido a nuestro sitio web</h2>
+        <p>Somos una empresa dedicada a ofrecer soluciones innovadoras y creativas para nuestros clientes. Con años de
+            experiencia en el mercado, nos especializamos en brindar servicios de alta calidad que superan las
+            expectativas.</p>
+        <p>Nuestro equipo de profesionales está comprometido con la excelencia y siempre busca las mejores alternativas
+            para cada proyecto. ¡Conócenos y descubre cómo podemos ayudarte a alcanzar tus objetivos!</p>
+        <a href="#contacto" class="boton">Más información</a>
+    </section>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Alzárea. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Asistente Alzárea
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, soy Alzárea ¿Lista para una expreriencia de moda?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del chatbot -->
+    <script src="script.js"></script>
+    <!-- Script del pop-up newsletter -->
+    <script src="script_pop_up.js"></script>
+
+</body>
+
+</html>

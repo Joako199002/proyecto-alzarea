@@ -1,0 +1,382 @@
+/* Estilos para el pop-up de newsletter y agradecimiento */
+.newsletter-popup,
+.thankyou-popup {
+    /* Cambiamos display: none por opacity y visibility para mantener las dimensiones */
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    width: 90%;
+    max-width: 450px;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+/* Clase para mostrar el pop-up */
+.popup-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    position: relative;
+    text-align: center;
+}
+
+.popup-content h2 {
+    color: #4b4b4b;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.popup-content p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.close-popup {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.close-popup:hover {
+    background-color: #e0e0e0;
+}
+
+#newsletterForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#newsletterEmail {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#newsletterForm button,
+#acceptThankyou {
+    padding: 12px 20px;
+    background-color: #4b4b4b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#newsletterForm button:hover,
+#acceptThankyou:hover {
+    background-color: #858585;
+}
+
+.overlay {
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.overlay-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Contenedor principal que ocupa el 100% del viewport height */
+.contenedor {
+    display: flex;
+    /* Usa flexbox para layout */
+    height: 100vh;
+    /* Ocupa toda la altura de la ventana */
+    width: 100%;
+    /* Ocupa todo el ancho disponible */
+    position: relative;
+    /* Establece contexto de posicionamiento para el logo */
+}
+
+/* Efecto de zoom suave al pasar el cursor sobre las mitades */
+/* .mitad:hover {
+    transform: scale(1.02);
+    /* Aumenta ligeramente el tamaño al pasar el cursor */
+/* }  */
+
+/* Estilos para cada mitad del contenedor */
+.mitad {
+    width: 50%;
+    /* Cada mitad ocupa el 50% del ancho */
+    height: 100%;
+    /* Ocupa toda la altura del contenedor */
+    overflow: hidden;
+    /* Oculta cualquier contenido que desborde */
+    position: relative;
+    /* Establece contexto de posicionamiento */
+    display: flex;
+    /* Flexbox para centrar contenido */
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    border: 0px solid #2c3e50;
+    /* Borde de 2px sólido color azul oscuro */
+}
+
+/* Mitad izquierda con color de fondo temporal */
+.izquierda {
+    background-color: lab(61.7% 0 -0.01 / 0.722);
+}
+
+/* Mitad derecha con color de fondo temporal */
+.derecha {
+    background-color: #a6a6a6;
+}
+
+/* Estilos para las imágenes */
+.imagen {
+    width: 100%;
+    /* Ancho del 60% del contenedor padre */
+    height: 100%;
+    /* Alto del 80% del contenedor padre */
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior inherente a las imágenes inline */
+}
+
+/* Contenedor del logo superpuesto */
+.logo-contenedor {
+    position: absolute;
+    /* Posicionamiento absoluto respecto al contenedor padre */
+    top: 50%;
+    /* Centrado vertical */
+    left: 50%;
+    /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    /* Ajuste fino para centrado perfecto */
+    z-index: 10;
+    /* Asegura que el logo esté por encima de las otras imágenes */
+    background-color: rgba(255, 255, 255, 0);
+    /* Fondo blanco semitransparente */
+    /*border-radius: 50%;
+    /* Forma circular */
+    padding: 0px;
+    /* Espaciado interno */
+    /*box-shadow: 0 0 25px rgba(0, 0, 0, 0.3); /* Sombra para efecto de elevación */
+    animation: pulse 2s infinite;
+    /* Animación de pulsación */
+}
+
+/* Estilos para el logo */
+.logo {
+    width: 450px;
+    /* Ancho del logo */
+    height: 350px;
+    /* Alto del logo */
+    /*border-radius: 50%;
+    /* Forma circular */
+    object-fit: contain;
+    /* Mantiene proporciones sin recortar */
+    display: block;
+    /* Elimina espacio inferior */
+}
+
+/* Animación de pulsación para el logo */
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        /* Tamaño normal */
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.0);
+        /* Sombra normal */
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        /* Ligero agrandamiento */
+        box-shadow: 0 0 35px rgba(255, 255, 255, 0.0);
+        /* Sombra más pronunciada */
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        /* Vuelve al tamaño normal */
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.0);
+        /* Vuelve a sombra normal */
+    }
+}
+
+/* Sección de descripción */
+.descripcion {
+    padding: 40px 20px;
+    /* Espaciado interno: 40px arriba/abajo, 20px izquierda/derecha */
+    background: white;
+    /* Fondo con gradiente azul a púrpura en diagonal */
+    color: rgb(75, 75, 75);
+    /* Color de texto blanco */
+    min-height: 30vh;
+    /* Altura mínima de 30% del viewport height */
+    display: flex;
+    /* Usa flexbox para layout */
+    flex-direction: column;
+    /* Organiza los elementos en columna */
+    justify-content: center;
+    /* Centra verticalmente los elementos */
+    align-items: center;
+    /* Centra horizontalmente los elementos */
+    text-align: center;
+    /* Alinea el texto al centro */
+}
+
+/* Título de la sección de descripción */
+.descripcion h2 {
+    font-size: 2.5rem;
+    /* Tamaño de fuente de 2.5rem (40px aprox) */
+    margin-bottom: 20px;
+    /* Espacio inferior de 20px */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    /* Sombra de texto para mejor legibilidad */
+}
+
+/* Párrafos de la sección de descripción */
+.descripcion p {
+    font-size: 1.2rem;
+    /* Tamaño de fuente de 1.2rem (19px aprox) */
+    max-width: 800px;
+    /* Ancho máximo de 800px para mejor lectura */
+    line-height: 1.6;
+    /* Interlineado de 1.6 para mejor legibilidad */
+    margin-bottom: 25px;
+    /* Espacio inferior de 25px entre párrafos */
+}
+
+/* Botón de llamada a la acción */
+.boton {
+    display: inline-block;
+    /* Permite dimensionar como bloque pero fluye como inline */
+    padding: 12px 30px;
+    /* Espaciado interno: 12px arriba/abajo, 30px izquierda/derecha */
+    background-color: rgb(75, 75, 75);
+    /* Color de fondo rojo */
+    color: white;
+    /* Color de texto blanco */
+    text-decoration: none;
+    /* Elimina subrayado de enlace */
+    border-radius: 30px;
+    /* Bordes completamente redondeados */
+    font-weight: bold;
+    /* Texto en negrita */
+    transition: all 0.3s ease;
+    /* Transición suave para todos los cambios de estado */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra suave */
+}
+
+/* Efecto al pasar el cursor sobre el botón */
+.boton:hover {
+    background-color: #858585;
+    /* Color de fondo más oscuro al pasar el cursor */
+    transform: translateY(-3px);
+    /* Efecto de levitación (se mueve hacia arriba 3px) */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    /* Sombra más pronunciada al pasar el cursor */
+}
+
+/* Animación de entrada para la sección de descripción */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        /* Comienza completamente transparente */
+        transform: translateY(20px);
+        /* Comienza 20px más abajo */
+    }
+
+    to {
+        opacity: 1;
+        /* Termina completamente opaco */
+        transform: translateY(0);
+        /* Termina en su posición original */
+    }
+}
+
+/* Aplicar la animación a la sección de descripción */
+.descripcion {
+    animation: fadeIn 1s ease-out;
+    /* Duración de 1 segundo con función de easing ease-out */
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+
+    .contenedor {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .mitad {
+        width: 100%;
+        height: 40vh;
+    }
+
+    .logo-contenedor {
+        padding: 10px;
+    }
+
+    .logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .descripcion {
+        padding: 30px 15px;
+    }
+
+    .descripcion h2 {
+        font-size: 2rem;
+    }
+
+    .descripcion p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .newsletter-popup,
+    .thankyou-popup {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .close-popup {
+        top: -10px;
+        right: -10px;
+        width: 25px;
+        height: 25px;
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,13 @@
+flask
+flask-cors
+flask-session
+pandas
+openpyxl
+opencv-python-headless
+torch
+numpy
+pillow
+deepface
+transformers
+mediapipe
+gunicorn

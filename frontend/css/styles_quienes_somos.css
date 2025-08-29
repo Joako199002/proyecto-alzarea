@@ -1,0 +1,163 @@
+/* Header de la página Quiénes Somos */
+.header-quienes-somos {
+    height: 45vh;
+    /* Altura del 30% del viewport */
+    width: 100%;
+    /* Ancho completo */
+    position: relative;
+    /* Posicionamiento relativo para elementos absolutos internos */
+    overflow: hidden;
+    /* Oculta cualquier desbordamiento */
+}
+
+/* Imagen del header */
+.header-quienes-somos img {
+    width: 100%;
+    /* Ancho completo del contenedor */
+    height: 100%;
+    /* Alto completo del contenedor */
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior inherente a las imágenes inline */
+}
+
+/* Leyenda superpuesta en el header */
+.leyenda-header {
+    position: absolute;
+    /* Posicionamiento absoluto respecto al header */
+    top: 50%;
+    /* Centrado vertical */
+    left: 50%;
+    /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    /* Ajuste fino para centrado perfecto */
+    color: white;
+    /* Color de texto blanco */
+    font-size: 3rem;
+    /* Tamaño de fuente grande */
+    font-weight: bold;
+    /* Texto en negrita */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    /* Sombra de texto para mejor legibilidad */
+    text-align: center;
+    /* Alineación centrada */
+    font-family: 'Quicksand', sans-serif;
+    /* Define la familia tipográfica */
+}
+
+/* Secciones de contenido */
+.seccion-motivacion {
+    padding: 60px 20px;
+    /* Espaciado interno generoso */
+    max-width: 1200px;
+    /* Ancho máximo para pantallas grandes */
+    margin: 0 auto;
+    /* Centrado horizontal */
+}
+
+/* Título de sección */
+.titulo-seccion {
+    font-size: 2.2rem;
+    /* Tamaño de fuente grande */
+    color: #2c3e50;
+    /* Color azul oscuro */
+    margin-bottom: 30px;
+    /* Espacio inferior */
+    text-align: center;
+    /* Alineación centrada */
+    position: relative;
+    /* Posicionamiento relativo para pseudo-elementos */
+}
+
+.titulo-seccion::after {
+    content: '';
+    /* Contenido vacío para el pseudo-elemento */
+    display: block;
+    /* Comportamiento de bloque */
+    width: 80px;
+    /* Ancho de la línea decorativa */
+    height: 4px;
+    /* Alto de la línea decorativa */
+    background: linear-gradient(to right, #667eea, #764ba2);
+    /* Gradiente de color */
+    margin: 15px auto 0;
+    /* Centrado и espaciado */
+    border-radius: 2px;
+    /* Bordes ligeramente redondeados */
+}
+
+/* Contenedor de contenido (texto + imagen) */
+.contenido-seccion {
+    display: flex;
+    /* Usa flexbox para layout */
+    flex-wrap: wrap;
+    /* Permite que los elementos se envuelvan */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    justify-content: space-between;
+    /* Distribuye el espacio entre elementos */
+    gap: 40px;
+    /* Espacio entre texto e imagen */
+    margin-bottom: 80px;
+    /* Espacio entre secciones */
+}
+
+/* Texto de la sección */
+.texto-seccion {
+    flex: 1;
+    /* Ocupa el espacio disponible */
+    min-width: 300px;
+    /* Ancho mínimo para evitar que se haga muy pequeño */
+    font-size: 1.1rem;
+    /* Tamaño de fuente legible */
+    line-height: 1.7;
+    /* Interlineado amplio para mejor lectura */
+    color: #333;
+    /* Color de texto gris oscuro */
+}
+
+/* Imagen de la sección */
+.imagen-seccion {
+    flex: 1;
+    /* Ocupa el espacio disponible */
+    min-width: 300px;
+    /* Ancho mínimo para evitar que se haga muy pequeño */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    overflow: hidden;
+    /* Oculta cualquier desbordamiento */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    /* Sombra suave para efecto de elevación */
+}
+
+.imagen-seccion img {
+    width: 100%;
+    /* Ancho completo del contenedor */
+    height: auto;
+    /* Altura automática para mantener proporciones */
+    display: block;
+    /* Elimina espacio inferior */
+    transition: transform 0.3s ease;
+    /* Transición suave para efectos hover */
+}
+
+.imagen-seccion:hover img {
+    transform: scale(1.03);
+    /* Efecto de zoom suave al pasar el cursor */
+}
+
+@media (max-width: 768px) {
+
+    .descripcion {
+        padding: 30px 15px;
+    }
+
+    .descripcion h2 {
+        font-size: 2rem;
+    }
+
+    .descripcion p {
+        font-size: 1rem;
+    }
+}

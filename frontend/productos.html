@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Alzárea</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="styles_general.css">
+    <!-- CSS específico de esta página -->
+    <link rel="stylesheet" href="styles_productos.css">
+    <!-- Enlace a Google Fonts para Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Menú hamburguesa -->
+    <div class="menu-hamburguesa" id="menuHamburguesa">
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+    </div>
+
+    <!-- Opciones del menú -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="inicio.html">Inicio</a></li>
+            <li><a href="quienes_somos.html">Quiénes somos</a></li>
+            <li><a href="productos.html">Productos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#newsletters">Newsletter</a></li>
+        </ul>
+    </div>
+
+    <!-- Header de la página -->
+    <header class="header-productos">
+        <img src="imagenes/quienes_somos.jpg" alt="Header Productos">
+        <div class="leyenda-header">Nuestros Productos</div>
+    </header>
+
+    <!-- Sección de productos -->
+    <section class="seccion-productos">
+        <h2 class="titulo-seccion">Nuestra Colección</h2>
+        <p class="descripcion-seccion">Descubre nuestra exclusiva colección de vestidos confeccionados con los mejores
+            materiales y atención al detalle.</p>
+
+        <!-- Grid de productos 3x3 -->
+        <div class="grid-productos">
+            <!-- Producto 1: CENEFA -->
+            <div class="producto" data-producto="cenefa">
+                <img src="imagenes/CENEFA.jpg" alt="Vestido CENEFA" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">CENEFA</h3>
+                    <p class="descripcion-producto">Elegante vestido con detalles únicos en acabados premium.</p>
+                </div>
+            </div>
+
+            <!-- Producto 2: FRISO -->
+            <div class="producto" data-producto="friso">
+                <img src="imagenes/FRISO_FLOWER.jpg" alt="FRISO" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">FRISO</h3>
+                    <p class="descripcion-producto">Diseño moderno con cortes innovadores y máxima comodidad.</p>
+                </div>
+            </div>
+
+            <!-- Producto 3: SOPHIE -->
+            <div class="producto" data-producto="sophie">
+                <img src="imagenes/SOPHIE.jpg" alt="Vestido SOPHIE" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">SOPHIE</h3>
+                    <p class="descripcion-producto">Vestido sofisticado con inspiración en tendencias contemporáneas.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Producto 4: LIRIA -->
+            <div class="producto" data-producto="liria">
+                <img src="imagenes/LIRIA_WHITE.jpg" alt="LIRA" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">LIRIA</h3>
+                    <p class="descripcion-producto">Modelo clásico reinventado con un toque de modernidad.</p>
+                </div>
+            </div>
+
+            <!-- Producto 5: LOGO -->
+            <div class="producto" data-producto="almena">
+                <img src="imagenes/ALMENA.jpg" alt="ALMENA" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">ALMENA</h3>
+                    <p class="descripcion-producto">Diseño exclusivo que representa la esencia de nuestra marca.</p>
+                </div>
+            </div>
+
+            <!-- Producto 6: CENEFA_2 -->
+            <div class="producto" data-producto="skirt">
+                <img src="imagenes/SKIRT_BLACK.jpg" alt="Vestido CENEFA_2" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">SKIRT</h3>
+                    <p class="descripcion-producto">Variación del modelo CENEFA con detalles mejorados.</p>
+                </div>
+            </div>
+
+            <!-- Espacios vacíos para completar el grid 3x3 -->
+            <div class="producto" data-producto="weird">
+                <img src="imagenes/WEIRD.jpg" alt="weird" class="imagen-producto">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">WIERD</h3>
+                    <p class="descripcion-producto">Un diseno muy extrano.</p>
+                </div>
+            </div>
+
+            <div class="producto vacio">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">Próximamente</h3>
+                    <p class="descripcion-producto">Nuevos diseños en camino.</p>
+                </div>
+            </div>
+
+            <div class="producto vacio">
+                <div class="info-producto">
+                    <h3 class="nombre-producto">Próximamente</h3>
+                    <p class="descripcion-producto">Nuevos diseños en camino.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal para detalles del producto -->
+    <div class="modal-producto" id="modalProducto">
+        <div class="modal-contenido">
+            <span class="modal-cerrar" id="modalCerrar">&times;</span>
+            <div class="modal-imagen">
+                <img id="modalImagen" src="" alt="Imagen del producto">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalNombre" class="modal-nombre"></h2>
+                <p class="modal-precio" id="modalPrecio"></p>
+                <p class="modal-descripcion" id="modalDescripcion"></p>
+                <button class="boton-contacto">Contactar para pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Alzárea. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Asistente Alzárea
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, ¿en qué puedo ayudarte hoy?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="script_modal.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,548 @@
+/* ===== ESTILOS COMUNES PARA TODAS LAS PÁGINAS ===== */
+
+* {
+    margin: 0; /* Elimina todos los márgenes por defecto */
+    padding: 0; /* Elimina todo el padding por defecto */
+    box-sizing: border-box; /* Incluye padding y border en el cálculo de dimensiones */
+}
+
+/* Estilos para body y html: ocupan toda la altura y anchura de la ventana */
+body, html {
+    height: 100%; /* Ocupa el 100% de la altura de la ventana */
+    width: 100%; /* Ocupa el 100% del ancho de la ventana */
+    font-family: Arial, sans-serif; /* Fuente principal para todo el sitio */
+    scroll-behavior: smooth; /* Permite un desplazamiento suave al hacer clic en enlaces internos */
+}
+
+/* ===== ESTILOS COMUNES DEL MENÚ HAMBURGUESA ===== */
+
+/* Contenedor del menú hamburguesa - TAMAÑO FIJO */
+.menu-hamburguesa {
+    position: fixed;
+    /* Fija el menú en la pantalla */
+    top: 1vw;
+    /* Distancia desde la parte superior (responsive pero con límites) */
+    left: 1vw;
+    /* Distancia desde la izquierda (responsive pero con límites) */
+    z-index: 1000;
+    /* Asegura que esté por encima de otros elementos */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Fondo blanco semitransparente */
+    border-radius: 50%;
+    /* Forma circular */
+    width: 7vw;
+    /* Ancho del botón (5% del viewport width) */
+    height: 7vw;
+    /* Alto del botón (5% del viewport height) */
+    min-width: 50px;
+    /* Tamaño mínimo absoluto */
+    min-height: 50px;
+    /* Tamaño mínimo absoluto */
+    max-width: 80px;
+    /* Tamaño máximo absoluto */
+    max-height: 80px;
+    /* Tamaño máximo absoluto */
+    display: flex;
+    /* Usa flexbox para centrar */
+    flex-direction: column;
+    /* Organiza elementos en columna */
+    justify-content: center;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Centra horizontalmente */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra suave */
+    transition: all 0.3s ease;
+    /* Transición suave para animaciones */
+}
+
+/* Efecto al pasar el cursor sobre el menú */
+.menu-hamburguesa:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    /* Fondo menos transparente */
+    transform: scale(1.05);
+    /* Ligero aumento de tamaño */
+}
+
+/* Líneas del menú hamburguesa - TAMAÑO PROPORCIONAL */
+.linea {
+    width: 60%;
+    /* Ancho de las líneas (60% del contenedor) */
+    height: 0.3vw;
+    /* Alto de las líneas (proporcional al viewport) */
+    min-height: 2px;
+    /* Altura mínima */
+    max-height: 4px;
+    /* Altura máxima */
+    background-color: #2c3e50;
+    /* Color de las líneas */
+    margin: 0.3vw 0;
+    /* Espacio entre líneas (proporcional) */
+    transition: all 0.3s ease;
+    /* Transición suave para animaciones */
+    border-radius: 2px;
+    /* Bordes ligeramente redondeados */
+}
+
+/* Contenedor de opciones del menú */
+.opciones-menu {
+    position: fixed;
+    /* Fija el menú en la pantalla */
+    top: 0;
+    /* Alinea en la parte superior */
+    left: -300px;
+    /* Oculta el menú fuera de la pantalla */
+    width: 250px;
+    /* Ancho del menú desplegado */
+    height: 100vh;
+    /* Altura completa de la ventana */
+    background-color: rgba(255, 255, 255, 0.3);
+    /* Fondo blanco semitransparente */
+    z-index: 999;
+    /* Por debajo del botón pero sobre el contenido */
+    padding: 150px 20px 20px 20px;
+    /* Espaciado interno (aumentado para botón grande) */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    /* Sombra lateral */
+    transition: left 0.3s ease;
+    /* Transición suave para abrir/cerrar */
+}
+
+/* Clase para mostrar el menú */
+.menu-abierto .opciones-menu {
+    left: 0;
+    /* Muestra el menú deslizándolo desde la izquierda */
+}
+
+/* Transformación de las líneas al abrir el menú */
+.menu-abierto .linea:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+    /* Rota la primera línea */
+}
+
+.menu-abierto .linea:nth-child(2) {
+    opacity: 0;
+    /* Hace la segunda línea transparente */
+}
+
+.menu-abierto .linea:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+    /* Rota la tercera línea */
+}
+
+/* Estilos para las opciones del menú */
+.opciones-menu ul {
+    list-style: none;
+    /* Elimina los puntos de la lista */
+}
+
+.opciones-menu li {
+    margin-bottom: 15px;
+    /* Espacio entre elementos del menú */
+}
+
+.opciones-menu a {
+    color: #2c3e50;
+    /* Color del texto */
+    text-decoration: none;
+    /* Elimina el subrayado */
+    font-size: 1.2rem;
+    /* Tamaño de fuente */
+    font-weight: 500;
+    /* Grosor de la fuente */
+    display: block;
+    /* Hace que el enlace ocupe todo el ancho */
+    padding: 10px;
+    /* Espaciado interno */
+    border-radius: 4px;
+    /* Bordes redondeados */
+    transition: background-color 0.3s ease;
+    /* Transición suave para hover */
+}
+
+/* Efecto al pasar el cursor sobre las opciones */
+.opciones-menu a:hover {
+    background-color: rgba(44, 62, 80, 0.1);
+    /* Fondo semitransparente al pasar el cursor */
+}
+
+/* ===== ESTILOS COMUNES DEL CHATBOT ===== */
+
+/* Contenedor del chatbot */
+.chatbot-container {
+    position: fixed;
+    /* Posicionamiento fijo para que permanezca en la misma posición al hacer scroll */
+    bottom: 20px;
+    /* Distancia de 20px desde el borde inferior de la ventana */
+    /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
+    right: 20px;
+    /* Distancia de 20px desde el borde derecho de la ventana */
+    /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
+    font-family: sans-serif;
+    /* Fuente sans-serif para el texto del chatbot */
+    z-index: 999;
+    /* Alto índice z para asegurar que esté por encima de la mayoría de elementos */
+}
+
+/* Botón toggle del chatbot */
+.chatbot-toggle {
+    background-color: rgba(129, 129, 129, 0.2);
+    /* Fondo gris semitransparente (20% de opacidad) */
+    color: white;
+    /* Color blanco para el icono del chatbot */
+    border: none;
+    /* Sin borde para el botón */
+    border-radius: 50%;
+    /* Forma circular perfecta */
+    width: 90px;
+    /* Ancho fijo de 90 píxeles */
+    height: 90px;
+    /* Alto fijo de 90 píxeles (mismo que el ancho para mantener la circularidad) */
+    font-size: 60px;
+    /* Tamaño de fuente grande para el icono de chat */
+    cursor: pointer;
+    /* Cambia el cursor a una mano al pasar sobre el botón, indicando que es clickeable */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra suave: desplazamiento X=0, Y=4px, desenfoque 8px, color negro con 20% opacidad */
+    display: flex;
+    /* Utiliza flexbox para alinear contenido */
+    justify-content: center;
+    /* Centra horizontalmente el contenido (icono) */
+    align-items: center;
+    /* Centra verticalmente el contenido (icono) */
+    transition: all 0.3s ease;
+    /* Transición suave de 0.3 segundos para todos los cambios de estilo */
+}
+
+/* Efecto hover del botón toggle */
+.chatbot-toggle:hover {
+    background-color: rgba(129, 129, 129, 0.3);
+    /* Fondo ligeramente más oscuro al pasar el cursor (30% de opacidad) */
+    transform: scale(1.05);
+    /* Efecto de zoom del 5% al pasar el cursor sobre el botón */
+}
+
+/* Caja del chatbot */
+.chatbot-box {
+    display: none;
+    /* Oculta inicialmente la caja de chat (se mostrará con JavaScript) */
+    flex-direction: column;
+    /* Organiza los elementos hijos en una columna vertical */
+    width: 300px;
+    /* Ancho fijo de 300 píxeles para la caja de chat */
+    height: 400px;
+    /* Alto fijo de 400 píxeles para la caja de chat */
+    background: white;
+    /* Fondo blanco para la caja de chat */
+    border-radius: 10px;
+    /* Esquinas redondeadas de 10 píxeles */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    /* Sombra más pronunciada: desplazamiento X=0, Y=4px, desenfoque 16px, color negro con 30% opacidad */
+    padding: 10px;
+    /* Espaciado interno de 10 píxeles en todos los lados */
+    position: absolute;
+    /* Posicionamiento absoluto relativo al contenedor padre (.chatbot-container) */
+    bottom: 100px;
+    /* Posiciona la caja 100 píxeles arriba del botón toggle */
+    right: 0;
+    /* Alinea la caja al lado derecho del contenedor padre */
+}
+
+/* Encabezado del chatbot */
+.chatbot-header {
+    background-color: #000000;
+    /* Fondo negro para el encabezado */
+    color: white;
+    /* Texto color blanco para contraste */
+    padding: 12px;
+    /* Espaciado interno de 12px */
+    font-weight: bold;
+    /* Texto en negrita */
+    border-radius: 10px 10px 0 0;
+    /* Bordes redondeados solo en las esquinas superiores (10px arriba, 0 abajo) */
+    display: flex;
+    /* Usa el modelo de caja flexible para layout */
+    justify-content: space-between;
+    /* Distribuye el espacio entre los elementos hijos ( título y botón cerrar) */
+    align-items: center;
+    /* Centra verticalmente los elementos hijos */
+    font-size: 1.1rem;
+    /* Tamaño de fuente de 1.1rem (ligeramente más grande que el base) */
+}
+
+/* Botón cerrar del chatbot */
+.chatbot-close {
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima a una mano, indicando que es clickeable */
+    font-size: 1.5rem;
+    /* Tamaño de fuente de 1.5rem (más grande para mejor clickeabilidad) */
+    font-weight: bold;
+    /* Texto en negrita */
+}
+
+/* Área de mensajes del chatbot */
+.chatbot-messages {
+    display: flex;
+    /* Usa el modelo de caja flexible para layout */
+    flex: 1;
+    /* Ocupa todo el espacio disponible dentro del contenedor flex padre */
+    flex-direction: column;
+    /* Organiza los elementos hijos en columna (verticalmente) */
+    overflow-y: auto;
+    /* Habilita scroll vertical si el contenido excede el espacio disponible */
+    padding: 12px;
+    /* Espaciado interno de 12px */
+    margin-bottom: 10px;
+    /* Margen inferior de 10px para separación del área de entrada */
+    font-size: 0.95rem;
+    /* Tamaño de fuente de 0.95rem (ligeramente más pequeño que el base) */
+}
+
+/* Mensajes del bot y usuario */
+.bot-message,
+.user-message {
+    display: inline-block;
+    /* Elementos en línea pero con dimensiones modificables */
+    max-width: 80%;
+    /* Ancho máximo del 80% para evitar que los mensajes sean demasiado anchos */
+    padding: 10px 14px;
+    /* Espaciado interno: 10px arriba/abajo, 14px izquierda/derecha */
+    border-radius: 14px;
+    /* Bordes redondeados de 14px (forma de "pastilla") */
+    word-wrap: break-word;
+    /* Permite que las palabras largas se dividan y continúen en la siguiente línea */
+    margin-bottom: 10px;
+    /* Margen inferior de 10px entre mensajes */
+    text-align: left;
+    /* Alineación del texto a la izquierda */
+    font-size: 0.95rem;
+    /* Tamaño de fuente de 0.95rem (consistente con el contenedor) */
+}
+
+/* Mensajes del bot */
+.bot-message {
+    background-color: #f1f1f1;
+    /* Fondo gris claro para mensajes del bot */
+    align-self: flex-start;
+    /* Alinea el elemento al inicio del contenedor flex (izquierda) */
+    margin-right: auto;
+    /* Margen automático a la derecha, empujando el elemento hacia la izquierda */
+}
+
+/* Mensajes del usuario */
+.user-message {
+    background-color: #a6a8a7;
+    /* Fondo gris medio para mensajes del usuario */
+    align-self: flex-end;
+    /* Alinea el elemento al final del contenedor flex (derecha) */
+    margin-left: auto;
+    /* Margen automático a la izquierda, empujando el elemento hacia la derecha */
+}
+
+/* Mensajes solo de imagen */
+.user-message.solo-imagen {
+    background: none;
+    /* Sin fondo para mensajes que solo contienen imágenes */
+    padding: 0;
+    /* Sin espaciado interno para mensajes que solo contienen imágenes */
+    border-radius: 0;
+    /* Sin bordes redondeados para mensajes que solo contienen imágenes */
+}
+
+/* Imágenes en mensajes de usuario */
+.user-message img {
+    display: block;
+    /* La imagen se comporta como un elemento de bloque */
+    max-width: 120px;
+    /* Ancho máximo de 120px para imágenes enviadas por usuarios */
+    height: auto;
+    /* Altura automática para mantener la proporción de la imagen */
+    border-radius: 8px;
+    /* Bordes redondeados de 8px para imágenes */
+    margin-top: 6px;
+    /* Margen superior de 6px para separación del texto (si lo hay) */
+    margin-left: auto;
+    /* Margen automático a la izquierda, alineando la imagen a la derecha */
+}
+
+/* Imágenes en mensajes del bot y usuario */
+.bot-message img,
+.user-message img {
+    max-width: 100%;
+    /* Ancho máximo del 100% del contenedor para imágenes en mensajes */
+    border-radius: 8px;
+    /* Bordes redondeados de 8px para imágenes */
+    margin-top: 6px;
+    /* Margen superior de 6px para separación del texto (si lo hay) */
+}
+
+/* Estilos mejorados para el área de entrada del chatbot */
+.chatbot-input {
+    display: flex;
+    /* Usa el modelo de caja flexible para layout */
+    flex-direction: column;
+    /* Organiza los elementos hijos en columna (verticalmente) */
+    gap: 8px;
+    /* Espacio de 8px entre elementos hijos */
+}
+
+/* Campo de entrada de texto */
+#chatbot-input {
+    padding: 10px;
+    /* Espaciado interno de 10px */
+    width: 100%;
+    /* Ancho completo del contenedor padre */
+    resize: none;
+    /* Desactiva la capacidad de redimensionamiento manual por el usuario */
+    overflow-y: auto;
+    /* Habilita scroll vertical si el contenido excede el espacio disponible */
+    white-space: pre-wrap;
+    /* Permite saltos de línea y preserva espacios en blanco */
+    word-wrap: break-word;
+    /* Permite que las palabras largas se dividan y continúen en la siguiente línea */
+    border: 1px solid #ccc;
+    /* Borde gris claro de 1px */
+    border-radius: 6px;
+    /* Bordes redondeados de 6px */
+    min-height: 45px;
+    /* Altura mínima de 45px */
+    max-height: 100px;
+    /* Altura máxima de 100px (equivale a aproximadamente 4-5 líneas) */
+    line-height: 1.4;
+    /* Interlineado de 1.4 para mejor legibilidad */
+    box-sizing: border-box;
+    /* Incluye padding y border en el cálculo de dimensiones del elemento */
+    font-size: 0.95rem;
+    /* Tamaño de fuente de 0.95rem (consistente con el resto del chat) */
+}
+
+/* Botón enviar del chatbot */
+#chatbot-send {
+    padding: 10px;
+    /* Espaciado interno de 10px */
+    background-color: #000000;
+    /* Fondo negro */
+    color: white;
+    /* Texto color blanco */
+    border: none;
+    /* Sin borde */
+    width: 100%;
+    /* Ancho completo del contenedor padre */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima a una mano, indicando que es clickeable */
+    border-radius: 6px;
+    /* Bordes redondeados de 6px */
+    font-size: 0.95rem;
+    /* Tamaño de fuente de 0.95rem (consistente con el resto del chat) */
+    font-weight: 500;
+    /* Grosor de fuente medium (500) */
+}
+
+/* Botón de subir imagen */
+#upload-button {
+    padding: 8px 12px;
+    /* Espaciado interno: 8px arriba/abajo, 12px izquierda/derecha */
+    background-color: #f1f1f1;
+    /* Fondo gris claro */
+    color: #333;
+    /* Texto color gris oscuro */
+    border: 1px solid #ccc;
+    /* Borde gris claro de 1px */
+    border-radius: 6px;
+    /* Bordes redondeados de 6px */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima a una mano, indicando que es clickeable */
+    font-size: 0.9rem;
+    /* Tamaño de fuente de 0.9rem (ligeramente más pequeño que otros botones) */
+    margin-bottom: 5px;
+    /* Margen inferior de 5px para separación del área de texto */
+}
+
+/* ===== ESTILOS COMUNES DEL FOOTER ===== */
+
+/* Footer */
+footer {
+    background-color: #000000;
+    /* Color de fondo azul oscuro */
+    color: white;
+    /* Color de texto blanco */
+    text-align: center;
+    /* Centra el texto horizontalmente */
+    padding: 20px;
+    /* Espaciado interno de 20px en todos los lados */
+    font-size: 0.9rem;
+    /* Tamaño de fuente ligeramente reducido */
+}
+
+/* ===== MEDIA QUERIES COMUNES ===== */
+
+/* Media queries */
+@media (max-width: 1024px) {
+
+    /* Estilos para tablets */
+    .chatbot-toggle {
+        width: 80px;
+        height: 80px;
+        font-size: 50px;
+    }
+
+    .chatbot-box {
+        bottom: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Estilos para móviles */
+    .menu-hamburguesa {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .linea {
+        width: 25px;
+        height: 3px;
+        margin: 3px 0;
+    }
+
+   .chatbot-container {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .chatbot-toggle {
+        width: 70px;
+        height: 70px;
+        font-size: 40px;
+    }
+
+    .chatbot-box {
+        width: 90vw;
+        max-width: none;
+        height: 60vh;
+        bottom: 80px;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Estilos para móviles pequeños */
+    .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        font-size: 35px;
+    }
+
+    .chatbot-box {
+        width: 95vw;
+        height: 55vh;
+        bottom: 70px;
+    }
+}

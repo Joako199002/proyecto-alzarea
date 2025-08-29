@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiénes Somos - Alzárea</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="styles_general.css">
+    <!-- CSS específico de esta página -->
+    <link rel="stylesheet" href="styles_quienes_somos.css">
+    <!-- Enlace a Google Fonts para Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Menú hamburguesa -->
+    <div class="menu-hamburguesa" id="menuHamburguesa">
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+    </div>
+
+    <!-- Opciones del menú -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="inicio.html">Inicio</a></li>
+            <li><a href="quienes_somos.html">Quiénes somos</a></li>
+            <li><a href="productos.html">Productos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#newsletters">Newsletter</a></li>
+        </ul>
+    </div>
+
+    <!-- Header de la página -->
+    <header class="header-quienes-somos">
+        <img src="imagenes/quienes_somos.jpg" alt="Header Quiénes Somos">
+        <div class="leyenda-header">Quiénes Somos</div>
+    </header>
+
+    <!-- Sección 1: Qué nos motiva -->
+    <section class="seccion-motivacion">
+        <h2 class="titulo-seccion">Qué nos motiva</h2>
+        <div class="contenido-seccion">
+            <div class="texto-seccion">
+                <p>En Alzárea, nuestra principal motivación es crear diseños únicos que reflejen la personalidad y
+                    estilo de cada cliente. Creemos que la moda es una forma de expresión personal y nos esforzamos por
+                    crear piezas que no solo visten bien, sino que también cuentan una historia.</p>
+                <p>Cada vestido que creamos es el resultado de horas de dedicación, atención al detalle y amor por el
+                    arte de la costura. Nos inspiramos en las tendencias actuales, pero siempre manteniendo un toque
+                    atemporal que garantice que nuestras creaciones perduren en el tiempo.</p>
+            </div>
+            <div class="imagen-seccion">
+                <img src="https://placehold.co/500x300/667eea/white?text=Motivación" alt="Qué nos motiva">
+            </div>
+        </div>
+
+        <!-- Sección 2: Nuestra filosofía -->
+        <h2 class="titulo-seccion">Nuestra filosofía</h2>
+        <div class="contenido-seccion">
+            <div class="imagen-seccion">
+                <img src="https://placehold.co/500x300/764ba2/white?text=Filosofía" alt="Nuestra filosofía">
+            </div>
+            <div class="texto-seccion">
+                <p>Nuestra filosofía se basa en tres pilares fundamentales: calidad, personalización y sostenibilidad.
+                    Utilizamos solo los mejores materiales, trabajamos directamente con cada cliente para entender sus
+                    necesidades y preferencias, y implementamos prácticas sostenibles en nuestro proceso de producción.
+                </p>
+                <p>Creemos que la moda debe ser inclusiva y accesible, por lo que ofrecemos opciones para diferentes
+                    tallas, estilos y presupuestos. Cada cliente es único, y cada creación debe reflejar esa
+                    singularidad.</p>
+            </div>
+        </div>
+
+        <!-- Sección 3: Nuestro compromiso -->
+        <h2 class="titulo-seccion">Nuestro compromiso</h2>
+        <div class="contenido-seccion">
+            <div class="texto-seccion">
+                <p>Nos comprometemos a ofrecer no solo productos de alta calidad, sino también una experiencia
+                    excepcional. Desde la primera consulta hasta la entrega final, nuestro equipo está dedicado a
+                    asegurar que cada cliente se sienta escuchado, valorado y satisfecho.</p>
+                <p>Además, estamos comprometidos con nuestra comunidad y el medio ambiente. Parte de nuestras ganancias
+                    se destinan a apoyar iniciativas locales y implementamos prácticas eco-amigables en nuestro taller.
+                </p>
+            </div>
+            <div class="imagen-seccion">
+                <img src="https://placehold.co/500x300/2c3e50/white?text=Compromiso" alt="Nuestro compromiso">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Alzárea. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Asistente Alzárea
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, ¿en qué puedo ayudarte hoy?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
