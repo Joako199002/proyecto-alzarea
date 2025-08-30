@@ -440,13 +440,36 @@
 
     .producto {
         margin-bottom: 15px;
+        transition: transform 0.2s ease;
+        /*interaccion tactil */
+    }
+
+    /* interaccion moviles */
+    .producto:active {
+        transform: scale(0.98);
+    }
+
+    /* Aumenta el área táctil */
+    .producto {
+        padding: 5px;
     }
 
     .imagen-producto {
         height: 200px;
         /* Ajusta la altura para móviles */
+        /* Optimización para móviles */
+        loading: lazy;
+        aspect-ratio: 3/4;
     }
 
+    /* Reduce animaciones para mejor rendimiento */
+    .producto:hover {
+        transform: none;
+    }
+
+    .imagen-seccion:hover img {
+        transform: none;
+    }
 
     .modal-contenido {
         flex-direction: column;
@@ -455,32 +478,51 @@
         /* Ancho del 90% */
         margin: 10% auto;
         /* Margen superior aumentado */
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
     .modal-imagen {
         flex: none;
         /* Sin flex growing */
-        height: 250px;
+        height: 200px;
+        /* antes 250
         /* Altura fija */
     }
 
     .modal-info {
         flex: none;
         /* Sin flex growing */
-        padding: 20px;
+        padding: 15px;
+        /* antes 20
         /* Espaciado interno reducido */
     }
 
     .modal-nombre {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+        /* antes 1.5
         /* Tamaño de fuente reducido */
     }
 
     .modal-precio {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        /* antes 1.3
         /* Tamaño de fuente reducido */
     }
+
+    .modal-descripcion {
+        font-size: 0.9rem;
+    }
+
+    .boton-contacto {
+        align-self: center;
+        width: 100%;
+        text-align: center;
+    }
 }
+
+/* interaccion tactil */
+
 
 
 /* Ajustes adicionales para móviles pequeños */
