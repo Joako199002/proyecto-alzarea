@@ -6,7 +6,7 @@ import os
 import pandas as pd
 import requests
 import time
-from detection import detect_facial_features
+# from detection import detect_facial_features  # COMENTADA PARA TESTING
 
 app = Flask(__name__)
 app.secret_key = 'clave-secreta'
@@ -267,59 +267,59 @@ def chat():
 
 # ******* Termina respuesta con escritura animada *******
 
+# ****COMENTADO PARA TESTING  ******
+# @app.route('/subir-imagen', methods=['POST'])
+# def subir_imagen():
+#     print("📸 Imagen recibida en el backend")
+#     if 'imagen' not in request.files:
+#         return jsonify({"reply": "No se recibió ninguna imagen."}), 400
 
-@app.route('/subir-imagen', methods=['POST'])
-def subir_imagen():
-    print("📸 Imagen recibida en el backend")
-    if 'imagen' not in request.files:
-        return jsonify({"reply": "No se recibió ninguna imagen."}), 400
+#     imagen = request.files['imagen']
+#     image_bytes = imagen.read()
 
-    imagen = request.files['imagen']
-    image_bytes = imagen.read()
+#     try:
+#         resultados = detect_facial_features(image_bytes)
+#         session['caracteristicas_usuario'] = resultados
+#         print(resultados)
 
-    try:
-        resultados = detect_facial_features(image_bytes)
-        session['caracteristicas_usuario'] = resultados
-        print(resultados)
+#         # Inicializa historial si no existe
+#         if 'historial' not in session:
+#             session['historial'] = [
+#                 {"role": "system", "content": construir_prompt()}
+#             ]
 
-        # Inicializa historial si no existe
-        if 'historial' not in session:
-            session['historial'] = [
-                {"role": "system", "content": construir_prompt()}
-            ]
+#         historial = session['historial']
 
-        historial = session['historial']
+#         # Agregar características físicas si aún no están
+#         if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+#             descripcion = ", ".join(
+#                 [f"{k}: {v}" for k, v in resultados.items()])
+#             historial.append({
+#                 "role": "system",
+#                 "content": f"Características físicas detectadas del usuario: {descripcion}"
+#             })
 
-        # Agregar características físicas si aún no están
-        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
-            descripcion = ", ".join(
-                [f"{k}: {v}" for k, v in resultados.items()])
-            historial.append({
-                "role": "system",
-                "content": f"Características físicas detectadas del usuario: {descripcion}"
-            })
+#         # Simular un mensaje del usuario para que la IA continúe el flujo
+#         historial.append({"role": "user", "content": "Ya subí mi imagen"})
 
-        # Simular un mensaje del usuario para que la IA continúe el flujo
-        historial.append({"role": "user", "content": "Ya subí mi imagen"})
+#         response = requests.post(
+#             'http://localhost:3000/chat',
+#             json={"messages": historial},
+#             timeout=15
+#         )
+#         response.raise_for_status()
+#         respuesta_ia = response.json().get('reply')
 
-        response = requests.post(
-            'http://localhost:3000/chat',
-            json={"messages": historial},
-            timeout=15
-        )
-        response.raise_for_status()
-        respuesta_ia = response.json().get('reply')
+#         if respuesta_ia:
+#             historial.append({"role": "assistant", "content": respuesta_ia})
+#             session['historial'] = historial
+#             return jsonify({"reply": respuesta_ia})
+#         else:
+#             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
 
-        if respuesta_ia:
-            historial.append({"role": "assistant", "content": respuesta_ia})
-            session['historial'] = historial
-            return jsonify({"reply": respuesta_ia})
-        else:
-            return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
-
-    except Exception as e:
-        print("Error al analizar imagen:", e)
-        return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+#     except Exception as e:
+#         print("Error al analizar imagen:", e)
+#         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
 
 
 # agregado para manejo de imagen de vestido en el chatbot
@@ -331,6 +331,16 @@ def subir_imagen():
 # Version app local
 # if __name__ == '__main__':
 #     app.run(port=5000, debug=True)
+
+# *********** SOLO PARA TESTING   **************
+@app.route('/subir-imagen', methods=['POST'])
+def subir_imagen():
+    print("📸 Imagen recibida en el backend (modo prueba)")
+    # Devuelve datos de prueba en lugar de procesar
+    return jsonify({
+        "reply": "Imagen recibida (modo prueba). Características: Silueta-Media, Piel-Clara, Género-Mujer, Edad-30, Cabello-Castaño"
+    })
+
 
 # Version app en linea
 if __name__ == '__main__':
