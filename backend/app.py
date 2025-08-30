@@ -6,7 +6,6 @@ import os
 import pandas as pd
 import requests
 import time
-from deepface imprort DeepDFace
 # from detection import detect_facial_features  # COMENTADA PARA TESTING
 
 app = Flask(__name__)
