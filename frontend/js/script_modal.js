@@ -98,3 +98,42 @@ document.addEventListener('keydown', (event) => {
         cerrarModal(); // Cerrar modal
     }
 });
+
+// ****** mEJORAR INTERACCION DEL PRODUCTO  ********
+
+// Función para prevenir el scroll del fondo cuando el modal está abierto
+function toggleBodyScroll(enable) {
+    if (enable) {
+        document.body.style.overflow = 'auto';
+    } else {
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Modifica la función abrirModal
+function abrirModal(productoId) {
+    const producto = productosData[productoId];
+
+    if (producto) {
+        modalImagen.src = producto.imagen;
+        modalImagen.alt = producto.nombre;
+        modalNombre.textContent = producto.nombre;
+        modalPrecio.textContent = producto.precio;
+        modalDescripcion.textContent = producto.descripcion;
+        modal.style.display = 'block';
+        toggleBodyScroll(false); // Deshabilita scroll del body
+    }
+}
+
+// Modifica la función cerrarModal
+function cerrarModal() {
+    modal.style.display = 'none';
+    toggleBodyScroll(true); // Habilita scroll del body
+}
+
+// Agrega este evento para manejar el cierre con gestos táctiles
+modal.addEventListener('touchstart', function (e) {
+    if (e.target === modal) {
+        cerrarModal();
+    }
+});
