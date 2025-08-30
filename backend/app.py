@@ -14,7 +14,12 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-CORS(app, supports_credentials=True, origins=["http://localhost:8000"])
+# descomentar para uso local
+# CORS(app, supports_credentials=True, origins=["http://localhost:8000"])
+
+# comentar para uso local
+frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8000')
+CORS(app, supports_credentials=True, origins=[frontend_url])
 # CORS(app, resources={
 #      r"/chat": {"origins": "http://localhost:8000"}}, supports_credentials=True)
 # CORS(app)  # Permite llamadas desde frontend local
@@ -135,7 +140,7 @@ def reiniciar_historial():
 
     return jsonify({"status": "ok"})
 
-# ***** Comienza respuesta sin escritura animada *****
+# ****** modificacion para despliegue en linea ******
 
 
 @app.route('/chat', methods=['POST'])
@@ -170,13 +175,37 @@ def chat():
     historial.append({"role": "user", "content": mensaje_usuario})
 
     try:
+        # Configuración directa para Groq
+        GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+        if not GROQ_API_KEY:
+            print("ERROR: GROQ_API_KEY no está configurada")
+            return jsonify({"reply": "Error de configuración del servidor. Falta la API key de Groq."}), 500
+
+        # Llamada directa a la API de Groq
         response = requests.post(
-            'http://localhost:3000/chat',
-            json={"messages": historial},
-            timeout=15
+            'https://api.groq.com/openai/v1/chat/completions',
+            json={
+                "model": "llama3-70b-8192",
+                "messages": historial,
+                "temperature": 0.7,
+                "max_tokens": 1024,
+                "top_p": 1
+            },
+            headers={
+                'Authorization': f'Bearer {GROQ_API_KEY}',
+                'Content-Type': 'application/json'
+            },
+            timeout=30
         )
+
         response.raise_for_status()
-        respuesta_ia = response.json().get('reply')
+        respuesta_data = response.json()
+
+        # Verifica la estructura de la respuesta
+        if 'choices' not in respuesta_data or len(respuesta_data['choices']) == 0:
+            print("ERROR: Respuesta de Groq inesperada:", respuesta_data)
+            return jsonify({"reply": "Lo siento, hubo un error inesperado. Por favor, intenta nuevamente."}), 200
+        respuesta_ia = respuesta_data['choices'][0]['message']['content']
 
         if not respuesta_ia:
             return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
@@ -185,22 +214,101 @@ def chat():
         historial.append({"role": "assistant", "content": respuesta_ia})
         session['historial'] = historial
 
-        # # Enviar la respuesta en fragmentos simulando escritura
-        # for char in respuesta_ia:
-        #     yield char
-        #     time.sleep(0.02)  # Simula escritura lenta (ajustable)
-
         return jsonify({"reply": respuesta_ia})
 
     except requests.exceptions.Timeout:
         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
-
-    except requests.exceptions.RequestException:
+    # except requests.exceptions.RequestException as e:
+    #     print(f"Error al conectar con Groq: {str(e)}")
+    #     return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+    except requests.exceptions.RequestException as e:
+        print(f"Error al conectar con Groq: {str(e)}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Respuesta de error: {e.response.text}")
         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+    except Exception as e:
+        print(f"Error inesperado: {str(e)}")
+        return jsonify({"reply": "Lo siento, hubo un error inesperado. Por favor, intenta nuevamente."}), 200
+
+# ****** termina modificacion para despliegue en linea **********
+
+# ***** Comienza respuesta sin escritura animada descomentar para que funcione de manera local*****
+
+
+# @app.route('/chat', methods=['POST'])
+# def chat():
+#     data = request.json
+#     if not data or 'mensaje' not in data:
+#         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+#     mensaje_usuario = data['mensaje'].strip()
+#     if not mensaje_usuario:
+#         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+#     # Inicializa historial si no existe
+#     if 'historial' not in session:
+#         session['historial'] = [
+#             {"role": "system", "content": construir_prompt()}
+#         ]
+
+#     # Agregar características físicas si están disponibles y aún no se han incluido
+#     caracteristicas = session.get('caracteristicas_usuario')
+#     historial = session['historial']
+
+#     if caracteristicas and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+#         descripcion = ", ".join(
+#             [f"{k}: {v}" for k, v in caracteristicas.items()])
+#         historial.append({
+#             "role": "system",
+#             "content": f"Características físicas detectadas del usuario: {descripcion}"
+#         })
+
+#     # Agrega el mensaje del usuario al historial
+#     historial.append({"role": "user", "content": mensaje_usuario})
+
+#     try:
+#         # Descomentar para testing local
+#         response = requests.post(
+#             'http://localhost:3000/chat',
+#             json={"messages": historial},
+#             timeout=15
+#         )
+
+#         # comentar para testing local
+#         # IA_API_URL = os.environ.get('IA_API_URL', 'http://localhost:3000')
+#         # response = requests.post(
+#         #     f'{IA_API_URL}/chat',
+#         #     json={"messages": historial},
+#         #     timeout=15
+#         # )
+#         # comentar hasta aqui
+
+#         response.raise_for_status()
+#         respuesta_ia = response.json().get('reply')
+
+#         if not respuesta_ia:
+#             return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+#         # Agrega la respuesta de la IA al historial
+#         historial.append({"role": "assistant", "content": respuesta_ia})
+#         session['historial'] = historial
+
+#         # # Enviar la respuesta en fragmentos simulando escritura
+#         # for char in respuesta_ia:
+#         #     yield char
+#         #     time.sleep(0.02)  # Simula escritura lenta (ajustable)
+
+#         return jsonify({"reply": respuesta_ia})
+
+#     except requests.exceptions.Timeout:
+#         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+#     except requests.exceptions.RequestException:
+#         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
 
 # ***** Termina respuesta sin escritura animada ******
 
-# ***** Comienza respuesta con escritura animada *****
+# ***** Comienza respuesta con escritura animada *****************NO USAR*****
 
 # @app.route('/chat', methods=['POST'])
 # def chat():
@@ -265,7 +373,7 @@ def chat():
 
 #     return Response(stream_with_context(generar_respuesta()), mimetype='text/plain')
 
-# ******* Termina respuesta con escritura animada *******
+# ******* Termina respuesta con escritura animada*******
 
 # ****COMENTADO PARA TESTING  ******
 # @app.route('/subir-imagen', methods=['POST'])
@@ -332,14 +440,92 @@ def chat():
 # if __name__ == '__main__':
 #     app.run(port=5000, debug=True)
 
-# *********** SOLO PARA TESTING   **************
+
+# ********* PRUEBA PARA DESPLIEGUE EN LINEA *********
+
 @app.route('/subir-imagen', methods=['POST'])
 def subir_imagen():
-    print("📸 Imagen recibida en el backend (modo prueba)")
-    # Devuelve datos de prueba en lugar de procesar
-    return jsonify({
-        "reply": "Imagen recibida (modo prueba). Características: Silueta-Media, Piel-Clara, Género-Mujer, Edad-30, Cabello-Castaño"
-    })
+    print("📸 Imagen recibida en el backend")
+    if 'imagen' not in request.files:
+        return jsonify({"reply": "No se recibió ninguna imagen."}), 400
+
+    imagen = request.files['imagen']
+    image_bytes = imagen.read()
+
+    try:
+        resultados = {"Silueta": "Media", "Piel": "Clara",
+                      "Género": "Mujer", "Edad": 30, "Cabello": "Castaño"}
+        session['caracteristicas_usuario'] = resultados
+        print(resultados)
+
+        # Inicializa historial si no existe
+        if 'historial' not in session:
+            session['historial'] = [
+                {"role": "system", "content": construir_prompt()}
+            ]
+
+        historial = session['historial']
+
+        # Agregar características físicas si aún no están
+        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+            descripcion = ", ".join(
+                [f"{k}: {v}" for k, v in resultados.items()])
+            historial.append({
+                "role": "system",
+                "content": f"Características físicas detectadas del usuario: {descripcion}"
+            })
+
+        # Simular un mensaje del usuario para que la IA continúe el flujo
+        historial.append({"role": "user", "content": "Ya subí mi imagen"})
+
+        # Llamada directa a Groq
+        GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+        response = requests.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            json={
+                "model": "llama3-70b-8192",
+                "messages": historial,
+                "temperature": 0.7,
+                "max_tokens": 1024
+            },
+            headers={
+                'Authorization': f'Bearer {GROQ_API_KEY}',
+                'Content-Type': 'application/json'
+            },
+            timeout=15
+        )
+
+        response.raise_for_status()
+        respuesta_ia = response.json().get('reply')
+
+        if respuesta_ia:
+            historial.append({"role": "assistant", "content": respuesta_ia})
+            session['historial'] = historial
+            return jsonify({"reply": respuesta_ia})
+        else:
+            return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
+
+    except Exception as e:
+        print("Error al analizar imagen:", e)
+        return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
+
+# # agregado para manejo de imagen de vestido en el chatbot
+# @app.route('/static/disenos/<path:filename>')
+# def serve_diseno(filename):
+#     return send_from_directory('static/disenos', filename)
+# #final del manejo de vestido en chatbot
+
+# ********* TERMINA PRUEBA PARA DESPLIEGUE EN LINEA *********
+
+# *********** SOLO PARA TESTING   **************
+# @app.route('/subir-imagen', methods=['POST'])
+# def subir_imagen():
+#     print("📸 Imagen recibida en el backend (modo prueba)")
+#     # Devuelve datos de prueba en lugar de procesar
+#     return jsonify({
+#         "reply": "Imagen recibida (modo prueba). Características: Silueta-Media, Piel-Clara, Género-Mujer, Edad-30, Cabello-Castaño"
+#     })
 
 
 # Version app en linea
