@@ -2,7 +2,7 @@
 // Determina automáticamente la URL del backend según el entorno
 const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
-    : 'https://tu-backend-en-railway.railway.app'; // Reemplaza con tu URL real de Railway
+    : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
 
 // ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
