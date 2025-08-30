@@ -18,15 +18,8 @@ import time
 # ***** comentar para testing local *******
 
 app = Flask(__name__)
-app.config.update(
-    SECRET_KEY='clave-secreta',
-    SESSION_TYPE='filesystem',
-    UPLOAD_FOLDER='uploads',
-    SESSION_COOKIE_NAME='alzarea_session',  # Nombre específico para la cookie
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SECURE=True,  # Para HTTPS en producción
-    SESSION_COOKIE_SAMESITE='Lax'
-)
+app.secret_key = 'clave-secreta'
+app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
