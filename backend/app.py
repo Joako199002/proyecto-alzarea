@@ -8,11 +8,27 @@ import requests
 import time
 # from detection import detect_facial_features  # COMENTADA PARA TESTING
 
+# ******* Descomentar para testing local *******
+# app = Flask(__name__)
+# app.secret_key = 'clave-secreta'
+# app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['UPLOAD_FOLDER'] = 'uploads'
+# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# ***** comentar para testing local *******
+
 app = Flask(__name__)
-app.secret_key = 'clave-secreta'
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config.update(
+    SECRET_KEY='clave-secreta',
+    SESSION_TYPE='filesystem',
+    UPLOAD_FOLDER='uploads',
+    SESSION_COOKIE_NAME='alzarea_session',  # Nombre específico para la cookie
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,  # Para HTTPS en producción
+    SESSION_COOKIE_SAMESITE='Lax'
+)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 
 # descomentar para uso local
 # CORS(app, supports_credentials=True, origins=["http://localhost:8000"])
@@ -23,7 +39,14 @@ CORS(app, supports_credentials=True, origins=[frontend_url])
 # CORS(app, resources={
 #      r"/chat": {"origins": "http://localhost:8000"}}, supports_credentials=True)
 # CORS(app)  # Permite llamadas desde frontend local
-Session(app)
+
+# descomentar para uso local
+# Session(app)
+
+# descomentar para uso en linea
+session_instance = Session()
+session_instance.init_app(app)
+
 
 # Carga la base de vestidos solo una vez al iniciar la app
 # Version de base de dadtos local
@@ -135,8 +158,9 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
 
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
-    session.pop('historial', None)
-    session.pop('caracteristicas_usuario', None)
+    # **********descomentar para uso local *************
+    # session.pop('historial', None)
+    # session.pop('caracteristicas_usuario', None)
 
     return jsonify({"status": "ok"})
 
