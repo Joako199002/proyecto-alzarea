@@ -392,3 +392,47 @@ if (imageInput) {
         }
     });
 }
+
+// ==================== FUNCIONALIDAD PARA MOVILES ====================
+
+// Función para ajustar el chatbot en dispositivos móviles
+function adjustChatbotForMobile() {
+    const chatbotBox = document.querySelector('.chatbot-box');
+    const chatbotContainer = document.querySelector('.chatbot-container');
+
+    if (!chatbotBox || !chatbotContainer) return;
+
+    // Detectar si es un dispositivo móvil
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // Asegurarse de que el chatbot esté visiblemente dentro de la pantalla
+        const viewportWidth = window.innerWidth;
+        const chatbotWidth = chatbotBox.offsetWidth;
+
+        // Si el chatbot se sale por la derecha
+        if (chatbotContainer.getBoundingClientRect().right > viewportWidth) {
+            chatbotBox.style.right = '0';
+            chatbotBox.style.left = 'auto';
+        }
+
+        // Si el chatbot se sale por la izquierda
+        if (chatbotContainer.getBoundingClientRect().left < 0) {
+            chatbotBox.style.left = '0';
+            chatbotBox.style.right = 'auto';
+        }
+    }
+}
+
+// Ejecutar al cargar y al redimensionar la ventana
+window.addEventListener('load', adjustChatbotForMobile);
+window.addEventListener('resize', adjustChatbotForMobile);
+
+// También ajustar después de abrir el chatbot
+const originalToggle = window.toggleChatbot;
+window.toggleChatbot = function () {
+    if (typeof originalToggle === 'function') {
+        originalToggle();
+    }
+    setTimeout(adjustChatbotForMobile, 100);
+};

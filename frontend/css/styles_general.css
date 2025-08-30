@@ -182,10 +182,10 @@ html {
 .chatbot-container {
     position: fixed;
     /* Posicionamiento fijo para que permanezca en la misma posición al hacer scroll */
-    bottom: 2.5vw;
+    bottom: 20px;
     /* Distancia de 20px desde el borde inferior de la ventana */
     /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
-    right: 2.5vw;
+    right: 20px;
     /* Distancia de 20px desde el borde derecho de la ventana */
     /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
     font-family: sans-serif;
@@ -503,6 +503,13 @@ footer {
 
 @media (max-width: 768px) {
 
+    body,
+    html {
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+    }
+
     /* Estilos para móviles */
     .menu-hamburguesa {
         width: 50px;
@@ -517,7 +524,7 @@ footer {
         margin: 3px 0;
     }
 
-    .chatbot-container {
+    /* .chatbot-container {
         bottom: 20px;
         right: 20px;
     }
@@ -536,12 +543,59 @@ footer {
         right: 0;
         left: 0;
         margin: 0 auto;
+    } */
+
+    /* moviles chatbot v1.1 */
+    .chatbot-container {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+        /* Añadido para controlar el ancho máximo */
+        display: flex;
+        justify-content: flex-end;
+        /* Mantiene el botón a la derecha */
     }
+
+    .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .chatbot-box {
+        width: calc(100vw - 30px);
+        /* Ocupa todo el ancho menos los márgenes */
+        max-width: 400px;
+        /* Limita el ancho máximo */
+        height: 50vh;
+        bottom: 80px;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        /* Centra horizontalmente */
+    }
+
+    .chatbot-messages {
+        max-height: calc(100% - 100px);
+        overflow-y: auto;
+    }
+
+    .chatbot-input {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        background: white;
+    }
+
 }
 
 @media (max-width: 480px) {
-
-    /* Estilos para móviles pequeños */
+    /* 
+    /* Estilos para móviles pequeños 
     .chatbot-toggle {
         width: 60px;
         height: 60px;
@@ -553,4 +607,42 @@ footer {
         height: 55vh;
         bottom: 70px;
     }
+*/
+
+    /* estilos moviles pequenoos v1.1 */
+    .chatbot-container {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+    }
+
+    .chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 25px;
+    }
+
+    .chatbot-box {
+        width: calc(100vw - 20px);
+        /* Ajuste fino para móviles muy pequeños */
+        height: 55vh;
+        bottom: 70px;
+    }
+
+    /* Para tablets en orientación vertical */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .chatbot-box {
+            height: 60vh;
+        }
+    }
+
+    /* Para tablets en orientación horizontal */
+    @media (max-width: 1024px) and (orientation: landscape) {
+        .chatbot-box {
+            height: 70vh;
+            width: 350px;
+        }
+    }
+
+
 }
