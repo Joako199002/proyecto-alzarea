@@ -404,6 +404,16 @@
 
 /* Media queries */
 
+/* Media queries para tablets */
+@media (max-width: 1024px) {
+    .grid-productos {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columnas en tablets */
+        gap: 20px;
+    }
+}
+
+
 @media (max-width: 768px) {
 
     /* Estilos para móviles */
@@ -419,6 +429,24 @@
     .descripcion p {
         font-size: 1rem;
     }
+
+    /* grid productos */
+
+    .grid-productos {
+        grid-template-columns: 1fr;
+        /* 1 columna en móviles */
+        gap: 15px;
+    }
+
+    .producto {
+        margin-bottom: 15px;
+    }
+
+    .imagen-producto {
+        height: 200px;
+        /* Ajusta la altura para móviles */
+    }
+
 
     .modal-contenido {
         flex-direction: column;
@@ -451,5 +479,29 @@
     .modal-precio {
         font-size: 1.3rem;
         /* Tamaño de fuente reducido */
+    }
+}
+
+
+/* Ajustes adicionales para móviles pequeños */
+@media (max-width: 480px) {
+    .grid-productos {
+        gap: 10px;
+    }
+
+    .imagen-producto {
+        height: 180px;
+    }
+
+    .info-producto {
+        padding: 15px;
+    }
+
+    .nombre-producto {
+        font-size: 1.2rem;
+    }
+
+    .descripcion-producto {
+        font-size: 0.9rem;
     }
 }
