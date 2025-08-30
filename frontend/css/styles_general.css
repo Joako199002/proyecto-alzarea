@@ -1,17 +1,25 @@
 /* ===== ESTILOS COMUNES PARA TODAS LAS PÁGINAS ===== */
 
 * {
-    margin: 0; /* Elimina todos los márgenes por defecto */
-    padding: 0; /* Elimina todo el padding por defecto */
-    box-sizing: border-box; /* Incluye padding y border en el cálculo de dimensiones */
+    margin: 0;
+    /* Elimina todos los márgenes por defecto */
+    padding: 0;
+    /* Elimina todo el padding por defecto */
+    box-sizing: border-box;
+    /* Incluye padding y border en el cálculo de dimensiones */
 }
 
 /* Estilos para body y html: ocupan toda la altura y anchura de la ventana */
-body, html {
-    height: 100%; /* Ocupa el 100% de la altura de la ventana */
-    width: 100%; /* Ocupa el 100% del ancho de la ventana */
-    font-family: Arial, sans-serif; /* Fuente principal para todo el sitio */
-    scroll-behavior: smooth; /* Permite un desplazamiento suave al hacer clic en enlaces internos */
+body,
+html {
+    height: 100%;
+    /* Ocupa el 100% de la altura de la ventana */
+    width: 100%;
+    /* Ocupa el 100% del ancho de la ventana */
+    font-family: Arial, sans-serif;
+    /* Fuente principal para todo el sitio */
+    scroll-behavior: smooth;
+    /* Permite un desplazamiento suave al hacer clic en enlaces internos */
 }
 
 /* ===== ESTILOS COMUNES DEL MENÚ HAMBURGUESA ===== */
@@ -174,10 +182,10 @@ body, html {
 .chatbot-container {
     position: fixed;
     /* Posicionamiento fijo para que permanezca en la misma posición al hacer scroll */
-    bottom: 20px;
+    bottom: 2.5vw;
     /* Distancia de 20px desde el borde inferior de la ventana */
     /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
-    right: 20px;
+    right: 2.5vw;
     /* Distancia de 20px desde el borde derecho de la ventana */
     /* Cambiado de 2.5vw a 20px (fijo) - ahora usa un valor absoluto en lugar de relativo al viewport */
     font-family: sans-serif;
@@ -509,7 +517,7 @@ footer {
         margin: 3px 0;
     }
 
-   .chatbot-container {
+    .chatbot-container {
         bottom: 20px;
         right: 20px;
     }
