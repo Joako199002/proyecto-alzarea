@@ -4,6 +4,10 @@ const backendUrl = window.location.hostname === 'localhost' || window.location.h
     ? 'http://localhost:5000'
     : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
 
+// prueba produccicon
+
+let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+
 // ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
 // Obtener referencias a los elementos del menú
@@ -47,6 +51,8 @@ let thinkingMessage = null;
 // Reiniciar la sesión del chatbot al cargar la página
 fetch(`${backendUrl}/reiniciar`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: sessionId }),
     credentials: 'include'
 }).catch(error => {
     console.error('Error al reiniciar sesión:', error);
@@ -219,7 +225,10 @@ async function respond(text, isDirectReply = false) {
             const response = await fetch(`${backendUrl}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mensaje: text }),
+                body: JSON.stringify({
+                    mensaje: text,
+                    sessionId: sessionId
+                }),
                 credentials: 'include'
             });
 
