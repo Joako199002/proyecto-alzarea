@@ -15,9 +15,14 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8000')
 CORS(app, supports_credentials=True, origins=[frontend_url])
 
-# Configuración de sesión
+# Configuración de sesión - IMPORTANTE: Agregar esta línea
 app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+app.config['SESSION_FILE_DIR'] = './flask_session'
+os.makedirs(app.config['SESSION_FILE_DIR'], exist_ok=True)
+
+# Inicializar la sesión
+session_instance = Session()
+session_instance.init_app(app)
 
 # Cargar base de datos de vestidos
 base_vestidos = pd.read_excel('base_vestidos.xlsx')
@@ -48,6 +53,20 @@ Sigue estrictamente este flujo:
 
 Incluye [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO] al recomendar prendas.
 """
+
+# Middleware para manejar solicitudes OPTIONS
+
+
+@app.before_request
+def handle_options():
+    if request.method == 'OPTIONS':
+        response = jsonify()
+        response.headers.add('Access-Control-Allow-Origin', frontend_url)
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add(
+            'Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response
 
 
 @app.route('/reiniciar', methods=['POST'])
@@ -169,6 +188,11 @@ def subir_imagen():
     except Exception as e:
         print(f"Error procesando imagen: {str(e)}")
         return jsonify({"reply": "Error al procesar la imagen. Por favor, intenta con otra imagen."}), 500
+
+
+@app.route('/')
+def health_check():
+    return jsonify({"status": "ok", "message": "Alzárea API is running"})
 
 
 if __name__ == '__main__':
