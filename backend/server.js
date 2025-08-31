@@ -1,11 +1,14 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
+
+// Configuración de CORS
 app.use(cors({
-    origin: ['https://proyecto-alzarea.netlify.app', 'http://localhost:3000'], // Reemplaza con tu dominio de Netlify
+    origin: ['https://proyecto-alzarea.netlify.app', 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -14,9 +17,12 @@ app.use(cors({
 // Manejar solicitudes OPTIONS (preflight)
 app.options('*', cors());
 
-
+// Middleware para parsing de JSON
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos (IMAGENES)
+app.use('/imagenes', express.static(path.join(__dirname, 'imagenes')));
 
 // Middleware de logging para diagnóstico
 app.use((req, res, next) => {
@@ -157,7 +163,7 @@ app.get('/test-groq', async (req, res) => {
         const response = await axios.post(
             'https://api.groq.com/openai/v1/chat/completions',
             {
-                model: "llama3-70b-8192",
+                model: "llama-3.3-70b-versatile",
                 messages: [{ role: "user", content: "Responde con 'OK' si funciona" }],
                 temperature: 0.7,
                 max_tokens: 10,
