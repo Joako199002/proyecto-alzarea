@@ -299,7 +299,7 @@ async function respond(text, isDirectReply = false) {
                             const normalizedName = cleanName.replace(/ /g, '_');
 
                             const img = document.createElement('img');
-                            img.src = `${backendUrl}imagenes/${normalizedName}.jpg`;
+                            img.src = `${backendUrl}/imagenes/${normalizedName}.jpg`;
                             img.alt = cleanName;
                             img.style.maxWidth = '100%';
                             img.style.borderRadius = '8px';
