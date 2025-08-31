@@ -6,9 +6,41 @@ require('dotenv').config();
 const app = express();
 app.use(cors({
     origin: ['https://proyecto-alzarea.netlify.app', 'http://localhost:3000'], // Reemplaza con tu dominio de Netlify
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Manejar solicitudes OPTIONS (preflight)
+app.options('*', cors());
+
+
 app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware de logging para diagnóstico
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
+
+// Ruta de salud para verificar que el servidor funciona
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        message: 'Servidor funcionando correctamente',
+        timestamp: new Date().toISOString(),
+        port: process.env.PORT
+    });
+});
+
+// Ruta simple de prueba
+app.get('/test', (req, res) => {
+    res.json({
+        message: 'Endpoint de prueba funcionando',
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -52,7 +84,7 @@ app.post('/chat', async (req, res) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${GROQ_API_KEY}`,
                 },
-                timeout: 30000 // 30 segundos de timeout
+                timeout: 50 // 30 segundos de timeout
             }
         );
 
@@ -88,7 +120,34 @@ app.post('/subir-imagen', (req, res) => {
     res.status(501).json({ error: 'Funcionalidad de imágenes no implementada aún' });
 });
 
+// Usar el puerto proporcionado por Railway o 3000 por defecto
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+
+// Asegurarse de escuchar en todas las interfaces de red
+const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`=================================`);
     console.log(`Servidor ejecutándose en puerto ${PORT}`);
+    console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`GROQ_API_KEY configurada: ${!!process.env.GROQ_API_KEY}`);
+    console.log(`=================================`);
+});
+
+// Manejar cierre graceful
+process.on('SIGTERM', () => {
+    console.log('Recibió SIGTERM. Cerrando servidor gracefully.');
+    server.close(() => {
+        console.log('Servidor cerrado.');
+        process.exit(0);
+    });
+});
+
+// Manejar errores no capturados
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
 });

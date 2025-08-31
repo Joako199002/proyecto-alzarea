@@ -4,6 +4,19 @@ const backendUrl = window.location.hostname === 'localhost' || window.location.h
     ? 'http://localhost:3000'
     : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
 
+// Función para verificar el estado del backend
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${backendUrl}/health`);
+        const data = await response.json();
+        console.log('Backend health:', data);
+        return response.ok;
+    } catch (error) {
+        console.error('Backend health check failed:', error);
+        return false;
+    }
+}
+
 // prueba produccicon
 
 let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
