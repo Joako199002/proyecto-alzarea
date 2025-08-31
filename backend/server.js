@@ -84,7 +84,7 @@ app.post('/chat', async (req, res) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${GROQ_API_KEY}`,
                 },
-                timeout: 50 // 30 segundos de timeout
+                timeout: 30000 // 30 segundos de timeout
             }
         );
 
@@ -150,4 +150,37 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
     process.exit(1);
+});
+
+app.get('/test-groq', async (req, res) => {
+    try {
+        const response = await axios.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            {
+                model: "llama3-70b-8192",
+                messages: [{ role: "user", content: "Responde con 'OK' si funciona" }],
+                temperature: 0.7,
+                max_tokens: 10,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+                },
+                timeout: 10000
+            }
+        );
+
+        res.json({
+            status: 'GROQ_CONNECTION_OK',
+            response: response.data,
+            response_time: `${response.headers['x-ratelimit-remaining']} requests remaining`
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'GROQ_CONNECTION_ERROR',
+            error: error.message,
+            details: error.response?.data || 'No response data'
+        });
+    }
 });
