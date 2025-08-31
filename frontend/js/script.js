@@ -139,7 +139,7 @@ if (inputField) {
     });
 }
 
-// Modificar la función addMessage para manejar mejor las etiquetas
+// Función para agregar mensajes al chat - MANTENIDA PARA OTROS USOS
 function addMessage(text, sender) {
     if (!messagesContainer) return;
 
@@ -190,7 +190,6 @@ function addMessage(text, sender) {
     messagesContainer.appendChild(message);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-
 // Función para eliminar el mensaje "pensando" si existe
 function removeThinkingMessage() {
     if (thinkingMessage && thinkingMessage.parentNode === messagesContainer) {
@@ -199,8 +198,8 @@ function removeThinkingMessage() {
     }
 }
 
-// Función para mostrar mensajes con animación de escritura
-function showMessageWithAnimation(messageText, isError = false) {
+// Función para mostrar mensajes con animación de escritura y luego imágenes - ACTUALIZADA
+function showMessageWithAnimation(messageText, isError = false, disenos = []) {
     if (!messagesContainer) return;
 
     // Crear contenedor del mensaje
@@ -224,11 +223,39 @@ function showMessageWithAnimation(messageText, isError = false) {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         } else {
             clearInterval(intervalo);
+
+            // Después de terminar la animación, agregar imágenes si hay diseños
+            if (disenos.length > 0) {
+                disenos.forEach(nombreDiseno => {
+                    const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+
+                    const img = document.createElement('img');
+                    img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+                    img.alt = nombreDiseno;
+                    img.style.maxWidth = '100%';
+                    img.style.borderRadius = '8px';
+                    img.style.marginTop = '5px';
+                    img.onerror = function () {
+                        console.error(`No se pudo cargar: ${nombreArchivo}.jpg`);
+                        // Intentar cargar con el nombre original
+                        img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
+                        img.onerror = function () {
+                            this.style.display = 'none';
+                        };
+                    };
+                    img.onload = () => {
+                        if (messagesContainer) {
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    };
+                    message.appendChild(img);
+                });
+            }
         }
     }, 50); // velocidad animación
 }
 
-// Función principal para procesar respuestas del chatbot
+// Función principal para procesar respuestas del chatbot - CORREGIDA
 async function respond(text, isDirectReply = false) {
     try {
         let mensajeTexto = text;
@@ -274,16 +301,18 @@ async function respond(text, isDirectReply = false) {
         // Detectar todas las etiquetas [MOSTRAR_IMAGEN: ...]
         const regex = /\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/gi;
         let match;
-        let textoParaMostrar = mensajeTexto;
 
+        // Extraer los diseños del mensaje
         while ((match = regex.exec(mensajeTexto)) !== null) {
             const disenosEncontrados = match[1].split(',').map(d => d.trim());
             disenos.push(...disenosEncontrados);
-            // Mantener la etiqueta en el texto para que addMessage la procese correctamente
         }
 
-        // Usar addMessage para mostrar el texto y las imágenes
-        addMessage(mensajeTexto, 'bot');
+        // Eliminar las etiquetas del texto para la animación
+        const textoSinEtiquetas = mensajeTexto.replace(regex, '').trim();
+
+        // Mostrar el mensaje con animación de escritura
+        showMessageWithAnimation(textoSinEtiquetas, false, disenos);
 
     } catch (error) {
         // Asegurarse de eliminar el mensaje "pensando" en caso de error
