@@ -1,201 +1,478 @@
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
+// ==================== CONFIGURACIÓN DE URLS ====================
+// Determina automáticamente la URL del backend según el entorno
+const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
 
-const app = express();
+// Mapeo de nombres de diseño a nombres de archivo
+const mapeoImagenes = {
+    'CENEFA': 'CENEFA',
+    'FRISO': 'FRISO_FLOWER',
+    'SOPHIE': 'SOPHIE',
+    'LIRIA': 'LIRIA_WHITE',
+    'ALMENA': 'ALMENA',
+    'SKIRT': 'SKIRT_BLACK',
+    'WEIRD': 'WEIRD'
+};
 
-// Configuración de CORS
-app.use(cors({
-    origin: ['https://proyecto-alzarea.netlify.app', 'http://localhost:3000'],
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Manejar solicitudes OPTIONS (preflight)
-app.options('*', cors());
-
-// Middleware para parsing de JSON
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true }));
-
-// Servir archivos estáticos (IMAGENES)
-app.use('/imagenes', express.static(path.join(__dirname, 'imagenes')));
-
-// Middleware de logging para diagnóstico
-app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-    next();
-});
-
-// Ruta de salud para verificar que el servidor funciona
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'OK',
-        message: 'Servidor funcionando correctamente',
-        timestamp: new Date().toISOString(),
-        port: process.env.PORT
-    });
-});
-
-// Ruta simple de prueba
-app.get('/test', (req, res) => {
-    res.json({
-        message: 'Endpoint de prueba funcionando',
-        environment: process.env.NODE_ENV || 'development'
-    });
-});
-
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-
-// Almacenamiento simple de conversaciones (en producción usarías una base de datos)
-const conversations = new Map();
-
-// Función para procesar y formatear la respuesta de la IA
-function procesarRespuestaIA(respuesta) {
-    // Reemplazar etiquetas [MOSTRAR_IMAGEN: ...] con el nombre del diseño
-    return respuesta.replace(/\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/g, '$1');
+// Función para verificar el estado del backend
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${backendUrl}/health`);
+        const data = await response.json();
+        console.log('Backend health:', data);
+        return response.ok;
+    } catch (error) {
+        console.error('Backend health check failed:', error);
+        return false;
+    }
 }
 
-app.post('/chat', async (req, res) => {
-    try {
-        const { mensaje, sessionId = 'default' } = req.body;
+// prueba produccicon
 
-        if (!mensaje) {
-            return res.status(400).json({ error: 'Mensaje es requerido' });
-        }
+let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
 
-        // Obtener o inicializar la conversación
-        if (!conversations.has(sessionId)) {
-            conversations.set(sessionId, [
-                {
-                    role: "system",
-                    content: "Eres un asistente de moda útil y entusiasta para Alzárea, una marca de vestidos. Responde de manera amable y profesional. Cuando sea apropiado, sugiere diseños específicos de la marca usando la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]. Los diseños disponibles son: CENEFA, FRISO, SOPHIE, LIRIA, ALMENA, SKIRT, WEIRD. Asegúrate de que el nombre del diseño aparezca en el texto de respuesta, no solo en la etiqueta."
-                }
-            ]);
-        }
+// ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
-        const conversation = conversations.get(sessionId);
+// Obtener referencias a los elementos del menú
+const menuHamburguesa = document.getElementById('menuHamburguesa');
+const opcionesMenu = document.getElementById('opcionesMenu');
+const body = document.body;
 
-        // Agregar mensaje del usuario a la conversación
-        conversation.push({ role: "user", content: mensaje });
+// Función para alternar el menú
+function toggleMenu() {
+    body.classList.toggle('menu-abierto');
+}
 
-        const response = await axios.post(
-            GROQ_API_URL,
-            {
-                model: "llama-3.3-70b-versatile",
-                messages: conversation,
-                temperature: 0.7,
-                max_tokens: 1000,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`,
-                },
-                timeout: 30000 // 30 segundos de timeout
-            }
-        );
+// Agregar evento de clic al menú hamburguesa
+if (menuHamburguesa) {
+    menuHamburguesa.addEventListener('click', toggleMenu);
+}
 
-        let reply = response.data.choices[0].message.content;
-
-        // Procesar la respuesta para formatearla correctamente
-        reply = procesarRespuestaIA(reply);
-
-        // Agregar respuesta del asistente a la conversación
-        conversation.push({ role: "assistant", content: reply });
-
-        res.json({ reply });
-
-    } catch (error) {
-        console.error('Error al conectar con Groq API:', error.response?.data || error.message);
-
-        if (error.code === 'ECONNABORTED') {
-            return res.status(408).json({ error: 'Tiempo de espera agotado. Por favor, intenta de nuevo.' });
-        }
-
-        res.status(500).json({
-            error: 'Lo siento, hubo un error al procesar tu solicitud.',
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-    }
-});
-
-app.post('/reiniciar', (req, res) => {
-    const { sessionId = 'default' } = req.body;
-    conversations.delete(sessionId);
-    res.json({ message: 'Conversación reiniciada' });
-});
-
-// Ruta para subir imágenes (si decides implementarlo después)
-app.post('/subir-imagen', (req, res) => {
-    res.status(501).json({ error: 'Funcionalidad de imágenes no implementada aún' });
-});
-
-// Usar el puerto proporcionado por Railway o 3000 por defecto
-const PORT = process.env.PORT || 3000;
-
-// Asegurarse de escuchar en todas las interfaces de red
-const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`=================================`);
-    console.log(`Servidor ejecutándose en puerto ${PORT}`);
-    console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`GROQ_API_KEY configurada: ${!!process.env.GROQ_API_KEY}`);
-    console.log(`=================================`);
-});
-
-// Manejar cierre graceful
-process.on('SIGTERM', () => {
-    console.log('Recibió SIGTERM. Cerrando servidor gracefully.');
-    server.close(() => {
-        console.log('Servidor cerrado.');
-        process.exit(0);
+// Cerrar el menú al hacer clic en una opción (opcional)
+const enlacesMenu = document.querySelectorAll('.opciones-menu a');
+enlacesMenu.forEach(enlace => {
+    enlace.addEventListener('click', () => {
+        body.classList.remove('menu-abierto');
     });
 });
 
-// Manejar errores no capturados
-process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception:', error);
-    process.exit(1);
+// ==================== CÓDIGO DEL CHATBOT ====================
+
+// Obtener elementos del DOM para el chatbot
+const toggleButton = document.querySelector('.chatbot-toggle');
+const chatbotBox = document.querySelector('.chatbot-box');
+const closeButton = document.querySelector('.chatbot-close');
+const sendButton = document.getElementById('chatbot-send');
+const inputField = document.getElementById('chatbot-input');
+const messagesContainer = document.getElementById('chatbot-messages');
+const uploadButton = document.getElementById('upload-button');
+const imageInput = document.getElementById('chatbot-image');
+
+// Variable para almacenar la referencia al mensaje "pensando"
+let thinkingMessage = null;
+
+// Reiniciar la sesión del chatbot al cargar la página
+fetch(`${backendUrl}/reiniciar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: sessionId }),
+    credentials: 'include'
+}).catch(error => {
+    console.error('Error al reiniciar sesión:', error);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    process.exit(1);
-});
+// Mostrar el chatbot al hacer clic en el botón de toggle
+if (toggleButton) {
+    toggleButton.addEventListener('click', () => {
+        chatbotBox.style.display = 'flex';
+        // Enfocar el campo de entrada cuando se abre el chatbot
+        setTimeout(() => inputField.focus(), 100);
+    });
+}
 
-app.get('/test-groq', async (req, res) => {
-    try {
-        const response = await axios.post(
-            'https://api.groq.com/openai/v1/chat/completions',
-            {
-                model: "llama3-70b-8192",
-                messages: [{ role: "user", content: "Responde con 'OK' si funciona" }],
-                temperature: 0.7,
-                max_tokens: 10,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-                },
-                timeout: 10000
-            }
-        );
+// Ocultar el chatbot al hacer clic en el botón de cerrar
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        chatbotBox.style.display = 'none';
+    });
+}
 
-        res.json({
-            status: 'GROQ_CONNECTION_OK',
-            response: response.data,
-            response_time: `${response.headers['x-ratelimit-remaining']} requests remaining`
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: 'GROQ_CONNECTION_ERROR',
-            error: error.message,
-            details: error.response?.data || 'No response data'
-        });
+// Función para ajustar automáticamente la altura del textarea
+function autoResizeTextarea() {
+    // Reset height to auto to get the correct scrollHeight
+    inputField.style.height = 'auto';
+
+    // Calculate the scrollHeight (content height)
+    const scrollHeight = inputField.scrollHeight;
+
+    // Set a maximum height equivalent to 3 lines
+    const maxHeight = 90;
+
+    // Set the height based on content, but not exceeding maxHeight
+    if (scrollHeight <= maxHeight) {
+        inputField.style.height = scrollHeight + 'px';
+    } else {
+        inputField.style.height = maxHeight + 'px';
     }
-});
+}
+
+// Ajustar el textarea cuando se escribe o se pega texto
+if (inputField) {
+    inputField.addEventListener('input', autoResizeTextarea);
+    // Ajustar el textarea al cargar la página (por si hay contenido inicial)
+    autoResizeTextarea();
+}
+
+// Enviar mensaje al hacer clic en el botón de enviar
+if (sendButton) {
+    sendButton.addEventListener('click', () => {
+        const userInput = inputField.value.trim();
+        if (userInput) {
+            addMessage(userInput, 'user');
+            respond(userInput);
+            inputField.value = '';
+            // Resetear la altura del textarea después de enviar
+            inputField.style.height = '45px';
+        }
+    });
+}
+
+// Enviar mensaje al presionar Enter en el campo de texto (pero no crear nueva línea con Shift+Enter)
+if (inputField) {
+    inputField.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // Evita salto de línea
+            if (sendButton) {
+                sendButton.click(); // Simula el click del botón
+            }
+        }
+    });
+}
+
+// Función para agregar mensajes al chat
+function addMessage(text, sender) {
+    if (!messagesContainer) return;
+
+    const message = document.createElement('div');
+    message.className = sender + '-message';
+
+    // Verificar si contiene la etiqueta [MOSTRAR_IMAGEN: NOMBRE]
+    const regex = /\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/i;
+    const match = text.match(regex);
+
+    if (match) {
+        const nombreDiseno = match[1].trim();
+        // Reemplazar solo la etiqueta, manteniendo el nombre en el texto
+        const textoSinEtiqueta = text.replace(regex, '').trim();
+
+        // Agregar texto sin la etiqueta
+        const textoElem = document.createElement('span');
+        textoElem.textContent = textoSinEtiqueta;
+        message.appendChild(textoElem);
+
+        // Agregar imagen del diseño
+        const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+        const img = document.createElement('img');
+        img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+        img.alt = nombreDiseno;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.marginTop = '5px';
+        img.onerror = function () {
+            console.error(`Error al cargar la imagen: ${img.src}`);
+            // Intentar cargar la imagen con el nombre original
+            img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
+            img.onerror = function () {
+                this.style.display = 'none';
+            };
+        };
+        message.appendChild(img);
+    } else {
+        const textoElem = document.createElement('span');
+        textoElem.textContent = text;
+        message.appendChild(textoElem);
+    }
+
+    messagesContainer.appendChild(message);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Función para eliminar el mensaje "pensando" si existe
+function removeThinkingMessage() {
+    if (thinkingMessage && thinkingMessage.parentNode === messagesContainer) {
+        messagesContainer.removeChild(thinkingMessage);
+        thinkingMessage = null;
+    }
+}
+
+// Función para mostrar mensajes con animación de escritura
+function showMessageWithAnimation(messageText, isError = false) {
+    if (!messagesContainer) return;
+
+    // Crear contenedor del mensaje
+    const message = document.createElement('div');
+    message.className = 'bot-message';
+    if (isError) {
+        message.style.color = '#d32f2f'; // Color rojo para errores
+    }
+
+    const textoElem = document.createElement('span');
+    textoElem.textContent = '';
+    message.appendChild(textoElem);
+    messagesContainer.appendChild(message);
+
+    // Animación de escritura
+    let index = 0;
+    const intervalo = setInterval(() => {
+        if (index < messageText.length) {
+            textoElem.textContent += messageText.charAt(index);
+            index++;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 50); // velocidad animación
+}
+
+// Función principal para procesar respuestas del chatbot
+async function respond(text, isDirectReply = false) {
+    try {
+        let mensajeTexto = text;
+        let disenos = [];
+
+        if (!isDirectReply) {
+            // Mostrar "escribiendo..."
+            thinkingMessage = document.createElement('div');
+            thinkingMessage.className = 'bot-message';
+            thinkingMessage.textContent = '...';
+            if (messagesContainer) {
+                messagesContainer.appendChild(thinkingMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            // Enviar mensaje al backend
+            const response = await fetch(`${backendUrl}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mensaje: text,
+                    sessionId: sessionId
+                }),
+                credentials: 'include'
+            });
+
+            // Quitar "..." después de obtener respuesta
+            removeThinkingMessage();
+
+            // Verificar si la respuesta es exitosa
+            if (!response.ok) {
+                throw new Error(`Error del servidor: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (!data.reply) {
+                showMessageWithAnimation("Lo siento, no pude obtener una respuesta en este momento.", true);
+                return;
+            }
+            mensajeTexto = data.reply;
+        }
+
+        // Detectar todas las etiquetas [MOSTRAR_IMAGEN: ...]
+        const regex = /\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/gi;
+        let match;
+        while ((match = regex.exec(mensajeTexto)) !== null) {
+            disenos.push(match[1].trim());
+            // No reemplazar la etiqueta aquí, dejarla para que addMessage la procese
+        }
+
+        // Crear contenedor del mensaje
+        const message = document.createElement('div');
+        message.className = 'bot-message';
+        const textoElem = document.createElement('span');
+        textoElem.textContent = '';
+        message.appendChild(textoElem);
+        if (messagesContainer) {
+            messagesContainer.appendChild(message);
+        }
+
+        // Animación de escritura
+        let index = 0;
+        const intervalo = setInterval(() => {
+            if (index < mensajeTexto.length) {
+                textoElem.textContent += mensajeTexto.charAt(index);
+                index++;
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            } else {
+                clearInterval(intervalo);
+
+                // Agregar imágenes si hay
+                if (disenos.length > 0 && messagesContainer) {
+                    disenos.forEach(nombreDiseno => {
+                        const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+
+                        const img = document.createElement('img');
+                        img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+                        img.alt = nombreDiseno;
+                        img.style.maxWidth = '100%';
+                        img.style.borderRadius = '8px';
+                        img.style.marginTop = '5px';
+                        img.onerror = function () {
+                            console.error(`No se pudo cargar: ${nombreArchivo}.jpg`);
+                            // Intentar cargar con el nombre original
+                            img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
+                            img.onerror = function () {
+                                this.style.display = 'none';
+                            };
+                        };
+                        img.onload = () => {
+                            if (messagesContainer) {
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }
+                        };
+                        message.appendChild(img);
+                    });
+                }
+            }
+        }, 50); // velocidad animación
+
+    } catch (error) {
+        // Asegurarse de eliminar el mensaje "pensando" en caso de error
+        removeThinkingMessage();
+
+        // Mostrar mensaje de error con animación
+        showMessageWithAnimation("Ocurrió un error al contactar la IA.", true);
+        console.error('Error en respond:', error);
+    }
+}
+
+// ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
+
+// Al hacer clic en el botón, abrir el selector de imágenes
+if (uploadButton) {
+    uploadButton.addEventListener('click', () => {
+        if (imageInput) {
+            imageInput.click();
+        }
+    });
+}
+
+// Al seleccionar una imagen
+if (imageInput) {
+    imageInput.addEventListener('change', () => {
+        const file = imageInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Imagen subida';
+                img.style.maxWidth = '100px';
+                img.style.borderRadius = '8px';
+                img.style.margin = '5px 0';
+
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('user-message', 'solo-imagen');
+                messageDiv.appendChild(img);
+
+                img.onload = function () {
+                    if (messagesContainer) {
+                        messagesContainer.appendChild(messageDiv);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                };
+
+                // Enviar imagen al backend
+                const formData = new FormData();
+                formData.append('imagen', file);
+
+                // Mostrar mensaje "pensando" para la subida de imagen
+                thinkingMessage = document.createElement('div');
+                thinkingMessage.className = 'bot-message';
+                thinkingMessage.textContent = '...';
+                if (messagesContainer) {
+                    messagesContainer.appendChild(thinkingMessage);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                fetch(`${backendUrl}/subir-imagen`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                })
+                    .then(response => {
+                        // Eliminar mensaje "pensando" después de obtener respuesta
+                        removeThinkingMessage();
+
+                        if (!response.ok) {
+                            throw new Error(`Error del servidor: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.reply) {
+                            respond(data.reply, true);
+                        } else {
+                            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
+                        }
+                    })
+                    .catch(error => {
+                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
+                        removeThinkingMessage();
+
+                        console.error("Error al subir la imagen:", error);
+                        showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
+                    });
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// ==================== FUNCIONALIDAD PARA MOVILES ====================
+
+// Función para ajustar el chatbot en dispositivos móviles
+function adjustChatbotForMobile() {
+    const chatbotBox = document.querySelector('.chatbot-box');
+    const chatbotContainer = document.querySelector('.chatbot-container');
+
+    if (!chatbotBox || !chatbotContainer) return;
+
+    // Detectar si es un dispositivo móvil
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // Asegurarse de que el chatbot esté visiblemente dentro de la pantalla
+        const viewportWidth = window.innerWidth;
+        const chatbotWidth = chatbotBox.offsetWidth;
+
+        // Si el chatbot se sale por la derecha
+        if (chatbotContainer.getBoundingClientRect().right > viewportWidth) {
+            chatbotBox.style.right = '0';
+            chatbotBox.style.left = 'auto';
+        }
+
+        // Si el chatbot se sale por la izquierda
+        if (chatbotContainer.getBoundingClientRect().left < 0) {
+            chatbotBox.style.left = '0';
+            chatbotBox.style.right = 'auto';
+        }
+    }
+}
+
+// Ejecutar al cargar y al redimensionar la ventana
+window.addEventListener('load', adjustChatbotForMobile);
+window.addEventListener('resize', adjustChatbotForMobile);
+
+// También ajustar después de abrir el chatbot
+const originalToggle = window.toggleChatbot;
+window.toggleChatbot = function () {
+    if (typeof originalToggle === 'function') {
+        originalToggle();
+    }
+    setTimeout(adjustChatbotForMobile, 100);
+};
