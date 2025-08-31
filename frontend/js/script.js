@@ -139,7 +139,7 @@ if (inputField) {
     });
 }
 
-// Función para agregar mensajes al chat
+// Modificar la función addMessage para manejar mejor las etiquetas
 function addMessage(text, sender) {
     if (!messagesContainer) return;
 
@@ -152,6 +152,7 @@ function addMessage(text, sender) {
 
     if (match) {
         const nombreDiseno = match[1].trim();
+        // Reemplazar solo la etiqueta, manteniendo el nombre en el texto si ya está presente
         const textoSinEtiqueta = text.replace(regex, '').trim();
 
         // Agregar texto sin la etiqueta
@@ -159,18 +160,27 @@ function addMessage(text, sender) {
         textoElem.textContent = textoSinEtiqueta;
         message.appendChild(textoElem);
 
-        // Agregar imagen del diseño
-        const img = document.createElement('img');
-        img.src = `${backendUrl}/static/disenos/${nombreDiseno}.jpg`;
-        img.alt = nombreDiseno;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '8px';
-        img.style.marginTop = '5px';
-        img.onerror = function () {
-            console.error(`Error al cargar la imagen: ${img.src}`);
-            this.style.display = 'none';
-        };
-        message.appendChild(img);
+        // Agregar imágenes de los diseños
+        const disenos = nombreDiseno.split(',').map(d => d.trim());
+        disenos.forEach(nombreDiseno => {
+            const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+
+            const img = document.createElement('img');
+            img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+            img.alt = nombreDiseno;
+            img.style.maxWidth = '100%';
+            img.style.borderRadius = '8px';
+            img.style.marginTop = '5px';
+            img.onerror = function () {
+                console.error(`Error al cargar la imagen: ${img.src}`);
+                // Intentar cargar la imagen con el nombre original
+                img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
+                img.onerror = function () {
+                    this.style.display = 'none';
+                };
+            };
+            message.appendChild(img);
+        });
     } else {
         const textoElem = document.createElement('span');
         textoElem.textContent = text;
@@ -264,61 +274,16 @@ async function respond(text, isDirectReply = false) {
         // Detectar todas las etiquetas [MOSTRAR_IMAGEN: ...]
         const regex = /\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/gi;
         let match;
+        let textoParaMostrar = mensajeTexto;
+
         while ((match = regex.exec(mensajeTexto)) !== null) {
-            disenos.push(match[1].trim());
-            mensajeTexto = mensajeTexto.replace(match[0], '').trim();
+            const disenosEncontrados = match[1].split(',').map(d => d.trim());
+            disenos.push(...disenosEncontrados);
+            // Mantener la etiqueta en el texto para que addMessage la procese correctamente
         }
 
-        // Crear contenedor del mensaje
-        const message = document.createElement('div');
-        message.className = 'bot-message';
-        const textoElem = document.createElement('span');
-        textoElem.textContent = '';
-        message.appendChild(textoElem);
-        if (messagesContainer) {
-            messagesContainer.appendChild(message);
-        }
-
-        // Animación de escritura
-        let index = 0;
-        const intervalo = setInterval(() => {
-            if (index < mensajeTexto.length) {
-                textoElem.textContent += mensajeTexto.charAt(index);
-                index++;
-                if (messagesContainer) {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            } else {
-                clearInterval(intervalo);
-
-                // Agregar imágenes si hay
-                if (disenos.length > 0 && messagesContainer) {
-                    disenos.forEach(grupo => {
-                        grupo.split(',').forEach(d => {
-                            const cleanName = d.trim();
-                            const normalizedName = cleanName.replace(/ /g, '_');
-
-                            const img = document.createElement('img');
-                            img.src = `${backendUrl}/imagenes/${normalizedName}.jpg`;
-                            img.alt = cleanName;
-                            img.style.maxWidth = '100%';
-                            img.style.borderRadius = '8px';
-                            img.style.marginTop = '5px';
-                            img.onerror = function () {
-                                console.error(`No se pudo cargar: ${normalizedName}.jpg`);
-                                this.style.display = 'none';
-                            };
-                            img.onload = () => {
-                                if (messagesContainer) {
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                }
-                            };
-                            message.appendChild(img);
-                        });
-                    });
-                }
-            }
-        }, 50); // velocidad animación
+        // Usar addMessage para mostrar el texto y las imágenes
+        addMessage(mensajeTexto, 'bot');
 
     } catch (error) {
         // Asegurarse de eliminar el mensaje "pensando" en caso de error
