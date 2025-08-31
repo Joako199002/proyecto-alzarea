@@ -13,3 +13,4 @@ mediapipe==0.10.14  # Cambiado a versión compatible
 #mediapipe==0.10.0
 gunicorn==20.1.0
 requests==2.31.0
+logging
