@@ -152,16 +152,17 @@ function addMessage(text, sender) {
 
     if (match) {
         const nombreDiseno = match[1].trim();
-        const textoSinEtiqueta = text.replace(regex, '').trim();
+        // Reemplazar la etiqueta con el nombre del diseño en el texto
+        const textoSinEtiqueta = text.replace(regex, nombreDiseno).trim();
 
-        // Agregar texto sin la etiqueta
+        // Agregar texto con el nombre del diseño
         const textoElem = document.createElement('span');
         textoElem.textContent = textoSinEtiqueta;
         message.appendChild(textoElem);
 
         // Agregar imagen del diseño
         const img = document.createElement('img');
-        img.src = `${backendUrl}/static/disenos/${nombreDiseno}.jpg`;
+        img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
         img.alt = nombreDiseno;
         img.style.maxWidth = '100%';
         img.style.borderRadius = '8px';

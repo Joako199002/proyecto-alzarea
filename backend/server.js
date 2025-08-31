@@ -54,6 +54,12 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // Almacenamiento simple de conversaciones (en producción usarías una base de datos)
 const conversations = new Map();
 
+// Función para procesar y formatear la respuesta de la IA
+function procesarRespuestaIA(respuesta) {
+    // Reemplazar etiquetas [MOSTRAR_IMAGEN: ...] con el nombre del diseño
+    return respuesta.replace(/\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/g, '$1');
+}
+
 app.post('/chat', async (req, res) => {
     try {
         const { mensaje, sessionId = 'default' } = req.body;
@@ -67,7 +73,7 @@ app.post('/chat', async (req, res) => {
             conversations.set(sessionId, [
                 {
                     role: "system",
-                    content: "Eres un asistente de moda útil y entusiasta para Alzárea, una marca de vestidos. Responde de manera amable y profesional. Cuando sea apropiado, sugiere diseños específicos de la marca usando la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]. Los diseños disponibles son: CENEFA, FRISO, SOPHIE, LIRIA, ALMENA, SKIRT, WEIRD."
+                    content: "Eres un asistente de moda útil y entusiasta para Alzárea, una marca de vestidos. Responde de manera amable y profesional. Cuando sea apropiado, sugiere diseños específicos de la marca usando la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]. Los diseños disponibles son: CENEFA, FRISO, SOPHIE, LIRIA, ALMENA, SKIRT, WEIRD. Asegúrate de que el nombre del diseño aparezca en el texto de respuesta, no solo en la etiqueta."
                 }
             ]);
         }
@@ -94,7 +100,10 @@ app.post('/chat', async (req, res) => {
             }
         );
 
-        const reply = response.data.choices[0].message.content;
+        let reply = response.data.choices[0].message.content;
+
+        // Procesar la respuesta para formatearla correctamente
+        reply = procesarRespuestaIA(reply);
 
         // Agregar respuesta del asistente a la conversación
         conversation.push({ role: "assistant", content: reply });
@@ -163,7 +172,7 @@ app.get('/test-groq', async (req, res) => {
         const response = await axios.post(
             'https://api.groq.com/openai/v1/chat/completions',
             {
-                model: "llama-3.3-70b-versatile",
+                model: "llama3-70b-8192",
                 messages: [{ role: "user", content: "Responde con 'OK' si funciona" }],
                 temperature: 0.7,
                 max_tokens: 10,
