@@ -12,7 +12,8 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Configuración CORS
-frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8000')
+frontend_url = os.environ.get(
+    'FRONTEND_URL', 'http://localhost:5000')  # cambiado de 8000
 CORS(app, supports_credentials=True, origins=[frontend_url])
 
 # Configuración de sesión - IMPORTANTE: Agregar esta línea
@@ -173,7 +174,7 @@ def subir_imagen():
                 'Authorization': f'Bearer {GROQ_API_KEY}',
                 'Content-Type': 'application/json'
             },
-            timeout=30
+            timeout=50000
         )
 
         response.raise_for_status()
