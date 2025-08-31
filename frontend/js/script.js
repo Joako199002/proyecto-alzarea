@@ -1,7 +1,7 @@
 // ==================== CONFIGURACIÓN DE URLS ====================
 // Determina automáticamente la URL del backend según el entorno
 const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000'
+    ? 'http://localhost:3000'
     : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
 
 // prueba produccicon
