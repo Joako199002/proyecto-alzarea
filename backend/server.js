@@ -54,6 +54,17 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // Almacenamiento simple de conversaciones (en producción usarías una base de datos)
 const conversations = new Map();
 
+// Mapeo de nombres de diseño a nombres de archivo
+const mapeoImagenes = {
+    'CENEFA': 'CENEFA',
+    'FRISO': 'FRISO_FLOWER',
+    'SOPHIE': 'SOPHIE',
+    'LIRIA': 'LIRIA_WHITE',
+    'ALMENA': 'ALMENA',
+    'SKIRT': 'SKIRT_BLACK',
+    'WEIRD': 'WEIRD'
+};
+
 app.post('/chat', async (req, res) => {
     try {
         const { mensaje, sessionId = 'default' } = req.body;
@@ -67,7 +78,7 @@ app.post('/chat', async (req, res) => {
             conversations.set(sessionId, [
                 {
                     role: "system",
-                    content: "Eres un asistente de moda útil y entusiasta para Alzárea, una marca de vestidos. Responde de manera amable y profesional. Cuando sea apropiado, sugiere diseños específicos de la marca usando la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]. Los diseños disponibles son: CENEFA, FRISO, SOPHIE, LIRIA, ALMENA, SKIRT, WEIRD."
+                    content: "Eres un asistente de moda útil y entusiasta para Alzárea, una marca de vestidos. Responde de manera amable y profesional. Cuando sea apropiado, sugiere diseños específicos de la marca usando la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]. Los diseños disponibles son: CENEFA, FRISO, SOPHIE, LIRIA, ALMENA, SKIRT, WEIRD. Asegúrate de mencionar el nombre del diseño en el texto antes de usar la etiqueta."
                 }
             ]);
         }
@@ -121,6 +132,21 @@ app.post('/reiniciar', (req, res) => {
     res.json({ message: 'Conversación reiniciada' });
 });
 
+// Ruta para obtener la URL de una imagen de diseño
+app.get('/imagen-diseno/:nombre', (req, res) => {
+    const { nombre } = req.params;
+    const nombreArchivo = mapeoImagenes[nombre.toUpperCase()];
+
+    if (!nombreArchivo) {
+        return res.status(404).json({ error: 'Diseño no encontrado' });
+    }
+
+    res.json({
+        url: `${req.protocol}://${req.get('host')}/imagenes/${nombreArchivo}.jpg`,
+        nombre: nombre
+    });
+});
+
 // Ruta para subir imágenes (si decides implementarlo después)
 app.post('/subir-imagen', (req, res) => {
     res.status(501).json({ error: 'Funcionalidad de imágenes no implementada aún' });
@@ -129,7 +155,7 @@ app.post('/subir-imagen', (req, res) => {
 // Usar el puerto proporcionado por Railway o 3000 por defecto
 const PORT = process.env.PORT || 3000;
 
-// Asegurarse de escuchar en todas las interfaces de red
+// Crear servidor HTTP en lugar de usar app.listen directamente
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`=================================`);
     console.log(`Servidor ejecutándose en puerto ${PORT}`);
@@ -139,23 +165,32 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 });
 
 // Manejar cierre graceful
-process.on('SIGTERM', () => {
-    console.log('Recibió SIGTERM. Cerrando servidor gracefully.');
+const shutdown = (signal) => {
+    console.log(`Recibió ${signal}. Cerrando servidor gracefully.`);
     server.close(() => {
         console.log('Servidor cerrado.');
         process.exit(0);
     });
-});
+
+    // Forzar cierre después de 10 segundos
+    setTimeout(() => {
+        console.error('Forzando cierre después de timeout');
+        process.exit(1);
+    }, 10000);
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 
 // Manejar errores no capturados
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
-    process.exit(1);
+    shutdown('uncaughtException');
 });
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    process.exit(1);
+    shutdown('unhandledRejection');
 });
 
 app.get('/test-groq', async (req, res) => {
