@@ -104,6 +104,10 @@ con el entorno.
 Base de vestidos y colores disponibles:
 ${vestidosFormateados}
 
+IMPORTANTE ABSOLUTO: Cuando menciones cualquier vestido de nuestra colección, DEBES incluir al final de la descripción la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO].
+Ejemplo:
+"Te recomiendo nuestro vestido CENEFA, es elegante con detalles únicos [MOSTRAR_IMAGEN: CENEFA]"
+
 IMPORTANTE: Cuando hagas la recomendación de una prenda (paso 7), al final de la descripción incluye una línea así:
 [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]
 Ejemplo:
@@ -120,6 +124,9 @@ Nunca uses frases genéricas como "hecho con amor". Enfócate en:
 Asegurate de saber siempre si es un invitado o quien celebra el evento
 Asegúrate de recibir una respuesta coherente a cada pregunta, si no es así vuelve a preguntar. 
 Haz solo una pregunta a la vez.
+
+IMPORTANTE: Si el usuario te pide ver la imagen de un vestido, DEBES incluir inmediatamente la etiqueta [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO] en tu respuesta.
+
 El flujo que seguiras será:
 
 1.- Presentación (solo al inicio de la conversacion) usando:
@@ -144,7 +151,7 @@ Si el usuario no sube una imagen dale una alterntviva, algo como:
 "Sin imagen también puedo ayudarte: me podrías describir tu color de piel, ojos, cabello, altura, y vamos construyendo desde ahí."
 
 4.- Después de analizar la imagen debes preguntar por la información del evento, tipo de evento, fecha y ubicacion, tipo de lugar o espacio, y cualquier dato
-que consideres necesario para ofrecer la mejor recomendación. Haz la pregunta de manera orgánica, no como un bot cualquiera, recuerda que eres
+que consideres necesario para ofrecer la mejor recomendación. Haz la pregunta de manera orgánica, no como a bot cualquiera, recuerda que eres
 un asistente de un Atelier exclusivo
 
 5.- Después de que el usuario responda al punto 4 pregunta por el estilo que le gusta y si hay algunas partes de su cuerpo que prefiere resaltar
@@ -225,7 +232,28 @@ app.post('/chat', async (req, res) => {
             }
         );
 
-        const reply = response.data.choices[0].message.content;
+        // Obtener la respuesta de la IA
+        let reply = response.data.choices[0].message.content;
+
+        // Verificar si se menciona un vestido pero no se incluye la etiqueta
+        const nombresVestidos = ['CENEFA', 'FRISO', 'SOPHIE', 'LIRIA', 'ALMENA', 'SKIRT', 'WEIRD'];
+
+        // Solo agregar la etiqueta si no está presente y si se menciona algún vestido
+        if (!reply.includes('[MOSTRAR_IMAGEN:')) {
+            const vestidosMencionados = nombresVestidos.filter(vestido =>
+                reply.includes(vestido) && !reply.includes(`[MOSTRAR_IMAGEN: ${vestido}]`)
+            );
+
+            if (vestidosMencionados.length > 0) {
+                // Si se mencionan SOPHIE y LIRIA, agregarlos juntos
+                if (vestidosMencionados.includes('SOPHIE') && vestidosMencionados.includes('LIRIA')) {
+                    reply += ` [MOSTRAR_IMAGEN: SOPHIE, LIRIA]`;
+                } else {
+                    // Agregar todos los vestidos mencionados, separados por comas
+                    reply += ` [MOSTRAR_IMAGEN: ${vestidosMencionados.join(', ')}]`;
+                }
+            }
+        }
 
         // Agregar respuesta del asistente a la conversación
         conversation.push({ role: "assistant", content: reply });
