@@ -8,24 +8,18 @@ import re
 import time
 from pathlib import Path
 
-# ==================== CONFIGURACIÓN DE FLASK (DE APP_V3.PY) ====================
-# Crear directorio para sesiones si no existe
+# ==================== CONFIGURACIÓN DE FLASK ====================
 session_dir = Path('./flask_session')
 session_dir.mkdir(exist_ok=True)
 
-# Configuración del directorio de sesiones
 if os.environ.get('RAILWAY_ENVIRONMENT'):
-    # En Railway, usa el directorio temporal
     session_dir = Path('/tmp/flask_session')
 else:
-    # En desarrollo, usa directorio local
     session_dir = Path('./flask_session')
 
 session_dir.mkdir(exist_ok=True, parents=True)
 
 app = Flask(__name__)
-
-# Configuración básica de la aplicación
 app.secret_key = os.environ.get('SECRET_KEY', 'clave-secreta-desarrollo')
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = str(session_dir)
@@ -43,11 +37,9 @@ frontend_urls = [
 ]
 CORS(app, supports_credentials=True, origins=frontend_urls)
 
-# Inicializar Flask-Session
 Session(app)
 
-# ==================== COMPORTAMIENTO DEL CHATBOT (DE APP.PY) ====================
-# Carga la base de vestidos
+# ==================== COMPORTAMIENTO DEL CHATBOT ====================
 base_vestidos = pd.read_excel('base_vestidos.xlsx')
 vestidos_formateados = "\n\n".join([
     f"DISEÑO: {row['DISEÑO']}\nDESCRIPCIÓN: {row['DESCRIPCION']}\nCOLORES: {row['COLORES']}\nMATERIAL: {row['MATERIAL']}\nORIGEN: {row['ORIGEN']}\nIMAGEN: {row['IMAGEN']}"
@@ -152,17 +144,13 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
 
 
 def limpiar_respuesta(respuesta):
-    """Limpia la respuesta para eliminar múltiples preguntas (de app_v3.py)"""
-    # Buscar todas las preguntas en la respuesta
+    """Limpia la respuesta para eliminar múltiples preguntas"""
     preguntas = re.findall(r'[^.!?]*\?', respuesta)
 
     if len(preguntas) > 1:
-        # Conservar solo la primera pregunta y el texto hasta ella
         primera_pregunta = preguntas[0]
         indice = respuesta.find(primera_pregunta) + len(primera_pregunta)
         respuesta = respuesta[:indice].strip()
-
-        # Añadir instrucción para responder una pregunta a la vez
         respuesta += " Por favor, respóndeme esta pregunta primero."
 
     return respuesta
@@ -202,29 +190,35 @@ def chat():
         # Agregar prompt del sistema solo al inicio
         session['historial'].append(
             {"role": "system", "content": construir_prompt()})
+        # Forzar la escritura de la sesión
+        session.modified = True
 
     # Agregar características físicas si están disponibles y aún no se han incluido
     caracteristicas = session.get('caracteristicas_usuario')
     historial = session['historial']
 
-    if caracteristicas and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+    if caracteristicas and not any("Características físicas detectadas" in h.get("content", "") for h in historial if h.get("role") == "system"):
         descripcion = ", ".join(
             [f"{k}: {v}" for k, v in caracteristicas.items()])
         historial.append({
             "role": "system",
             "content": f"Características físicas detectadas del usuario: {descripcion}"
         })
+        session.modified = True
 
     # Agregar mensaje del usuario al historial
     historial.append({"role": "user", "content": mensaje_usuario})
+    session.modified = True
 
     # Limitar el historial para no exceder el límite de tokens
     if len(historial) > 20:
         # Mantener el primer mensaje (system) y los últimos 19 mensajes
         historial = [historial[0]] + historial[-19:]
+        session['historial'] = historial
+        session.modified = True
 
     try:
-        # Llamada directa a la API de Groq (de app_v3.py)
+        # Llamada directa a la API de Groq
         GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
         if not GROQ_API_KEY:
             return jsonify({"reply": "Error de configuración del servidor. Por favor, contacta al administrador."}), 500
@@ -234,9 +228,9 @@ def chat():
             json={
                 "model": "llama-3.3-70b-versatile",
                 "messages": historial,
-                "temperature": 0.7,  # Ajustado según app.py
-                "max_tokens": 1024,  # Ajustado según app.py
-                "top_p": 1,  # Ajustado según app.py
+                "temperature": 0.7,
+                "max_tokens": 1024,
+                "top_p": 1,
                 "stop": None
             },
             headers={
@@ -257,12 +251,13 @@ def chat():
         if not respuesta_ia:
             return jsonify({"reply": "No recibí una respuesta válida. Por favor, intenta de nuevo."}), 200
 
-        # Limpiar la respuesta para eliminar múltiples preguntas (de app_v3.py)
+        # Limpiar la respuesta para eliminar múltiples preguntas
         respuesta_ia = limpiar_respuesta(respuesta_ia)
 
         # Agregar respuesta al historial
         historial.append({"role": "assistant", "content": respuesta_ia})
         session['historial'] = historial
+        session.modified = True
 
         return jsonify({"reply": respuesta_ia})
 
@@ -285,7 +280,7 @@ def subir_imagen():
     imagen = request.files['imagen']
 
     try:
-        # Simular análisis de imagen (reemplazar con tu lógica real)
+        # Simular análisis de imagen
         resultados = {
             "Silueta": "Media",
             "Piel": "Clara",
@@ -296,6 +291,7 @@ def subir_imagen():
 
         # Guardar características en la sesión
         session['caracteristicas_usuario'] = resultados
+        session.modified = True
 
         # Agregar características al historial si no están ya
         if 'historial' in session:
@@ -310,10 +306,12 @@ def subir_imagen():
                     "role": "system",
                     "content": f"Características físicas detectadas del usuario: {descripcion}"
                 })
+                session.modified = True
 
         # Simular un mensaje del usuario para que la IA continúe el flujo
         session['historial'].append(
             {"role": "user", "content": "Ya subí mi imagen"})
+        session.modified = True
 
         # Llamar a Groq para obtener respuesta después de subir la imagen
         GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
@@ -340,6 +338,7 @@ def subir_imagen():
         if respuesta_ia:
             session['historial'].append(
                 {"role": "assistant", "content": respuesta_ia})
+            session.modified = True
             return jsonify({
                 "reply": respuesta_ia,
                 "caracteristicas": resultados
@@ -353,8 +352,6 @@ def subir_imagen():
     except Exception as e:
         print(f"Error al procesar imagen: {str(e)}")
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla. ¿Podrías intentar con otra imagen?"})
-
-# Servir imágenes de vestidos
 
 
 @app.route('/imagenes/<path:filename>')
