@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import os
-# from groq import Groq
+from groq import Groq
 
 app = Flask(__name__)
 CORS(app)  # Permitir solicitudes desde tu frontend
