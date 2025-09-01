@@ -1,15 +1,23 @@
-FROM python:3.9.18
+FROM python:3.9.18-slim-bullseye
 
 WORKDIR /app
 
+# Instalar dependencias del sistema que puedan ser necesarias
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Usar el puerto que Railway asigna (por defecto 8080)
 ENV PORT=8080
 EXPOSE $PORT
 
-# Especificar explícitamente que use app.py y la variable app
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
