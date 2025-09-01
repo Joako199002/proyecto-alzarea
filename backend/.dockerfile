@@ -7,6 +7,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 3000
+# Usar el puerto que Railway asigna (por defecto 8080)
+ENV PORT=8080
+EXPOSE $PORT
 
-CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app"]
+# Especificar explícitamente que use app.py y la variable app
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT app:app"]
