@@ -235,29 +235,33 @@ app.post('/chat', async (req, res) => {
         // Obtener la respuesta de la IA
         let reply = response.data.choices[0].message.content;
 
-        // Verificar si se menciona un vestido pero no se incluye la etiqueta
+        // Verificación mejorada para incluir etiquetas de imagen
         const nombresVestidos = ['CENEFA', 'FRISO', 'SOPHIE', 'LIRIA', 'ALMENA', 'SKIRT', 'WEIRD'];
+        const replyUpper = reply.toUpperCase();
 
-        // Solo agregar la etiqueta si no está presente y si se menciona algún vestido
-        if (!reply.includes('[MOSTRAR_IMAGEN:')) {
-            const vestidosMencionados = nombresVestidos.filter(vestido =>
-                reply.includes(vestido) && !reply.includes(`[MOSTRAR_IMAGEN: ${vestido}]`)
-            );
+        // Buscar vestidos mencionados (case-insensitive)
+        const vestidosMencionados = nombresVestidos.filter(vestido =>
+            replyUpper.includes(vestido.toUpperCase())
+        );
 
-            if (vestidosMencionados.length > 0) {
-                // Si se mencionan SOPHIE y LIRIA, agregarlos juntos
-                if (vestidosMencionados.includes('SOPHIE') && vestidosMencionados.includes('LIRIA')) {
-                    reply += ` [MOSTRAR_IMAGEN: SOPHIE, LIRIA]`;
-                } else {
-                    // Agregar todos los vestidos mencionados, separados por comas
-                    reply += ` [MOSTRAR_IMAGEN: ${vestidosMencionados.join(', ')}]`;
-                }
+        // Si se mencionaron vestidos pero no hay etiqueta, agregarla
+        if (vestidosMencionados.length > 0 && !reply.includes('[MOSTRAR_IMAGEN:')) {
+            // SOPHIE y LIRIA siempre juntos
+            const tieneSophie = vestidosMencionados.includes('SOPHIE');
+            const tieneLiria = vestidosMencionados.includes('LIRIA');
+
+            if (tieneSophie && tieneLiria) {
+                reply += ` [MOSTRAR_IMAGEN: SOPHIE, LIRIA]`;
+            } else {
+                // Agregar todos los vestidos mencionados
+                reply += ` [MOSTRAR_IMAGEN: ${vestidosMencionados.join(', ')}]`;
             }
+
+            console.log('Etiqueta de imagen agregada automáticamente');
         }
 
         // Agregar respuesta del asistente a la conversación
         conversation.push({ role: "assistant", content: reply });
-
         // Actualizar el estado según la respuesta
         if (reply.includes("¿Cómo te llamas?") || reply.includes("nombre")) {
             userState.step = 2; // Esperando nombre

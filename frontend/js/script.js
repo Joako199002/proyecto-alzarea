@@ -2,7 +2,18 @@
 // Determina automáticamente la URL del backend según el entorno
 const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : 'https://proyecto-alzarea-production.up.railway.app'; // Reemplaza con tu URL real de Railway
+    : 'https://proyecto-alzarea-production.up.railway.app';
+
+// Mapeo de nombres de diseño a nombres de archivo (actualizado)
+const mapeoImagenes = {
+    'CENEFA': 'CENEFA',
+    'FRISO': 'FRISO_FLOWER',
+    'SOPHIE': 'SOPHIE',
+    'LIRIA': 'LIRIA_WHITE',
+    'ALMENA': 'ALMENA',
+    'SKIRT': 'SKIRT_BLACK',
+    'WEIRD': 'WEIRD'
+};
 
 // Función para verificar el estado del backend
 async function checkBackendHealth() {
@@ -16,8 +27,6 @@ async function checkBackendHealth() {
         return false;
     }
 }
-
-// prueba produccicon
 
 let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
 
@@ -171,14 +180,58 @@ function addMessage(text, sender) {
             img.style.maxWidth = '100%';
             img.style.borderRadius = '8px';
             img.style.marginTop = '5px';
+
+            // Mejor manejo de errores para imágenes
             img.onerror = function () {
                 console.error(`Error al cargar la imagen: ${img.src}`);
-                // Intentar cargar la imagen con el nombre original
-                img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
-                img.onerror = function () {
-                    this.style.display = 'none';
+
+                // Intentar cargar con diferentes extensiones y nombres
+                const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+                const alternativeNames = {
+                    'FRISO': ['FRISO_FLOWER', 'FRISO'],
+                    'LIRIA': ['LIRIA_WHITE', 'LIRIA'],
+                    'SKIRT': ['SKIRT_BLACK', 'SKIRT']
                 };
+
+                let currentAttempt = 0;
+                const tryNextImage = () => {
+                    if (currentAttempt < extensions.length * 2) {
+                        const attemptType = currentAttempt % 2;
+                        const extIndex = Math.floor(currentAttempt / 2);
+
+                        let newSrc;
+                        if (attemptType === 0 && alternativeNames[nombreDiseno]) {
+                            // Intentar con nombres alternativos
+                            newSrc = `${backendUrl}/imagenes/${alternativeNames[nombreDiseno][0]}${extensions[extIndex]}`;
+                        } else {
+                            // Intentar con el nombre original
+                            newSrc = `${backendUrl}/imagenes/${nombreDiseno}${extensions[extIndex]}`;
+                        }
+
+                        currentAttempt++;
+                        console.log(`Intentando cargar: ${newSrc}`);
+                        img.src = newSrc;
+                    } else {
+                        this.style.display = 'none';
+                        // Mostrar mensaje al usuario
+                        const errorMsg = document.createElement('div');
+                        errorMsg.textContent = `No se pudo cargar la imagen de ${nombreDiseno}`;
+                        errorMsg.style.color = '#d32f2f';
+                        errorMsg.style.marginTop = '5px';
+                        errorMsg.style.fontSize = '0.9em';
+                        message.appendChild(errorMsg);
+                    }
+                };
+
+                tryNextImage();
             };
+
+            // Agregar logging para diagnóstico
+            console.log(`Intentando cargar imagen: ${img.src}`);
+            img.onload = function () {
+                console.log(`Imagen cargada correctamente: ${img.src}`);
+            };
+
             message.appendChild(img);
         });
     } else {
@@ -190,6 +243,7 @@ function addMessage(text, sender) {
     messagesContainer.appendChild(message);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
+
 // Función para eliminar el mensaje "pensando" si existe
 function removeThinkingMessage() {
     if (thinkingMessage && thinkingMessage.parentNode === messagesContainer) {
@@ -235,19 +289,61 @@ function showMessageWithAnimation(messageText, isError = false, disenos = []) {
                     img.style.maxWidth = '100%';
                     img.style.borderRadius = '8px';
                     img.style.marginTop = '5px';
+
+                    // Mejor manejo de errores para imágenes
                     img.onerror = function () {
                         console.error(`No se pudo cargar: ${nombreArchivo}.jpg`);
-                        // Intentar cargar con el nombre original
-                        img.src = `${backendUrl}/imagenes/${nombreDiseno}.jpg`;
-                        img.onerror = function () {
-                            this.style.display = 'none';
+
+                        // Intentar cargar con diferentes extensiones y nombres
+                        const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+                        const alternativeNames = {
+                            'FRISO': ['FRISO_FLOWER', 'FRISO'],
+                            'LIRIA': ['LIRIA_WHITE', 'LIRIA'],
+                            'SKIRT': ['SKIRT_BLACK', 'SKIRT']
                         };
+
+                        let currentAttempt = 0;
+                        const tryNextImage = () => {
+                            if (currentAttempt < extensions.length * 2) {
+                                const attemptType = currentAttempt % 2;
+                                const extIndex = Math.floor(currentAttempt / 2);
+
+                                let newSrc;
+                                if (attemptType === 0 && alternativeNames[nombreDiseno]) {
+                                    // Intentar con nombres alternativos
+                                    newSrc = `${backendUrl}/imagenes/${alternativeNames[nombreDiseno][0]}${extensions[extIndex]}`;
+                                } else {
+                                    // Intentar con el nombre original
+                                    newSrc = `${backendUrl}/imagenes/${nombreDiseno}${extensions[extIndex]}`;
+                                }
+
+                                currentAttempt++;
+                                console.log(`Intentando cargar: ${newSrc}`);
+                                img.src = newSrc;
+                            } else {
+                                this.style.display = 'none';
+                                // Mostrar mensaje al usuario
+                                const errorMsg = document.createElement('div');
+                                errorMsg.textContent = `No se pudo cargar la imagen de ${nombreDiseno}`;
+                                errorMsg.style.color = '#d32f2f';
+                                errorMsg.style.marginTop = '5px';
+                                errorMsg.style.fontSize = '0.9em';
+                                message.appendChild(errorMsg);
+                            }
+                        };
+
+                        tryNextImage();
                     };
-                    img.onload = () => {
+
+                    // Agregar logging para diagnóstico
+                    console.log(`Intentando cargar imagen: ${img.src}`);
+                    img.onload = function () {
+                        console.log(`Imagen cargada correctamente: ${img.src}`);
                         if (messagesContainer) {
                             messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         }
                     };
+
                     message.appendChild(img);
                 });
             }
@@ -318,96 +414,35 @@ async function respond(text, isDirectReply = false) {
         // Asegurarse de eliminar el mensaje "pensando" en caso de error
         removeThinkingMessage();
 
-        // Mostrar mensaje de error con animación
-        showMessageWithAnimation("Ocurrió un error al contactar la IA.", true);
+        // Mostrar mensaje de error más específico
+        if (error.message.includes('Failed to fetch')) {
+            showMessageWithAnimation("Error de conexión con el servidor. Por favor, intenta nuevamente.", true);
+        } else {
+            showMessageWithAnimation("Ocurrió un error al procesar tu solicitud.", true);
+        }
+
         console.error('Error en respond:', error);
     }
 }
 
 // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
 
-// Al hacer clic en el botón, abrir el selector de imágenes
+// Deshabilitar temporalmente la subida de imágenes
 if (uploadButton) {
     uploadButton.addEventListener('click', () => {
-        if (imageInput) {
-            imageInput.click();
-        }
+        // Mostrar mensaje de que la función no está disponible
+        showMessageWithAnimation("La función de subir imágenes no está disponible temporalmente. Por favor, describe tu apariencia con texto.", true);
     });
 }
 
-// Al seleccionar una imagen
+// Comentar el evento change para imageInput para deshabilitar la subida
+/*
 if (imageInput) {
     imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Imagen subida';
-                img.style.maxWidth = '100px';
-                img.style.borderRadius = '8px';
-                img.style.margin = '5px 0';
-
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('user-message', 'solo-imagen');
-                messageDiv.appendChild(img);
-
-                img.onload = function () {
-                    if (messagesContainer) {
-                        messagesContainer.appendChild(messageDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                };
-
-                // Enviar imagen al backend
-                const formData = new FormData();
-                formData.append('imagen', file);
-
-                // Mostrar mensaje "pensando" para la subida de imagen
-                thinkingMessage = document.createElement('div');
-                thinkingMessage.className = 'bot-message';
-                thinkingMessage.textContent = '...';
-                if (messagesContainer) {
-                    messagesContainer.appendChild(thinkingMessage);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-
-                fetch(`${backendUrl}/subir-imagen`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                })
-                    .then(response => {
-                        // Eliminar mensaje "pensando" después de obtener respuesta
-                        removeThinkingMessage();
-
-                        if (!response.ok) {
-                            throw new Error(`Error del servidor: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.reply) {
-                            respond(data.reply, true);
-                        } else {
-                            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
-                        }
-                    })
-                    .catch(error => {
-                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
-                        removeThinkingMessage();
-
-                        console.error("Error al subir la imagen:", error);
-                        showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
-                    });
-            };
-
-            reader.readAsDataURL(file);
-        }
+        // Código comentado para deshabilitar la subida de imágenes
     });
 }
+*/
 
 // ==================== FUNCIONALIDAD PARA MOVILES ====================
 
