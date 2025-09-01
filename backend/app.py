@@ -266,11 +266,6 @@ def health_check():
     return jsonify({"status": "ok", "message": "Servidor funcionando correctamente"})
 
 
-@app.route('/')
-def home():
-    return jsonify({"message": "Backend de Alzárea funcionando correctamente"}), 200
-
-
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
