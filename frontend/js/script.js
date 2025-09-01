@@ -28,7 +28,12 @@ async function checkBackendHealth() {
     }
 }
 
-let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+// let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+let sessionId = localStorage.getItem('chatbot_session_id');
+if (!sessionId) {
+    sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('chatbot_session_id', sessionId);
+}
 
 // ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
@@ -396,6 +401,31 @@ async function respond(text, isDirectReply = false) {
 
         console.error('Error en respond:', error);
     }
+}
+
+// Agrega una función para reiniciar la conversación si es necesario
+function reiniciarConversacion() {
+    fetch(`${backendUrl}/reiniciar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionId })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Conversación reiniciada:', data);
+            // Limpiar el chat visualmente
+            if (messagesContainer) {
+                messagesContainer.innerHTML = '';
+                // Agregar mensaje inicial
+                const initialMessage = document.createElement('div');
+                initialMessage.className = 'bot-message';
+                initialMessage.textContent = 'Hola, soy Alzárea ¿Lista para una experiencia de moda?';
+                messagesContainer.appendChild(initialMessage);
+            }
+        })
+        .catch(error => {
+            console.error('Error al reiniciar la conversación:', error);
+        });
 }
 
 // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================

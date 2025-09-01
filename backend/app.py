@@ -6,6 +6,8 @@ import os
 import pandas as pd
 import numpy as np
 from groq import Groq
+from collections import deque
+import time
 
 app = Flask(__name__)
 CORS(app)  # Permitir solicitudes desde tu frontend
@@ -13,6 +15,12 @@ CORS(app)  # Permitir solicitudes desde tu frontend
 # Configuración de Groq
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
+
+# Diccionario para almacenar historiales de conversación por sesión
+conversation_histories = {}
+
+# Tiempo de expiración para las sesiones (24 horas)
+SESSION_EXPIRY = 24 * 60 * 60
 
 # Carga la base de vestidos solo una vez al iniciar la app
 try:
@@ -115,9 +123,21 @@ una agenda disponible para que uno de nuestros expertos se contacte y juntos pue
 
 10.- Para finalizar usa una linea como:
 
-"Todo lo que te propuse forma parte de nuestra colección cápsula. If quieres algo aún más personalizado, también puedo agendarte una
-cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde cero, exclusivamente para ti."
+"Todo lo que te propuso forma parte de nuestra colección cápsula. Si quieres algo aún más personalizado, también puedo agendarte una
+cita y podemos hacer los ajustes que necesites o podemos diseñarte algo desde cero, exclusivamente para ti."
 """
+
+
+def cleanup_expired_sessions():
+    """Elimina sesiones expiradas para evitar acumulación de memoria"""
+    current_time = time.time()
+    expired_sessions = [
+        session_id for session_id, data in conversation_histories.items()
+        if current_time - data['last_activity'] > SESSION_EXPIRY
+    ]
+
+    for session_id in expired_sessions:
+        del conversation_histories[session_id]
 
 
 @app.route('/chat', methods=['POST'])
@@ -126,19 +146,48 @@ def chat():
     user_message = data.get('mensaje')
     session_id = data.get('sessionId', 'default_session')
 
+    # Limpiar sesiones expiradas periódicamente
+    if len(conversation_histories) > 100:  # Limpiar solo cuando hay muchas sesiones
+        cleanup_expired_sessions()
+
     try:
-        # Llamar a la API de Groq con el prompt personalizado
+        # Inicializar o recuperar el historial de conversación para esta sesión
+        if session_id not in conversation_histories:
+            conversation_histories[session_id] = {
+                'messages': [],
+                'last_activity': time.time(),
+                'has_introduced': False
+            }
+        else:
+            conversation_histories[session_id]['last_activity'] = time.time()
+
+        # Verificar si ya nos hemos presentado en esta conversación
+        has_introduced = conversation_histories[session_id]['has_introduced']
+
+        # Preparar los mensajes para la API de Groq
+        messages_for_api = []
+
+        # Solo incluir el prompt del sistema si es el primer mensaje
+        if not has_introduced:
+            messages_for_api.append({
+                "role": "system",
+                "content": system_prompt
+            })
+            conversation_histories[session_id]['has_introduced'] = True
+        else:
+            # Para mensajes subsiguientes, incluir solo el historial de la conversación
+            messages_for_api.extend(
+                conversation_histories[session_id]['messages'])
+
+        # Agregar el nuevo mensaje del usuario
+        messages_for_api.append({
+            "role": "user",
+            "content": user_message
+        })
+
+        # Llamar a la API de Groq
         chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": system_prompt
-                },
-                {
-                    "role": "user",
-                    "content": user_message
-                }
-            ],
+            messages=messages_for_api,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
             max_tokens=1024,
@@ -148,6 +197,21 @@ def chat():
         )
 
         response = chat_completion.choices[0].message.content
+
+        # Guardar la conversación en el historial (solo los últimos 10 intercambios)
+        conversation_histories[session_id]['messages'].append({
+            "role": "user",
+            "content": user_message
+        })
+        conversation_histories[session_id]['messages'].append({
+            "role": "assistant",
+            "content": response
+        })
+
+        # Limitar el historial a los últimos 10 intercambios para no exceder el límite de tokens
+        # 10 preguntas + 10 respuestas
+        if len(conversation_histories[session_id]['messages']) > 20:
+            conversation_histories[session_id]['messages'] = conversation_histories[session_id]['messages'][-20:]
 
         return jsonify({
             "reply": response,
@@ -160,6 +224,18 @@ def chat():
             "reply": "Lo siento, estoy teniendo dificultades técnicas. Por favor, intenta de nuevo más tarde.",
             "sessionId": session_id
         }), 500
+
+
+@app.route('/reiniciar', methods=['POST'])
+def reiniciar():
+    """Reinicia la conversación para una sesión específica"""
+    data = request.json
+    session_id = data.get('sessionId', 'default_session')
+
+    if session_id in conversation_histories:
+        del conversation_histories[session_id]
+
+    return jsonify({"status": "ok", "message": "Conversación reiniciada"})
 
 
 @app.route('/health', methods=['GET'])
