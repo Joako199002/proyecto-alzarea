@@ -143,29 +143,29 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
     return prompt
 
 
-def limpiar_respuesta(respuesta):
-    """Limpia la respuesta para eliminar múltiples preguntas"""
-    preguntas = re.findall(r'[^.!?]*\?', respuesta)
+# def limpiar_respuesta(respuesta):
+#     """Limpia la respuesta para eliminar múltiples preguntas"""
+#     preguntas = re.findall(r'[^.!?]*\?', respuesta)
 
-    if len(preguntas) > 1:
-        primera_pregunta = preguntas[0]
-        indice = respuesta.find(primera_pregunta) + len(primera_pregunta)
-        respuesta = respuesta[:indice].strip()
-        respuesta += " Por favor, respóndeme esta pregunta primero."
+#     if len(preguntas) > 1:
+#         primera_pregunta = preguntas[0]
+#         indice = respuesta.find(primera_pregunta) + len(primera_pregunta)
+#         respuesta = respuesta[:indice].strip()
+#         respuesta += " Por favor, respóndeme esta pregunta primero."
 
-    return respuesta
+#     return respuesta
 
 
-@app.route('/')
-def home():
-    return jsonify({
-        "message": "Backend de Alzárea funcionando correctamente",
-        "endpoints": {
-            "health": "/health",
-            "chat": "/chat",
-            "reiniciar": "/reiniciar"
-        }
-    }), 200
+# @app.route('/')
+# def home():
+#     return jsonify({
+#         "message": "Backend de Alzárea funcionando correctamente",
+#         "endpoints": {
+#             "health": "/health",
+#             "chat": "/chat",
+#             "reiniciar": "/reiniciar"
+#         }
+#     }), 200
 
 
 @app.route('/reiniciar', methods=['POST'])
@@ -210,12 +210,12 @@ def chat():
     historial.append({"role": "user", "content": mensaje_usuario})
     session.modified = True
 
-    # Limitar el historial para no exceder el límite de tokens
-    if len(historial) > 20:
-        # Mantener el primer mensaje (system) y los últimos 19 mensajes
-        historial = [historial[0]] + historial[-19:]
-        session['historial'] = historial
-        session.modified = True
+    # # Limitar el historial para no exceder el límite de tokens
+    # if len(historial) > 20:
+    #     # Mantener el primer mensaje (system) y los últimos 19 mensajes
+    #     historial = [historial[0]] + historial[-19:]
+    #     session['historial'] = historial
+    #     session.modified = True
 
     try:
         # Llamada directa a la API de Groq
@@ -251,8 +251,8 @@ def chat():
         if not respuesta_ia:
             return jsonify({"reply": "No recibí una respuesta válida. Por favor, intenta de nuevo."}), 200
 
-        # Limpiar la respuesta para eliminar múltiples preguntas
-        respuesta_ia = limpiar_respuesta(respuesta_ia)
+        # # Limpiar la respuesta para eliminar múltiples preguntas
+        # respuesta_ia = limpiar_respuesta(respuesta_ia)
 
         # Agregar respuesta al historial
         historial.append({"role": "assistant", "content": respuesta_ia})
