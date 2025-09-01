@@ -122,6 +122,18 @@ def limpiar_respuesta(respuesta):
     return respuesta
 
 
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "Backend de Alzárea funcionando correctamente",
+        "endpoints": {
+            "health": "/health",
+            "chat": "/chat",
+            "reiniciar": "/reiniciar"
+        }
+    }), 200
+
+
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
     session.clear()
