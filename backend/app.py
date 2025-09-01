@@ -168,10 +168,10 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
 #     }), 200
 
 
-@app.route('/reiniciar', methods=['POST'])
-def reiniciar_historial():
-    session.clear()
-    return jsonify({"status": "ok", "message": "Conversación reiniciada"})
+# @app.route('/reiniciar', methods=['POST'])
+# def reiniciar_historial():
+#     session.clear()
+#     return jsonify({"status": "ok", "message": "Conversación reiniciada"})
 
 
 @app.route('/chat', methods=['POST'])
