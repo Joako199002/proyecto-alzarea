@@ -25,7 +25,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hora de vida de sesión
 
 # Configuración CORS
-frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8000')
+frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8080')
 CORS(app, supports_credentials=True, origins=[frontend_url])
 
 # Inicializar extensión de sesiones
@@ -244,5 +244,5 @@ def health_check():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
