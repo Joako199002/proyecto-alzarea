@@ -6,13 +6,24 @@ import pandas as pd
 import requests
 import re
 import time
+from pathlib import Path
+
+# Configuración del directorio de sesiones
+if os.environ.get('RAILWAY_ENVIRONMENT'):
+    # En Railway, usa el directorio temporal
+    session_dir = Path('/tmp/flask_session')
+else:
+    # En desarrollo, usa directorio local
+    session_dir = Path('./flask_session')
+
+session_dir.mkdir(exist_ok=True, parents=True)
 
 app = Flask(__name__)
 
 # Configuración básica de la aplicación
 app.secret_key = os.environ.get('SECRET_KEY', 'clave-secreta-desarrollo')
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_FILE_DIR'] = './flask_session'
+app.config['SESSION_FILE_DIR'] = str(session_dir)
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
