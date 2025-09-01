@@ -350,6 +350,7 @@ async function respond(text, isDirectReply = false) {
             const response = await fetch(`${backendUrl}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include", // Permite creedenciales del backend
                 body: JSON.stringify({
                     mensaje: text,
                     sessionId: sessionId

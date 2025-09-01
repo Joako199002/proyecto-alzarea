@@ -35,9 +35,12 @@ app.config['SESSION_COOKIE_SECURE'] = os.environ.get(
     'FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-# Configuración CORS
-frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:8000')
-CORS(app, supports_credentials=True, origins=[frontend_url])
+frontend_urls = [
+    'http://localhost:8000',
+    'https://proyecto-alzarea.netlify.app',
+    'https://proyecto-alzarea-production.up.railway.app'
+]
+CORS(app, supports_credentials=True, origins=frontend_urls)
 
 # Inicializar Flask-Session
 Session(app)
