@@ -8,6 +8,10 @@ import re
 import time
 from pathlib import Path
 
+# Crear directorio para sesiones si no existe
+session_dir = Path('./flask_session')
+session_dir.mkdir(exist_ok=True)
+
 # Configuración del directorio de sesiones
 if os.environ.get('RAILWAY_ENVIRONMENT'):
     # En Railway, usa el directorio temporal
