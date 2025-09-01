@@ -4,6 +4,7 @@ from flask_cors import CORS
 import requests
 import os
 import pandas as pd
+import numpy as np
 from groq import Groq
 
 app = Flask(__name__)
