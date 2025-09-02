@@ -151,16 +151,16 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
 #     return respuesta
 
 
-# @app.route('/')
-# def home():
-#     return jsonify({
-#         "message": "Backend de Alzárea funcionando correctamente",
-#         "endpoints": {
-#             "health": "/health",
-#             "chat": "/chat",
-#             "reiniciar": "/reiniciar"
-#         }
-#     }), 200
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "Backend de Alzárea funcionando correctamente",
+        "endpoints": {
+            "health": "/health",
+            "chat": "/chat",
+            "reiniciar": "/reiniciar"
+        }
+    }), 200
 
 
 # @app.route('/reiniciar', methods=['POST'])
