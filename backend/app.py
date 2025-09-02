@@ -97,8 +97,6 @@ def chat():
             "sessionId": session_id
         }), 500  # Código HTTP 500 indica un error interno del servidor
 
-# Ruta para reiniciar el historial de la conversación de un usuario específico
-
 
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
@@ -106,15 +104,14 @@ def reiniciar_historial():
     # Si no se pasa, se asigna 'default_session'
     session_id = request.json.get('sessionId', 'default_session')
 
-    # Elimina el historial para el `sessionId` especificado, si existe
-    if session_id in historial_conversaciones:
-        # Borra el historial del usuario
-        del historial_conversaciones[session_id]
+    # Elimina el historial de la conversación y cualquier otra información relacionada con la sesión
+    # Elimina el historial guardado en la sesión
+    session.pop('historial', None)
+    # Elimina las características guardadas (si las tienes)
+    session.pop('caracteristicas_usuario', None)
 
     # Devuelve una respuesta JSON confirmando que se reinició la conversación
-    # Respuesta sencilla para confirmar que el historial fue eliminado
     return jsonify({"status": "ok"})
-
 # Ruta para verificar el estado del servidor
 
 
