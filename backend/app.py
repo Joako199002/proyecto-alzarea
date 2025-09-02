@@ -1,140 +1,159 @@
-# app.py
-
-# Importaciones necesarias
-# Flask para la aplicación web, 'session' para manejar la sesión del usuario
 from flask import Flask, request, jsonify, session
-# Para manejar CORS (acceso entre diferentes orígenes)
 from flask_cors import CORS
-# Para acceder a variables de entorno (como la clave secreta y la API key)
 import os
-# Cliente para interactuar con la API de Groq (modelo de lenguaje tipo ChatGPT)
+import requests
 from groq import Groq
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "iofaen55!!$scjasncskn")
 
-# Configura la clave secreta para que Flask pueda manejar las sesiones de los usuarios
-# Esto es necesario para asegurar que Flask pueda usar cookies para almacenar las sesiones
-app.secret_key = os.environ.get("SECRET_KEY", "tu_clave_secreta_aqui")
-
-# Diccionario global para almacenar el historial de conversación por cada sesión (por `sessionId`)
-historial_conversaciones = {}
-
-# Obtiene la clave API de Groq desde una variable de entorno (esencial para autenticarte con la API de Groq)
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-# Crea una instancia del cliente de Groq utilizando la clave API
-client = Groq(api_key=GROQ_API_KEY)
-
-# Configura CORS para permitir solicitudes desde distintos orígenes (dominios) a la API
+# Configura CORS para permitir solicitudes desde distintos orígenes
 frontend_urls = [
-    'http://localhost:8000',  # Para pruebas locales
-    # Para el frontend desplegado en Netlify
+    'http://localhost:8000',
     'https://proyecto-alzarea.netlify.app',
-    # Para el frontend desplegado en Railway
     'https://proyecto-alzarea-production.up.railway.app'
 ]
-
-# Habilita CORS para los dominios especificados
 CORS(app, supports_credentials=True, origins=frontend_urls)
 
-# Define el prompt de manera global
+# Diccionario global para almacenar el historial de conversación por cada sesión
+historial_conversaciones = {}
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+client = Groq(api_key=GROQ_API_KEY)
+
+# Definir el prompt base para el asistente
 prompt_base = """
 Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional.
 """
 
-
-# Ruta para manejar el chat, acepta solicitudes POST y OPTIONS
-
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    # Obtiene los datos enviados en formato JSON desde el frontend
-    data = request.json
-    user_message = data.get('mensaje')  # Extrae el mensaje del usuario
-    # Obtiene un ID de sesión o asigna uno por defecto
-    session_id = data.get('sessionId', 'default_session')
-
-    # Obtén el historial actual del usuario desde el diccionario global, o crea uno nuevo si no existe
-    historial = historial_conversaciones.get(session_id, [])
-
-    # Agrega el nuevo mensaje del usuario al historial
-    historial.append({"role": "user", "content": user_message})
-
-    try:
-        # Llama a la API de Groq para generar una respuesta a partir del mensaje del usuario
-        chat_completion = client.chat.completions.create(
-            messages=[  # Conversación simulada que incluye mensaje del sistema y mensaje del usuario
-                {
-                    "role": "system",
-                    "content": prompt_base  # Aquí usar variable `prompt_base`
-                }
-                # Incluye todo el historial en el prompt (debe contener toda la conversación hasta el momento)
-            ] + historial,
-            model="llama-3.3-70b-versatile",  # El modelo de lenguaje que se utilizará
-            # Grado de creatividad de las respuestas (0.7 es un valor intermedio)
-            temperature=0.7,
-            # Máximo número de tokens en la respuesta del modelo (una medida del tamaño de la respuesta)
-            max_tokens=1024,
-            top_p=1,  # Técnica de muestreo (probabilidad acumulada)
-            stream=False,  # La respuesta no se enviará en modo streaming, sino en una sola respuesta
-            stop=None,  # No se especifican tokens de parada
-        )
-
-        # Extrae la respuesta generada por el modelo
-        response = chat_completion.choices[0].message.content
-
-        # Agrega la respuesta de la IA al historial de la sesión
-        historial.append({"role": "assistant", "content": response})
-
-        # Guarda el historial actualizado en el diccionario global `historial_conversaciones`
-        historial_conversaciones[session_id] = historial
-
-        # Devuelve la respuesta en formato JSON al frontend, incluyendo el `sessionId` para mantener el contexto de la conversación
-        return jsonify({
-            "reply": response,
-            "sessionId": session_id
-        })
-
-    except Exception as e:
-        # Si ocurre un error al llamar a la API de Groq, se imprime el error en consola y se devuelve un mensaje de error al frontend
-        print(f"Error calling Groq API: {e}")
-        return jsonify({
-            "reply": "Lo siento, estoy teniendo dificultades técnicas. Por favor, intenta de nuevo más tarde.",
-            "sessionId": session_id
-        }), 500  # Código HTTP 500 indica un error interno del servidor
+# Ruta para reiniciar el historial
 
 
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
-    # Obtiene el `sessionId` de la solicitud JSON (para saber cuál usuario reiniciar)
-    # Si no se pasa, se asigna 'default_session'
-    session_id = request.json.get('sessionId', 'default_session')
-
-    # Elimina el historial de la conversación y cualquier otra información relacionada con la sesión
-    # Elimina el historial guardado en la sesión
     session.pop('historial', None)
-    # Elimina las características guardadas (si las tienes)
     session.pop('caracteristicas_usuario', None)
-
-    # Devuelve una respuesta JSON confirmando que se reinició la conversación
     return jsonify({"status": "ok"})
+
+# Ruta para manejar el chat
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.json
+    if not data or 'mensaje' not in data:
+        return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+    mensaje_usuario = data['mensaje'].strip()
+    if not mensaje_usuario:
+        return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+    # Inicializa historial si no existe
+    if 'historial' not in session:
+        session['historial'] = [{"role": "system", "content": prompt_base}]
+
+    historial = session['historial']
+    caracteristicas = session.get('caracteristicas_usuario')
+
+    # Agregar características físicas si están disponibles y no se han agregado aún
+    if caracteristicas and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+        descripcion = ", ".join(
+            [f"{k}: {v}" for k, v in caracteristicas.items()])
+        historial.append({
+            "role": "system",
+            "content": f"Características físicas detectadas del usuario: {descripcion}"
+        })
+
+    # Agregar el mensaje del usuario al historial
+    historial.append({"role": "user", "content": mensaje_usuario})
+
+    try:
+        # Llama a la API de Groq para obtener una respuesta
+        chat_completion = client.chat.completions.create(
+            messages=[{"role": "system", "content": prompt_base}] + historial,
+            model="llama-3.3-70b-versatile",
+            temperature=0.7,
+            max_tokens=1024,
+            top_p=1,
+            stream=False
+        )
+        response = chat_completion.choices[0].message.content
+
+        # Agregar la respuesta de la IA al historial
+        historial.append({"role": "assistant", "content": response})
+        session['historial'] = historial
+
+        return jsonify({"reply": response})
+
+    except Exception as e:
+        print(f"Error al llamar a la API de Groq: {e}")
+        return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+# Ruta para subir imagen y detectar características
+
+
+@app.route('/subir-imagen', methods=['POST'])
+def subir_imagen():
+    if 'imagen' not in request.files:
+        return jsonify({"reply": "No se recibió ninguna imagen."}), 400
+
+    imagen = request.files['imagen']
+    image_bytes = imagen.read()
+
+    try:
+        # Aquí debes incluir la lógica de detección de características
+        # Asumiendo que tienes esta función definida
+        resultados = detect_facial_features(image_bytes)
+        session['caracteristicas_usuario'] = resultados
+
+        # Inicializa historial si no existe
+        if 'historial' not in session:
+            session['historial'] = [{"role": "system", "content": prompt_base}]
+
+        historial = session['historial']
+
+        # Agregar características físicas si aún no están
+        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
+            descripcion = ", ".join(
+                [f"{k}: {v}" for k, v in resultados.items()])
+            historial.append({
+                "role": "system",
+                "content": f"Características físicas detectadas del usuario: {descripcion}"
+            })
+
+        # Simular un mensaje del usuario para que la IA continúe el flujo
+        historial.append({"role": "user", "content": "Ya subí mi imagen"})
+
+        # Llama a la API para obtener una respuesta
+        chat_completion = client.chat.completions.create(
+            messages=[{"role": "system", "content": prompt_base}] + historial,
+            model="llama-3.3-70b-versatile",
+            temperature=0.7,
+            max_tokens=1024,
+            top_p=1,
+            stream=False
+        )
+        respuesta_ia = chat_completion.choices[0].message.content
+
+        if respuesta_ia:
+            historial.append({"role": "assistant", "content": respuesta_ia})
+            session['historial'] = historial
+            return jsonify({"reply": respuesta_ia})
+        else:
+            return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
+
+    except Exception as e:
+        print("Error al analizar imagen:", e)
+        return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
 # Ruta para verificar el estado del servidor
 
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    # Devuelve un estado "ok" si el servidor está funcionando correctamente
-    # Respuesta estándar para comprobar que la aplicación está funcionando
     return jsonify({"status": "ok"})
 
 
-# Este bloque permite ejecutar la app directamente con Python (útil para desarrollo)
-# También garantiza compatibilidad con servidores como Gunicorn en producción
 if __name__ == '__main__':
-    # Toma el puerto desde una variable de entorno (útil para plataformas como Heroku o Railway)
-    # Si no se especifica, usa el puerto 8080 por defecto
     port = int(os.environ.get('PORT', 8080))
-
-    # Ejecuta la aplicación Flask en el puerto especificado
-    # Esto hace que la aplicación esté disponible en todas las interfaces de red disponibles
     app.run(host='0.0.0.0', port=port)
