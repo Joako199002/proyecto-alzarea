@@ -1,41 +1,31 @@
 # app.py
 
 # Importaciones necesarias
-# Framework web ligero y funciones para manejar solicitudes y respuestas JSON
-from flask import Flask, request, jsonify
-# Para permitir solicitudes de distintos orígenes (CORS)
-from flask_cors import CORS
-# No se usa en el código actual, pero se importa (posiblemente para futuras integraciones)
-import requests
-import os  # Para acceder a variables de entorno
+# Flask para la aplicación web, 'session' para manejar la sesión del usuario
+from flask import Flask, request, jsonify, session
+# Para acceder a variables de entorno (como la clave secreta y la API key)
+import os
 # Cliente para interactuar con la API de Groq (modelo de lenguaje tipo ChatGPT)
 from groq import Groq
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
 
-# Origenes permitidos
-frontend_urls = [
-    'http://localhost:8000',
-    'https://proyecto-alzarea.netlify.app',
-    'https://proyecto-alzarea-production.up.railway.app']
+# Configura la clave secreta para que Flask pueda manejar las sesiones de los usuarios
+# Esto es necesario para asegurar que Flask pueda usar cookies para almacenar las sesiones
+app.secret_key = os.environ.get("SECRET_KEY", "tu_clave_secreta_aqui")
 
-# Habilita CORS para que el frontend (aunque esté en otro dominio) pueda comunicarse con esta API
-CORS(app, supports_credentials=True, origins=frontend_urls)
-
-# Diccionario para almacenar el historial de conversaciones por sessionId
+# Diccionario global para almacenar el historial de conversación por cada sesión (por `sessionId`)
 historial_conversaciones = {}
 
-# Obtiene la clave API de Groq desde una variable de entorno
+# Obtiene la clave API de Groq desde una variable de entorno (esencial para autenticarte con la API de Groq)
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-
 # Crea una instancia del cliente de Groq utilizando la clave API
 client = Groq(api_key=GROQ_API_KEY)
 
-# Ruta principal para el chatbot
+# Ruta para manejar el chat, acepta solicitudes POST y OPTIONS
 
 
-# Define la ruta '/chat' que solo acepta solicitudes POST
 @app.route('/chat', methods=['POST'])
 def chat():
     # Obtiene los datos enviados en formato JSON desde el frontend
@@ -44,7 +34,7 @@ def chat():
     # Obtiene un ID de sesión o asigna uno por defecto
     session_id = data.get('sessionId', 'default_session')
 
-    # Obtén el historial actual o crea uno nuevo si no existe
+    # Obtén el historial actual del usuario desde el diccionario global, o crea uno nuevo si no existe
     historial = historial_conversaciones.get(session_id, [])
 
     # Agrega el nuevo mensaje del usuario al historial
@@ -58,51 +48,76 @@ def chat():
                     "role": "system",
                     "content": "Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional."
                 }
-            ] + historial,  # Incluye todo el historial en el prompt,
-            model="llama-3.3-70b-versatile",  # Modelo de lenguaje usado
-            temperature=0.7,  # Grado de creatividad en la respuesta
-            max_tokens=1024,  # Máximo número de tokens en la respuesta
+                # Incluye todo el historial en el prompt (debe contener toda la conversación hasta el momento)
+            ] + historial,
+            model="llama-3.3-70b-versatile",  # El modelo de lenguaje que se utilizará
+            # Grado de creatividad de las respuestas (0.7 es un valor intermedio)
+            temperature=0.7,
+            # Máximo número de tokens en la respuesta del modelo (una medida del tamaño de la respuesta)
+            max_tokens=1024,
             top_p=1,  # Técnica de muestreo (probabilidad acumulada)
-            stream=False,  # La respuesta no se envía en streaming
+            stream=False,  # La respuesta no se enviará en modo streaming, sino en una sola respuesta
             stop=None,  # No se especifican tokens de parada
         )
 
         # Extrae la respuesta generada por el modelo
         response = chat_completion.choices[0].message.content
 
-        # Agrega la respuesta de la IA al historial
+        # Agrega la respuesta de la IA al historial de la sesión
         historial.append({"role": "assistant", "content": response})
 
-        # Guarda el historial actualizado en el diccionario global
+        # Guarda el historial actualizado en el diccionario global `historial_conversaciones`
         historial_conversaciones[session_id] = historial
 
-        # Devuelve la respuesta en formato JSON al frontend
+        # Devuelve la respuesta en formato JSON al frontend, incluyendo el `sessionId` para mantener el contexto de la conversación
         return jsonify({
             "reply": response,
             "sessionId": session_id
         })
 
     except Exception as e:
-        # En caso de error, se imprime el error en consola y se devuelve un mensaje de error al usuario
+        # Si ocurre un error al llamar a la API de Groq, se imprime el error en consola y se devuelve un mensaje de error al frontend
         print(f"Error calling Groq API: {e}")
         return jsonify({
             "reply": "Lo siento, estoy teniendo dificultades técnicas. Por favor, intenta de nuevo más tarde.",
             "sessionId": session_id
-        }), 500  # Código HTTP 500 = error interno del servidor
+        }), 500  # Código HTTP 500 indica un error interno del servidor
+
+# Ruta para reiniciar el historial de la conversación de un usuario específico
 
 
-# Ruta simple para verificar que el servidor está corriendo correctamente
-# Ruta GET para verificar estado de la app
+@app.route('/reiniciar', methods=['POST'])
+def reiniciar_historial():
+    # Obtiene el `sessionId` de la solicitud JSON (para saber cuál usuario reiniciar)
+    # Si no se pasa, se asigna 'default_session'
+    session_id = request.json.get('sessionId', 'default_session')
+
+    # Elimina el historial para el `sessionId` especificado, si existe
+    if session_id in historial_conversaciones:
+        # Borra el historial del usuario
+        del historial_conversaciones[session_id]
+
+    # Devuelve una respuesta JSON confirmando que se reinició la conversación
+    # Respuesta sencilla para confirmar que el historial fue eliminado
+    return jsonify({"status": "ok"})
+
+# Ruta para verificar el estado del servidor
+
+
 @app.route('/health', methods=['GET'])
 def health_check():
-    # Devuelve un estado "ok" si todo funciona
+    # Devuelve un estado "ok" si el servidor está funcionando correctamente
+    # Respuesta estándar para comprobar que la aplicación está funcionando
     return jsonify({"status": "ok"})
 
 
 # Este bloque permite ejecutar la app directamente con Python (útil para desarrollo)
 # También garantiza compatibilidad con servidores como Gunicorn en producción
 if __name__ == '__main__':
-    # Toma el puerto desde variable de entorno o usa 8080 por defecto
+    # Toma el puerto desde una variable de entorno (útil para plataformas como Heroku o Railway)
+    # Si no se especifica, usa el puerto 8080 por defecto
     port = int(os.environ.get('PORT', 8080))
-    # Ejecuta la app en todas las interfaces de red disponibles
+
+    # Ejecuta la aplicación Flask en el puerto especificado
+    # Esto hace que la aplicación esté disponible en todas las interfaces de red disponibles
     app.run(host='0.0.0.0', port=port)
