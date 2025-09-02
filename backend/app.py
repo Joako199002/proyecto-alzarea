@@ -9,26 +9,20 @@ import time
 from pathlib import Path
 
 # ==================== CONFIGURACIÓN DE FLASK ====================
-session_dir = Path('./flask_session')
-session_dir.mkdir(exist_ok=True)
-
-if os.environ.get('RAILWAY_ENVIRONMENT'):
-    session_dir = Path('/tmp/flask_session')
-else:
-    session_dir = Path('./flask_session')
-
-session_dir.mkdir(exist_ok=True, parents=True)
-
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'clave-secreta-desarrollo')
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_FILE_DIR'] = str(session_dir)
+
+# Configuración simplificada para usar cookies en lugar de filesystem
+app.config['SESSION_TYPE'] = 'cookie'  # Cambiado de 'filesystem' a 'cookie'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = os.environ.get(
     'FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_PATH'] = '/'
+# Aumentar el tamaño máximo de la cookie si es necesario
+app.config['SESSION_COOKIE_MAX_SIZE'] = 4096  # 4KB máximo para cookies
 
 frontend_urls = [
     'http://localhost:8000',
@@ -37,6 +31,7 @@ frontend_urls = [
 ]
 CORS(app, supports_credentials=True, origins=frontend_urls)
 
+# Inicializar Flask-Session
 Session(app)
 
 # ==================== COMPORTAMIENTO DEL CHATBOT ====================
@@ -184,14 +179,17 @@ def chat():
     if not mensaje_usuario:
         return jsonify({"reply": "Parece que tu mensaje está vacío. ¿Podrías escribirme de nuevo?"}), 200
 
+    # DEBUG: Imprimir el estado actual de la sesión
+    print(f"Sesión actual: {dict(session)}")
+    print(f"¿Tiene historial? {'historial' in session}")
+
     # Inicializar historial si no existe
     if 'historial' not in session:
         session['historial'] = []
         # Agregar prompt del sistema solo al inicio
         session['historial'].append(
             {"role": "system", "content": construir_prompt()})
-        # Forzar la escritura de la sesión
-        session.modified = True
+        print("Historial inicializado")
 
     # Agregar características físicas si están disponibles y aún no se han incluido
     caracteristicas = session.get('caracteristicas_usuario')
@@ -204,18 +202,14 @@ def chat():
             "role": "system",
             "content": f"Características físicas detectadas del usuario: {descripcion}"
         })
-        session.modified = True
 
     # Agregar mensaje del usuario al historial
     historial.append({"role": "user", "content": mensaje_usuario})
-    session.modified = True
 
-    # # Limitar el historial para no exceder el límite de tokens
-    # if len(historial) > 20:
-    #     # Mantener el primer mensaje (system) y los últimos 19 mensajes
-    #     historial = [historial[0]] + historial[-19:]
-    #     session['historial'] = historial
-    #     session.modified = True
+    # Limitar el historial para no exceder el límite de tokens
+    if len(historial) > 20:
+        # Mantener el primer mensaje (system) y los últimos 19 mensajes
+        historial = [historial[0]] + historial[-19:]
 
     try:
         # Llamada directa a la API de Groq
@@ -251,13 +245,18 @@ def chat():
         if not respuesta_ia:
             return jsonify({"reply": "No recibí una respuesta válida. Por favor, intenta de nuevo."}), 200
 
-        # # Limpiar la respuesta para eliminar múltiples preguntas
-        # respuesta_ia = limpiar_respuesta(respuesta_ia)
+        # Limpiar la respuesta para eliminar múltiples preguntas
+        respuesta_ia = limpiar_respuesta(respuesta_ia)
 
         # Agregar respuesta al historial
         historial.append({"role": "assistant", "content": respuesta_ia})
+
+        # Guardar el historial actualizado en la sesión
         session['historial'] = historial
-        session.modified = True
+        session.modified = True  # Marcar la sesión como modificada
+
+        # DEBUG: Imprimir el estado después de guardar
+        print(f"Historial guardado con {len(historial)} mensajes")
 
         return jsonify({"reply": respuesta_ia})
 
