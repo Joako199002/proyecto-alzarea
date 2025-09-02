@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import os
+import pandas as pd
 import requests
 from groq import Groq
 
@@ -20,6 +21,21 @@ CORS(app, supports_credentials=True, origins=frontend_urls)
 historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
+
+# Variable global para almacenar los vestidos cargados
+vestidos_formateados = ""
+
+# Carga la base de vestidos al inicio
+try:
+    base_vestidos = pd.read_excel('base_vestidos.xlsx')
+    vestidos_formateados = "\n\n".join([  # Formatea la base de datos de vestidos
+        f"DISEÑO: {row['DISEÑO']}\nDESCRIPCIÓN: {row['DESCRIPCION']}\nCOLORES: {row['COLORES']}\nMATERIAL: {row['MATERIAL']}\nORIGEN: {row['ORIGEN']}"
+        for _, row in base_vestidos.iterrows()
+    ])
+except Exception as e:
+    print(f"Error cargando base de vestidos: {e}")
+    vestidos_formateados = "Base de vestidos no disponible"
+
 
 # Definir el prompt base para el asistente
 prompt_base = """
