@@ -27,7 +27,7 @@ client = Groq(api_key=GROQ_API_KEY)
 
 
 # Define la ruta '/chat' que solo acepta solicitudes POST
-@app.route('/chat', methods=['POST'])
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat():
     # Obtiene los datos enviados en formato JSON desde el frontend
     data = request.json
