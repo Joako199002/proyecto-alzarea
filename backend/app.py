@@ -21,7 +21,7 @@ frontend_urls = [
     'https://proyecto-alzarea-production.up.railway.app']
 
 # Habilita CORS para que el frontend (aunque esté en otro dominio) pueda comunicarse con esta API
-CORS(app, origins=frontend_urls)
+CORS(app, supports_credentials=True, origins=frontend_urls)
 
 # Obtiene la clave API de Groq desde una variable de entorno
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -33,7 +33,7 @@ client = Groq(api_key=GROQ_API_KEY)
 
 
 # Define la ruta '/chat' que solo acepta solicitudes POST
-@app.route('/chat', methods=['POST', 'OPTIONS'])
+@app.route('/chat', methods=['POST'])
 def chat():
     # Obtiene los datos enviados en formato JSON desde el frontend
     data = request.json
