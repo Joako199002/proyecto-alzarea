@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, session
-from flask_cors import CORS
+from flask_session import Session  # Importa Flask-Session
+from flask_cors import CORS  # Importa CORS
 import os
 import pandas as pd
 import requests
@@ -9,13 +10,20 @@ from groq import Groq
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "iofaen55!!$scjasncskn")
 
+# Configuración de Flask-Session
+# Usa almacenamiento en el sistema de archivos
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+Session(app)  # Inicializa Flask-Session
+
 # Configura CORS para permitir solicitudes desde distintos orígenes
 frontend_urls = [
     'http://localhost:8000',
     'https://proyecto-alzarea.netlify.app',
     'https://proyecto-alzarea-production.up.railway.app'
 ]
-CORS(app, supports_credentials=True, origins=frontend_urls)
+CORS(app, supports_credentials=True, origins=frontend_urls)  # Habilita CORS
 
 # Diccionario global para almacenar el historial de conversación por cada sesión
 historial_conversaciones = {}
@@ -96,7 +104,7 @@ Debes preguntar si es un invitado o es quien festeja el evento pero solo si no e
 3.- Si el usuario responde con algo que no es un nombre vuelve a preguntarlo, si ya conoces el nombre del usuario
 debes pedirle que suba una imagen, usa las siguientes lineas como una base para hacer la solicitud:
 
-"Si querés para que pueda asesorarte de forma más efectiva, puedes subir una imagen tuya reciente, que sea una imagen clara,
+"Si quieres para que pueda asesorarte de forma más efectiva, puedes subir una imagen tuya reciente, que sea una imagen clara,
 de cuerpo completo y con buena iluminación por favor.  Esto me ayudará a sugerirte las prendas que armonicen con tu estilo,
 tu silueta y la ocasión."
 
