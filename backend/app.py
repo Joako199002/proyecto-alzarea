@@ -37,6 +37,12 @@ frontend_urls = [
 # Habilita CORS para los dominios especificados
 CORS(app, supports_credentials=True, origins=frontend_urls)
 
+# Define el prompt de manera global
+prompt_base = """
+Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional.
+"""
+
+
 # Ruta para manejar el chat, acepta solicitudes POST y OPTIONS
 
 
@@ -60,7 +66,7 @@ def chat():
             messages=[  # Conversación simulada que incluye mensaje del sistema y mensaje del usuario
                 {
                     "role": "system",
-                    "content": "Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional."
+                    "content": prompt_base  # Aquí usar variable `prompt_base`
                 }
                 # Incluye todo el historial en el prompt (debe contener toda la conversación hasta el momento)
             ] + historial,
