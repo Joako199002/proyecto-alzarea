@@ -3,6 +3,8 @@
 # Importaciones necesarias
 # Flask para la aplicación web, 'session' para manejar la sesión del usuario
 from flask import Flask, request, jsonify, session
+# Para manejar CORS (acceso entre diferentes orígenes)
+from flask_cors import CORS
 # Para acceder a variables de entorno (como la clave secreta y la API key)
 import os
 # Cliente para interactuar con la API de Groq (modelo de lenguaje tipo ChatGPT)
@@ -22,6 +24,18 @@ historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 # Crea una instancia del cliente de Groq utilizando la clave API
 client = Groq(api_key=GROQ_API_KEY)
+
+# Configura CORS para permitir solicitudes desde distintos orígenes (dominios) a la API
+frontend_urls = [
+    'http://localhost:8000',  # Para pruebas locales
+    # Para el frontend desplegado en Netlify
+    'https://proyecto-alzarea.netlify.app',
+    # Para el frontend desplegado en Railway
+    'https://proyecto-alzarea-production.up.railway.app'
+]
+
+# Habilita CORS para los dominios especificados
+CORS(app, supports_credentials=True, origins=frontend_urls)
 
 # Ruta para manejar el chat, acepta solicitudes POST y OPTIONS
 
