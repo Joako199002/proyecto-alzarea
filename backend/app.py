@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
-from flask_session import Session
 import os
 import pandas as pd
 import requests
@@ -12,17 +11,12 @@ from pathlib import Path
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'clave-secreta-desarrollo')
 
-# Configuración simplificada para usar cookies en lugar de filesystem
-app.config['SESSION_TYPE'] = 'cookie'  # Cambiado de 'filesystem' a 'cookie'
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
+# Configuración de cookies para sesiones (usando la implementación nativa de Flask)
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hora de duración de sesión
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = os.environ.get(
     'FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_PATH'] = '/'
-# Aumentar el tamaño máximo de la cookie si es necesario
-app.config['SESSION_COOKIE_MAX_SIZE'] = 4096  # 4KB máximo para cookies
 
 frontend_urls = [
     'http://localhost:8000',
@@ -30,9 +24,6 @@ frontend_urls = [
     'https://proyecto-alzarea-production.up.railway.app'
 ]
 CORS(app, supports_credentials=True, origins=frontend_urls)
-
-# Inicializar Flask-Session
-Session(app)
 
 # ==================== COMPORTAMIENTO DEL CHATBOT ====================
 base_vestidos = pd.read_excel('base_vestidos.xlsx')
@@ -83,7 +74,7 @@ IMPORTANTE: Los diseños SOPHIE y LIRIA siempre se ofrecen juntos ya que son un 
 Nunca uses frases genéricas como "hecho con amor". Enfócate en:
 - Experiencia única - Proceso artesanal - Detalles que marcan la diferencia.
 
-Asegurate de saber siempre si es un invitado o quien celebra el evento
+Asegurate de saber siempre si es an invitado o quien celebra el evento
 Asegúrate de recibir una respuesta coherente a cada pregunta, si no es así vuelve a preguntar. 
 Haz solo una pregunta a la vez.
 El flujo que seguiras será:
@@ -94,11 +85,11 @@ El flujo que seguiras será:
 Es un placer conocerte, ¿Hay algo que estés buscando en particular o te gustaría que te muestre algunas sugerencias?\n\n¿Buscas algo para
 una ocasión especial o deseas explorar nuestra colección cápsula?"
 
-Debes preguntar si es un invitado o es quien festeja el evento pero solo si no está implicito en la respuesta
+Debes preguntar si es an invitado o es quien festeja el evento pero solo si no está implicito en la respuesta
 
 2.- Después de recibir la respuesta, debes preguntar al usuario el nombre e inferir el sexo a partir de este.
 
-3.- Si el usuario responde con algo que no es un nombre vuelve a preguntarlo, si ya conoces el nombre del usuario
+3.- Si el usuario responde con algo que no es an nombre vuelve a preguntarlo, si ya conoces el nombre del usuario
 debes pedirle que suba una imagen, usa las siguientes lineas como una base para hacer la solicitud:
 
 "Si querés para que pueda asesorarte de forma más efectiva, puedes subir una imagen tuya reciente, que sea una imagen clara,
@@ -110,8 +101,8 @@ Si el usuario no sube una imagen dale una alterntviva, algo como:
 "Sin imagen también puedo ayudarte: me podrías describir tu color de piel, ojos, cabello, altura, y vamos construyendo desde ahí."
 
 4.- Después de analizar la imagen debes preguntar por la información del evento, tipo de evento, fecha y ubicacion, tipo de lugar o espacio, y cualquier dato
-que consideres necesario para ofrecer la mejor recomendación. Haz la pregunta de manera orgánica, no como un bot cualquiera, recuerda que eres
-un asistente de un Atelier exclusivo
+que consideres necesario para ofrecer la mejor recomendación. Haz la pregunta de manera orgánica, no como an bot cualquiera, recuerda que eres
+an asistente de an Atelier exclusivo
 
 5.- Después de que el usuario responda al punto 4 pregunta por el estilo que le gusta y si hay algunas partes de su cuerpo que prefiere resaltar
 o disimular así como si tiene preferencia por alguna silueta o corte de la prenda.
@@ -126,7 +117,7 @@ No debes solicitar aprobación sobre los accesorios ni condicionar su presentaci
 Justo después de hacer tu recomendación conecta la conversación con el siguiente punto.
 
 8.- Enfatíza las bondades de tu recomendación con respecto al evento y sus características físicas pero házle saber que contamos con
-una agenda disponible para que uno de nuestros expertos se contacte e juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
+una agenda disponible para que uno de nuestros expertos se contacte e juntos puedan ir elaborando an vestido adaptado a lo que está buscando.
 
 9.- Si el cliente solicita una cita pídele numero de teléfono, e-mail, y una fecha tentativa que le sea conveniente para poder contactarlo.
 
@@ -138,17 +129,17 @@ cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde c
     return prompt
 
 
-# def limpiar_respuesta(respuesta):
-#     """Limpia la respuesta para eliminar múltiples preguntas"""
-#     preguntas = re.findall(r'[^.!?]*\?', respuesta)
+def limpiar_respuesta(respuesta):
+    """Limpia la respuesta para eliminar múltiples preguntas"""
+    preguntas = re.findall(r'[^.!?]*\?', respuesta)
 
-#     if len(preguntas) > 1:
-#         primera_pregunta = preguntas[0]
-#         indice = respuesta.find(primera_pregunta) + len(primera_pregunta)
-#         respuesta = respuesta[:indice].strip()
-#         respuesta += " Por favor, respóndeme esta pregunta primero."
+    if len(preguntas) > 1:
+        primera_pregunta = preguntas[0]
+        indice = respuesta.find(primera_pregunta) + len(primera_pregunta)
+        respuesta = respuesta[:indice].strip()
+        respuesta += " Por favor, respóndeme esta pregunta primero."
 
-#     return respuesta
+    return respuesta
 
 
 @app.route('/')
@@ -163,10 +154,10 @@ def home():
     }), 200
 
 
-# @app.route('/reiniciar', methods=['POST'])
-# def reiniciar_historial():
-#     session.clear()
-#     return jsonify({"status": "ok", "message": "Conversación reiniciada"})
+@app.route('/reiniciar', methods=['POST'])
+def reiniciar_historial():
+    session.clear()
+    return jsonify({"status": "ok", "message": "Conversación reiniciada"})
 
 
 @app.route('/chat', methods=['POST'])
@@ -179,17 +170,12 @@ def chat():
     if not mensaje_usuario:
         return jsonify({"reply": "Parece que tu mensaje está vacío. ¿Podrías escribirme de nuevo?"}), 200
 
-    # DEBUG: Imprimir el estado actual de la sesión
-    print(f"Sesión actual: {dict(session)}")
-    print(f"¿Tiene historial? {'historial' in session}")
-
     # Inicializar historial si no existe
     if 'historial' not in session:
         session['historial'] = []
         # Agregar prompt del sistema solo al inicio
         session['historial'].append(
             {"role": "system", "content": construir_prompt()})
-        print("Historial inicializado")
 
     # Agregar características físicas si están disponibles y aún no se han incluido
     caracteristicas = session.get('caracteristicas_usuario')
@@ -253,10 +239,6 @@ def chat():
 
         # Guardar el historial actualizado en la sesión
         session['historial'] = historial
-        session.modified = True  # Marcar la sesión como modificada
-
-        # DEBUG: Imprimir el estado después de guardar
-        print(f"Historial guardado con {len(historial)} mensajes")
 
         return jsonify({"reply": respuesta_ia})
 
@@ -290,7 +272,6 @@ def subir_imagen():
 
         # Guardar características en la sesión
         session['caracteristicas_usuario'] = resultados
-        session.modified = True
 
         # Agregar características al historial si no están ya
         if 'historial' in session:
@@ -305,12 +286,10 @@ def subir_imagen():
                     "role": "system",
                     "content": f"Características físicas detectadas del usuario: {descripcion}"
                 })
-                session.modified = True
 
         # Simular un mensaje del usuario para que la IA continúe el flujo
         session['historial'].append(
             {"role": "user", "content": "Ya subí mi imagen"})
-        session.modified = True
 
         # Llamar a Groq para obtener respuesta después de subir la imagen
         GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
@@ -337,7 +316,6 @@ def subir_imagen():
         if respuesta_ia:
             session['historial'].append(
                 {"role": "assistant", "content": respuesta_ia})
-            session.modified = True
             return jsonify({
                 "reply": respuesta_ia,
                 "caracteristicas": resultados
