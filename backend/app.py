@@ -15,7 +15,7 @@ from groq import Groq
 app = Flask(__name__)
 
 # Origenes permitidos
-frontends_urls = [
+frontend_urls = [
     'http://localhost:8000',
     'https://proyecto-alzarea.netlify.app',
     'https://proyecto-alzarea-production.up.railway.app']
