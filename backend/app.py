@@ -15,13 +15,13 @@ from groq import Groq
 app = Flask(__name__)
 
 # Origenes permitidos
-frontends_urls = ['FRONTEND_URL,    
-	'http://localhost:8000',
-	'https://proyecto-alzarea.netlify.app',
- 	'https://proyecto-alzarea-production.up.railway.app'] 
+frontends_urls = [
+    'http://localhost:8000',
+    'https://proyecto-alzarea.netlify.app',
+    'https://proyecto-alzarea-production.up.railway.app']
 
 # Habilita CORS para que el frontend (aunque esté en otro dominio) pueda comunicarse con esta API
-CORS(app, origins=frontends_urls)
+CORS(app, origins=frontend_urls)
 
 # Obtiene la clave API de Groq desde una variable de entorno
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -30,12 +30,16 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
 
 # Ruta principal para el chatbot
-@app.route('/chat', methods=['POST', 'OPTIONS'])  # Define la ruta '/chat' que solo acepta solicitudes POST
+
+
+# Define la ruta '/chat' que solo acepta solicitudes POST
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat():
     # Obtiene los datos enviados en formato JSON desde el frontend
     data = request.json
     user_message = data.get('mensaje')  # Extrae el mensaje del usuario
-    session_id = data.get('sessionId', 'default_session')  # Obtiene un ID de sesión o asigna uno por defecto
+    # Obtiene un ID de sesión o asigna uno por defecto
+    session_id = data.get('sessionId', 'default_session')
 
     # Obtén el historial actual o crea uno nuevo si no existe
     historial = historial_conversaciones.get(session_id, [])
@@ -51,7 +55,7 @@ def chat():
                     "role": "system",
                     "content": "Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional."
                 }
-            ] + historial, # Incluye todo el historial en el prompt,
+            ] + historial,  # Incluye todo el historial en el prompt,
             model="llama-3.3-70b-versatile",  # Modelo de lenguaje usado
             temperature=0.7,  # Grado de creatividad en la respuesta
             max_tokens=1024,  # Máximo número de tokens en la respuesta
@@ -85,13 +89,17 @@ def chat():
 
 
 # Ruta simple para verificar que el servidor está corriendo correctamente
-@app.route('/health', methods=['GET'])  # Ruta GET para verificar estado de la app
+# Ruta GET para verificar estado de la app
+@app.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({"status": "ok"})  # Devuelve un estado "ok" si todo funciona
+    # Devuelve un estado "ok" si todo funciona
+    return jsonify({"status": "ok"})
 
 
 # Este bloque permite ejecutar la app directamente con Python (útil para desarrollo)
 # También garantiza compatibilidad con servidores como Gunicorn en producción
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))  # Toma el puerto desde variable de entorno o usa 8080 por defecto
-    app.run(host='0.0.0.0', port=port)  # Ejecuta la app en todas las interfaces de red disponibles
+    # Toma el puerto desde variable de entorno o usa 8080 por defecto
+    port = int(os.environ.get('PORT', 8080))
+    # Ejecuta la app en todas las interfaces de red disponibles
+    app.run(host='0.0.0.0', port=port)
