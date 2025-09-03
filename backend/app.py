@@ -45,6 +45,11 @@ Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vesti
 # Ruta para reiniciar el historial
 
 
+@app.route('/')
+def home():
+    return "Bienvenido a la API de Alzárea"
+
+
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
     session.pop('historial', None)
