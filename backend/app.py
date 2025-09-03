@@ -39,6 +39,8 @@ except Exception as e:
 
 # Definir el prompt base para el asistente
 prompt_base = """
+Debes responder de manera consisa, por lo que tus respeuestas deben ser de menos de 350 caracteres.
+
 Eres un asistente de moda para Alzárea. Ayudas a los usuarios a encontrar vestidos y outfits adecuados. Sé amable y profesional.
 """
 
@@ -150,7 +152,7 @@ def subir_imagen():
             messages=[{"role": "system", "content": prompt_base}] + historial,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
-            max_tokens=1024,
+            max_tokens=300,
             top_p=1,
             stream=False
         )
