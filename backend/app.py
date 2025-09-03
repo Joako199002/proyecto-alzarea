@@ -94,7 +94,7 @@ def chat():
             messages=[{"role": "system", "content": prompt_base}] + historial,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
-            max_tokens=1024,
+            max_tokens=300,
             top_p=1,
             stream=False
         )
