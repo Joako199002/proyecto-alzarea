@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import requests
 from groq import Groq
+from datetime import timedelta
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
