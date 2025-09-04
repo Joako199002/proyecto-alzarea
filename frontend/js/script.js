@@ -5,15 +5,15 @@ const backendUrl = window.location.hostname === 'localhost' || window.location.h
     : 'https://proyecto-alzarea-production.up.railway.app';
 
 // Mapeo de nombres de diseño a nombres de archivo (actualizado)
-const mapeoImagenes = {
-    'CENEFA': 'CENEFA',
-    'FRISO': 'FRISO_FLOWER',
-    'SOPHIE': 'SOPHIE',
-    'LIRIA': 'LIRIA_WHITE',
-    'ALMENA': 'ALMENA',
-    'SKIRT': 'SKIRT_BLACK',
-    'WEIRD': 'WEIRD'
-};
+// const mapeoImagenes = {
+//     'CENEFA': 'CENEFA',
+//     'FRISO': 'FRISO_FLOWER',
+//     'SOPHIE': 'SOPHIE',
+//     'LIRIA': 'LIRIA_WHITE',
+//     'ALMENA': 'ALMENA',
+//     'SKIRT': 'SKIRT_BLACK',
+//     'WEIRD': 'WEIRD'
+// };
 
 // Función para verificar el estado del backend
 async function checkBackendHealth() {
