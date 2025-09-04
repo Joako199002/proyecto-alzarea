@@ -353,7 +353,7 @@ async function respond(text, isDirectReply = false) {
                 credentials: "include", // Permite creedenciales del backend
                 body: JSON.stringify({
                     mensaje: text,
-                    sessionId: sessionId
+                    //sessionId: sessionId // cambiado
                 })
             });
 
@@ -427,6 +427,37 @@ function reiniciarConversacion() {
         .catch(error => {
             console.error('Error al reiniciar la conversación:', error);
         });
+}
+
+
+// ==================== CREAR BOTÓN DE REINICIO ====================
+
+// Crear botón de reinicio
+const resetButton = document.createElement('button');
+resetButton.id = 'reset-button';
+resetButton.textContent = '🔄 Reiniciar';
+
+// Insertar el botón de reinicio en el DOM
+const chatbotInput = document.querySelector('.chatbot-input');
+if (chatbotInput && uploadButton) {
+    // Crear contenedor para los botones
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'chatbot-buttons-container';
+
+    // Mover el botón de subir imagen al contenedor
+    uploadButton.parentNode.removeChild(uploadButton);
+    buttonsContainer.appendChild(uploadButton);
+
+    // Agregar el botón de reinicio al contenedor
+    buttonsContainer.appendChild(resetButton);
+
+    // Insertar el contenedor antes del textarea
+    inputField.parentNode.insertBefore(buttonsContainer, inputField);
+}
+
+// Agregar evento al botón de reinicio
+if (resetButton) {
+    resetButton.addEventListener('click', reiniciarConversacion);
 }
 
 // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================

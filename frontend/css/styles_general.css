@@ -484,6 +484,47 @@ footer {
     /* Tamaño de fuente ligeramente reducido */
 }
 
+/* Contenedor para los botones de subir imagen y reiniciar */
+.chatbot-buttons-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+/* Estilos para los botones de acción */
+#upload-button,
+#reset-button {
+    flex: 1;
+    padding: 8px 12px;
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Efecto hover para los botones */
+#upload-button:hover,
+#reset-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .chatbot-buttons-container {
+        flex-direction: row;
+    }
+
+    #upload-button,
+    #reset-button {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
+
 /* ===== MEDIA QUERIES COMUNES ===== */
 
 /* Media queries */

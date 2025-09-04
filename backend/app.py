@@ -9,6 +9,15 @@ from groq import Groq
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "iofaen55!!$scjasncskn")
 
+# ✅ CONFIGURACIÓN PARA COOKIES DE SESIÓN COMPATIBLE CON NETLIFY + HTTPS
+app.config.update(
+    # Permite cookies en cross-origin (Netlify + Railway)
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True,       # Requiere HTTPS
+    PERMANENT_SESSION_LIFETIME=timedelta(
+        hours=12)  # Opcional: duración de la sesión
+)
+
 # Configura CORS para permitir solicitudes desde distintos orígenes
 frontend_urls = [
     'http://localhost:8000',
