@@ -6,7 +6,7 @@ import os
 import pandas as pd
 import requests
 import time
-from detection import detect_facial_features
+# from detection import detect_facial_features
 
 app = Flask(__name__)
 app.secret_key = os.environ.get(
@@ -206,7 +206,9 @@ def subir_imagen():
     image_bytes = imagen.read()
 
     try:
-        resultados = detect_facial_features(image_bytes)
+        # resultados = detect_facial_features(image_bytes)
+        resultados = {'ojos': 'negro', 'cabello': 'negro',
+                      'complexion': 'delgada', 'sexo': 'mujer', 'tono de piel': 'moreno claro'}
         session['caracteristicas_usuario'] = resultados
         print(resultados)
 
