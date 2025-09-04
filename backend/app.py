@@ -1,54 +1,43 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, Response, stream_with_context, send_from_directory
 from flask_cors import CORS
+from flask_session import Session
+from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 import requests
-from groq import Groq
-from datetime import timedelta
+import time
+from detection import detect_facial_features
 
-# Inicializa la aplicación Flask
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "iofaen55!!$scjasncskn")
+app.secret_key = os.environ.get(
+    'SECRET_KEY', 'clave-secreta-por-defecto-cambiar-en-produccion')
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['UPLOAD_FOLDER'] = 'uploads'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# ✅ CONFIGURACIÓN PARA COOKIES DE SESIÓN COMPATIBLE CON NETLIFY + HTTPS
-app.config.update(
-    # Permite cookies en cross-origin (Netlify + Railway)
-    SESSION_COOKIE_SAMESITE="None",
-    SESSION_COOKIE_SECURE=True,       # Requiere HTTPS
-    PERMANENT_SESSION_LIFETIME=timedelta(
-        hours=12)  # Opcional: duración de la sesión
-)
-
-# Configura CORS para permitir solicitudes desde distintos orígenes
-frontend_urls = [
-    'http://localhost:8000',
-    'https://proyecto-alzarea.netlify.app',
-    'https://proyecto-alzarea-production.up.railway.app'
+# Configuración de CORS para producción
+allowed_origins = [
+    "http://localhost:8000",
+    "http://localhost:5000",
+    "https://proyecto-alzarea.netlify.app/"  # Reemplaza con tu URL de Netlify
 ]
-CORS(app, supports_credentials=True, origins=frontend_urls)
 
-# Diccionario global para almacenar el historial de conversación por cada sesión
-historial_conversaciones = {}
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-client = Groq(api_key=GROQ_API_KEY)
+CORS(app, supports_credentials=True, origins=allowed_origins)
 
-# Variable global para almacenar los vestidos cargados
-vestidos_formateados = ""
-
-# Carga la base de vestidos al inicio
+# Carga la base de vestidos
 try:
     base_vestidos = pd.read_excel('base_vestidos.xlsx')
-    vestidos_formateados = "\n\n".join([  # Formatea la base de datos de vestidos
-        f"DISEÑO: {row['DISEÑO']}\nDESCRIPCIÓN: {row['DESCRIPCION']}\nCOLORES: {row['COLORES']}\nMATERIAL: {row['MATERIAL']}\nORIGEN: {row['ORIGEN']}"
+    vestidos_formateados = "\n\n".join([
+        f"DISEÑO: {row['DISEÑO']}\nDESCRIPCIÓN: {row['DESCRIPCION']}\nCOLORES: {row['COLORES']}\nMATERIAL: {row['MATERIAL']}\nORIGEN: {row['ORIGEN']}\nIMAGEN: {row['IMAGEN']}"
         for _, row in base_vestidos.iterrows()
     ])
 except Exception as e:
-    print(f"Error cargando base de vestidos: {e}")
-    vestidos_formateados = "Base de vestidos no disponible"
+    print(f"Error al cargar la base de vestidos: {e}")
+    vestidos_formateados = ""
 
 
-# Definir el prompt base para el asistente
-prompt_base = f"""
+def construir_prompt() -> str:
+    prompt = f"""
 Eres Alzárea, asesora de estilo digital de un exclusivo ATELIER de moda artesanal. Tu tono debe ser:
 
 - Cálido y elegante.
@@ -97,7 +86,7 @@ El flujo que seguiras será:
 
 "¡Bienvenida a nuestro atelier digital!\n\n Mi nombre es Alzárea y estoy aquí para acompañarte mientras exploras nuestras colecciones.
 Es un placer conocerte, ¿Hay algo que estés buscando en particular o te gustaría que te muestre algunas sugerencias?\n\n¿Buscas algo para
-una ocasión especial o deseas explorar nuestra colección cápsula?"
+una ocasión especial o deseas exploremos nuestra colección cápsula?"
 
 Debes preguntar si es un invitado o es quien festeja el evento pero solo si no está implicito en la respuesta
 
@@ -130,7 +119,7 @@ ya que nuestro catálogo no cuenta con ellos. Muestra la imagen del vestido
 No debes solicitar aprobación sobre los accesorios ni condicionar su presentación. Son parte de la experiencia de asesoramiento.
 Justo después de hacer tu recomendación conecta la conversación con el siguiente punto.
 
-8.- Enfatíza las bondades de tu recomendación con respecto al evento y sus características físicas pero házle saber que contamos con
+8.- Enfatíza las bondades de tu recomendación con respecto ao evento y sus características físicas pero házle saber que contamos con
 una agenda disponible para que uno de nuestros expertos se contacte y juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
 
 9.- Si el cliente solicita una cita pídele numero de teléfono, e-mail, y una fecha tentativa que le sea conveniente para poder contactarlo.
@@ -140,22 +129,15 @@ una agenda disponible para que uno de nuestros expertos se contacte y juntos pue
 "Todo lo que te propuse forma parte de nuestra colección cápsula. Si quieres algo aún más personalizado, también puedo agendarte una
 cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde cero, exclusivamente para ti."
 """
-
-# Ruta para reiniciar el historial
-
-
-@app.route('/')
-def home():
-    return "Bienvenido a la API de Alzárea"
+    return prompt
 
 
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
     session.pop('historial', None)
     session.pop('caracteristicas_usuario', None)
-    return jsonify({"status": "ok"})
 
-# Ruta para manejar el chat
+    return jsonify({"status": "ok"})
 
 
 @app.route('/chat', methods=['POST'])
@@ -170,12 +152,14 @@ def chat():
 
     # Inicializa historial si no existe
     if 'historial' not in session:
-        session['historial'] = [{"role": "system", "content": prompt_base}]
+        session['historial'] = [
+            {"role": "system", "content": construir_prompt()}
+        ]
 
-    historial = session['historial']
+    # Agregar características físicas si están disponibles y aún no se han incluido
     caracteristicas = session.get('caracteristicas_usuario')
+    historial = session['historial']
 
-    # Agregar características físicas si están disponibles y no se han agregado aún
     if caracteristicas and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
         descripcion = ", ".join(
             [f"{k}: {v}" for k, v in caracteristicas.items()])
@@ -184,37 +168,37 @@ def chat():
             "content": f"Características físicas detectadas del usuario: {descripcion}"
         })
 
-    # Agregar el mensaje del usuario al historial
+    # Agrega el mensaje del usuario al historial
     historial.append({"role": "user", "content": mensaje_usuario})
 
     try:
-        # Llama a la API de Groq para obtener una respuesta
-        chat_completion = client.chat.completions.create(
-            messages=historial,
-            # messages=[{"role": "system", "content": prompt_base}] + historial,
-            model="llama-3.3-70b-versatile",
-            temperature=0.7,
-            max_tokens=300,
-            top_p=1,
-            stream=False
+        response = requests.post(
+            'http://localhost:3000/chat',
+            json={"messages": historial},
+            timeout=15
         )
-        response = chat_completion.choices[0].message.content
+        response.raise_for_status()
+        respuesta_ia = response.json().get('reply')
 
-        # Agregar la respuesta de la IA al historial
-        historial.append({"role": "assistant", "content": response})
+        if not respuesta_ia:
+            return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
+
+        # Agrega la respuesta de la IA al historial
+        historial.append({"role": "assistant", "content": respuesta_ia})
         session['historial'] = historial
 
-        return jsonify({"reply": response})
+        return jsonify({"reply": respuesta_ia})
 
-    except Exception as e:
-        print(f"Error al llamar a la API de Groq: {e}")
+    except requests.exceptions.Timeout:
         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
 
-# Ruta para subir imagen y detectar características
+    except requests.exceptions.RequestException:
+        return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
 
 
 @app.route('/subir-imagen', methods=['POST'])
 def subir_imagen():
+    print("📸 Imagen recibida en el backend")
     if 'imagen' not in request.files:
         return jsonify({"reply": "No se recibió ninguna imagen."}), 400
 
@@ -222,14 +206,15 @@ def subir_imagen():
     image_bytes = imagen.read()
 
     try:
-        # Aquí debes incluir la lógica de detección de características
-        # Asumiendo que tienes esta función definida
         resultados = detect_facial_features(image_bytes)
         session['caracteristicas_usuario'] = resultados
+        print(resultados)
 
         # Inicializa historial si no existe
         if 'historial' not in session:
-            session['historial'] = [{"role": "system", "content": prompt_base}]
+            session['historial'] = [
+                {"role": "system", "content": construir_prompt()}
+            ]
 
         historial = session['historial']
 
@@ -245,16 +230,13 @@ def subir_imagen():
         # Simular un mensaje del usuario para que la IA continúe el flujo
         historial.append({"role": "user", "content": "Ya subí mi imagen"})
 
-        # Llama a la API para obtener una respuesta
-        chat_completion = client.chat.completions.create(
-            messages=[{"role": "system", "content": prompt_base}] + historial,
-            model="llama-3.3-70b-versatile",
-            temperature=0.7,
-            max_tokens=300,
-            top_p=1,
-            stream=False
+        response = requests.post(
+            'http://localhost:3000/chat',
+            json={"messages": historial},
+            timeout=15
         )
-        respuesta_ia = chat_completion.choices[0].message.content
+        response.raise_for_status()
+        respuesta_ia = response.json().get('reply')
 
         if respuesta_ia:
             historial.append({"role": "assistant", "content": respuesta_ia})
@@ -267,14 +249,13 @@ def subir_imagen():
         print("Error al analizar imagen:", e)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
 
-# Ruta para verificar el estado del servidor
 
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({"status": "ok"})
+# Servir archivos estáticos (imágenes de vestidos)
+@app.route('/static/disenos/<path:filename>')
+def serve_diseno(filename):
+    return send_from_directory('static/disenos', filename)
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
