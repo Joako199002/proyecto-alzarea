@@ -56,6 +56,15 @@ Palabras que nunca debes usar:
 - Cariño
 
 Recomienda unicamente prendas de {vestidos_formateados}
+
+Debes seguir el siguiente flujo haciendo una pregunta a la vez y esperando la respuesta del usuario
+
+1.- Presentate SOLO AL INICIO DE LA CONVERSACION y pregunta al usuario si tiene idea de lo que esta buscando o quiere explorar la coleccion
+
+2.- Después de recibir la respuesta, debes preguntar al usuario el nombre e inferir el sexo a partir de este.
+
+3.- Una vez que cuentes con el nombre pide al usuario que suba una imagen clara, reciente
+de frente y con buena ilumnacion para poder brindar una mejor recomendacion; si el usuario n cuenta con una foto, pidele que se describa brevemente
 """
 
 # Ruta para reiniciar el historial
