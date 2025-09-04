@@ -175,7 +175,7 @@ function addMessage(text, sender) {
             const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
 
             const img = document.createElement('img');
-            img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+            img.src = `${backendUrl}/static/disenos/${nombreDiseno}.jpg`;
             img.alt = nombreDiseno;
             img.style.maxWidth = '100%';
             img.style.borderRadius = '8px';
@@ -284,7 +284,7 @@ function showMessageWithAnimation(messageText, isError = false, disenos = []) {
                     const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
 
                     const img = document.createElement('img');
-                    img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+                    img.src = `${backendUrl}/static/disenos/${nombreDiseno}.jpg`;
                     img.alt = nombreDiseno;
                     img.style.maxWidth = '100%';
                     img.style.borderRadius = '8px';
@@ -292,7 +292,7 @@ function showMessageWithAnimation(messageText, isError = false, disenos = []) {
 
                     // Mejor manejo de errores para imágenes
                     img.onerror = function () {
-                        console.error(`No se pudo cargar: ${nombreArchivo}.jpg`);
+                        console.error(`No se pudo cargar: ${nombreDiseno}.jpg`);
 
                         // Intentar cargar con diferentes extensiones y nombres
                         const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
