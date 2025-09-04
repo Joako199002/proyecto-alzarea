@@ -22,7 +22,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Servir archivos estáticos (IMAGENES)
-app.use('/static', express.static(path.join(__dirname, 'disenos')));
+app.use('/imagenes', express.static(path.join(__dirname, 'imagenes')));
 
 // Middleware de logging para diagnóstico
 app.use((req, res, next) => {
