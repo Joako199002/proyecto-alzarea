@@ -252,10 +252,10 @@ def subir_imagen():
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
 
 
-# Servir archivos estáticos (imágenes de vestidos)
-@app.route('/static/disenos/<path:filename>')
-def serve_diseno(filename):
-    return send_from_directory('static/disenos', filename)
+# # Servir archivos estáticos (imágenes de vestidos)
+# @app.route('/static/disenos/<path:filename>')
+# def serve_diseno(filename):
+#     return send_from_directory('static/disenos', filename)
 
 
 if __name__ == '__main__':
