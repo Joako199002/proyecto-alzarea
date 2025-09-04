@@ -1,8 +1,34 @@
 // ==================== CONFIGURACIÓN DE URLS ====================
 // Determina automáticamente la URL del backend según el entorno
 const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000'
+    ? 'http://localhost:3000'
     : 'https://proyecto-alzarea-production.up.railway.app';
+
+// Mapeo de nombres de diseño a nombres de archivo (actualizado)
+const mapeoImagenes = {
+    'CENEFA': 'CENEFA',
+    'FRISO': 'FRISO_FLOWER',
+    'SOPHIE': 'SOPHIE',
+    'LIRIA': 'LIRIA_WHITE',
+    'ALMENA': 'ALMENA',
+    'SKIRT': 'SKIRT_BLACK',
+    'WEIRD': 'WEIRD'
+};
+
+// Función para verificar el estado del backend
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${backendUrl}/health`);
+        const data = await response.json();
+        console.log('Backend health:', data);
+        return response.ok;
+    } catch (error) {
+        console.error('Backend health check failed:', error);
+        return false;
+    }
+}
+
+let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
 
 // ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
@@ -44,13 +70,15 @@ const imageInput = document.getElementById('chatbot-image');
 // Variable para almacenar la referencia al mensaje "pensando"
 let thinkingMessage = null;
 
-// // Reiniciar la sesión del chatbot al cargar la página
-// fetch(`${backendUrl}/reiniciar`, {
-//     method: 'POST',
-//     credentials: 'include'
-// }).catch(error => {
-//     console.error('Error al reiniciar sesión:', error);
-// });
+// Reiniciar la sesión del chatbot al cargar la página
+fetch(`${backendUrl}/reiniciar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: sessionId }),
+    credentials: 'include'
+}).catch(error => {
+    console.error('Error al reiniciar sesión:', error);
+});
 
 // Mostrar el chatbot al hacer clic en el botón de toggle
 if (toggleButton) {
@@ -120,7 +148,7 @@ if (inputField) {
     });
 }
 
-// Función para agregar mensajes al chat
+// Función para agregar mensajes al chat - MANTENIDA PARA OTROS USOS
 function addMessage(text, sender) {
     if (!messagesContainer) return;
 
@@ -133,6 +161,7 @@ function addMessage(text, sender) {
 
     if (match) {
         const nombreDiseno = match[1].trim();
+        // Reemplazar solo la etiqueta, manteniendo el nombre en el texto si ya está presente
         const textoSinEtiqueta = text.replace(regex, '').trim();
 
         // Agregar texto sin la etiqueta
@@ -140,18 +169,71 @@ function addMessage(text, sender) {
         textoElem.textContent = textoSinEtiqueta;
         message.appendChild(textoElem);
 
-        // Agregar imagen del diseño
-        const img = document.createElement('img');
-        img.src = `${backendUrl}/static/disenos/${nombreDiseno}.jpg`;
-        img.alt = nombreDiseno;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '8px';
-        img.style.marginTop = '5px';
-        img.onerror = function () {
-            console.error(`Error al cargar la imagen: ${img.src}`);
-            this.style.display = 'none';
-        };
-        message.appendChild(img);
+        // Agregar imágenes de los diseños
+        const disenos = nombreDiseno.split(',').map(d => d.trim());
+        disenos.forEach(nombreDiseno => {
+            const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+
+            const img = document.createElement('img');
+            img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+            img.alt = nombreDiseno;
+            img.style.maxWidth = '100%';
+            img.style.borderRadius = '8px';
+            img.style.marginTop = '5px';
+
+            // Mejor manejo de errores para imágenes
+            img.onerror = function () {
+                console.error(`Error al cargar la imagen: ${img.src}`);
+
+                // Intentar cargar con diferentes extensiones y nombres
+                const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+                const alternativeNames = {
+                    'FRISO': ['FRISO_FLOWER', 'FRISO'],
+                    'LIRIA': ['LIRIA_WHITE', 'LIRIA'],
+                    'SKIRT': ['SKIRT_BLACK', 'SKIRT']
+                };
+
+                let currentAttempt = 0;
+                const tryNextImage = () => {
+                    if (currentAttempt < extensions.length * 2) {
+                        const attemptType = currentAttempt % 2;
+                        const extIndex = Math.floor(currentAttempt / 2);
+
+                        let newSrc;
+                        if (attemptType === 0 && alternativeNames[nombreDiseno]) {
+                            // Intentar con nombres alternativos
+                            newSrc = `${backendUrl}/imagenes/${alternativeNames[nombreDiseno][0]}${extensions[extIndex]}`;
+                        } else {
+                            // Intentar con el nombre original
+                            newSrc = `${backendUrl}/imagenes/${nombreDiseno}${extensions[extIndex]}`;
+                        }
+
+                        currentAttempt++;
+                        console.log(`Intentando cargar: ${newSrc}`);
+                        img.src = newSrc;
+                    } else {
+                        this.style.display = 'none';
+                        // Mostrar mensaje al usuario
+                        const errorMsg = document.createElement('div');
+                        errorMsg.textContent = `No se pudo cargar la imagen de ${nombreDiseno}`;
+                        errorMsg.style.color = '#d32f2f';
+                        errorMsg.style.marginTop = '5px';
+                        errorMsg.style.fontSize = '0.9em';
+                        message.appendChild(errorMsg);
+                    }
+                };
+
+                tryNextImage();
+            };
+
+            // Agregar logging para diagnóstico
+            console.log(`Intentando cargar imagen: ${img.src}`);
+            img.onload = function () {
+                console.log(`Imagen cargada correctamente: ${img.src}`);
+            };
+
+            message.appendChild(img);
+        });
     } else {
         const textoElem = document.createElement('span');
         textoElem.textContent = text;
@@ -170,8 +252,8 @@ function removeThinkingMessage() {
     }
 }
 
-// Función para mostrar mensajes con animación de escritura
-function showMessageWithAnimation(messageText, isError = false) {
+// Función para mostrar mensajes con animación de escritura y luego imágenes - ACTUALIZADA
+function showMessageWithAnimation(messageText, isError = false, disenos = []) {
     if (!messagesContainer) return;
 
     // Crear contenedor del mensaje
@@ -195,11 +277,81 @@ function showMessageWithAnimation(messageText, isError = false) {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         } else {
             clearInterval(intervalo);
+
+            // Después de terminar la animación, agregar imágenes si hay diseños
+            if (disenos.length > 0) {
+                disenos.forEach(nombreDiseno => {
+                    const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
+
+                    const img = document.createElement('img');
+                    img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+                    img.alt = nombreDiseno;
+                    img.style.maxWidth = '100%';
+                    img.style.borderRadius = '8px';
+                    img.style.marginTop = '5px';
+
+                    // Mejor manejo de errores para imágenes
+                    img.onerror = function () {
+                        console.error(`No se pudo cargar: ${nombreArchivo}.jpg`);
+
+                        // Intentar cargar con diferentes extensiones y nombres
+                        const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+                        const alternativeNames = {
+                            'FRISO': ['FRISO_FLOWER', 'FRISO'],
+                            'LIRIA': ['LIRIA_WHITE', 'LIRIA'],
+                            'SKIRT': ['SKIRT_BLACK', 'SKIRT']
+                        };
+
+                        let currentAttempt = 0;
+                        const tryNextImage = () => {
+                            if (currentAttempt < extensions.length * 2) {
+                                const attemptType = currentAttempt % 2;
+                                const extIndex = Math.floor(currentAttempt / 2);
+
+                                let newSrc;
+                                if (attemptType === 0 && alternativeNames[nombreDiseno]) {
+                                    // Intentar con nombres alternativos
+                                    newSrc = `${backendUrl}/imagenes/${alternativeNames[nombreDiseno][0]}${extensions[extIndex]}`;
+                                } else {
+                                    // Intentar con el nombre original
+                                    newSrc = `${backendUrl}/imagenes/${nombreDiseno}${extensions[extIndex]}`;
+                                }
+
+                                currentAttempt++;
+                                console.log(`Intentando cargar: ${newSrc}`);
+                                img.src = newSrc;
+                            } else {
+                                this.style.display = 'none';
+                                // Mostrar mensaje al usuario
+                                const errorMsg = document.createElement('div');
+                                errorMsg.textContent = `No se pudo cargar la imagen de ${nombreDiseno}`;
+                                errorMsg.style.color = '#d32f2f';
+                                errorMsg.style.marginTop = '5px';
+                                errorMsg.style.fontSize = '0.9em';
+                                message.appendChild(errorMsg);
+                            }
+                        };
+
+                        tryNextImage();
+                    };
+
+                    // Agregar logging para diagnóstico
+                    console.log(`Intentando cargar imagen: ${img.src}`);
+                    img.onload = function () {
+                        console.log(`Imagen cargada correctamente: ${img.src}`);
+                        if (messagesContainer) {
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    };
+
+                    message.appendChild(img);
+                });
+            }
         }
     }, 50); // velocidad animación
 }
 
-// Función principal para procesar respuestas del chatbot
+// Función principal para procesar respuestas del chatbot - CORREGIDA
 async function respond(text, isDirectReply = false) {
     try {
         let mensajeTexto = text;
@@ -219,7 +371,10 @@ async function respond(text, isDirectReply = false) {
             const response = await fetch(`${backendUrl}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mensaje: text }),
+                body: JSON.stringify({
+                    mensaje: text,
+                    sessionId: sessionId
+                }),
                 credentials: 'include'
             });
 
@@ -242,190 +397,93 @@ async function respond(text, isDirectReply = false) {
         // Detectar todas las etiquetas [MOSTRAR_IMAGEN: ...]
         const regex = /\[MOSTRAR_IMAGEN:\s*([^\]]+)\]/gi;
         let match;
+
+        // Extraer los diseños del mensaje
         while ((match = regex.exec(mensajeTexto)) !== null) {
-            disenos.push(match[1].trim());
-            mensajeTexto = mensajeTexto.replace(match[0], '').trim();
+            const disenosEncontrados = match[1].split(',').map(d => d.trim());
+            disenos.push(...disenosEncontrados);
         }
 
-        // Crear contenedor del mensaje
-        const message = document.createElement('div');
-        message.className = 'bot-message';
-        const textoElem = document.createElement('span');
-        textoElem.textContent = '';
-        message.appendChild(textoElem);
-        if (messagesContainer) {
-            messagesContainer.appendChild(message);
-        }
+        // Eliminar las etiquetas del texto para la animación
+        const textoSinEtiquetas = mensajeTexto.replace(regex, '').trim();
 
-        // Animación de escritura
-        let index = 0;
-        const intervalo = setInterval(() => {
-            if (index < mensajeTexto.length) {
-                textoElem.textContent += mensajeTexto.charAt(index);
-                index++;
-                if (messagesContainer) {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            } else {
-                clearInterval(intervalo);
-
-                // Agregar imágenes si hay
-                if (disenos.length > 0 && messagesContainer) {
-                    disenos.forEach(grupo => {
-                        grupo.split(',').forEach(d => {
-                            const cleanName = d.trim();
-                            const normalizedName = cleanName.replace(/ /g, '_');
-
-                            const img = document.createElement('img');
-                            img.src = `${backendUrl}/static/disenos/${normalizedName}.jpg`;
-                            img.alt = cleanName;
-                            img.style.maxWidth = '100%';
-                            img.style.borderRadius = '8px';
-                            img.style.marginTop = '5px';
-                            img.onerror = function () {
-                                console.error(`No se pudo cargar: ${normalizedName}.jpg`);
-                                this.style.display = 'none';
-                            };
-                            img.onload = () => {
-                                if (messagesContainer) {
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                }
-                            };
-                            message.appendChild(img);
-                        });
-                    });
-                }
-            }
-        }, 50); // velocidad animación
+        // Mostrar el mensaje con animación de escritura
+        showMessageWithAnimation(textoSinEtiquetas, false, disenos);
 
     } catch (error) {
         // Asegurarse de eliminar el mensaje "pensando" en caso de error
         removeThinkingMessage();
 
-        // Mostrar mensaje de error con animación
-        showMessageWithAnimation("Ocurrió un error al contactar la IA.", true);
+        // Mostrar mensaje de error más específico
+        if (error.message.includes('Failed to fetch')) {
+            showMessageWithAnimation("Error de conexión con el servidor. Por favor, intenta nuevamente.", true);
+        } else {
+            showMessageWithAnimation("Ocurrió un error al procesar tu solicitud.", true);
+        }
+
         console.error('Error en respond:', error);
     }
 }
 
 // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
 
-// Al hacer clic en el botón, abrir el selector de imágenes
+// Deshabilitar temporalmente la subida de imágenes
 if (uploadButton) {
     uploadButton.addEventListener('click', () => {
-        if (imageInput) {
-            imageInput.click();
-        }
+        // Mostrar mensaje de que la función no está disponible
+        showMessageWithAnimation("La función de subir imágenes no está disponible temporalmente. Por favor, describe tu apariencia con texto.", true);
     });
 }
 
-// Al seleccionar una imagen
+// Comentar el evento change para imageInput para deshabilitar la subida
+/*
 if (imageInput) {
     imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Imagen subida';
-                img.style.maxWidth = '100px';
-                img.style.borderRadius = '8px';
-                img.style.margin = '5px 0';
-
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('user-message', 'solo-imagen');
-                messageDiv.appendChild(img);
-
-                img.onload = function () {
-                    if (messagesContainer) {
-                        messagesContainer.appendChild(messageDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                };
-
-                // Enviar imagen al backend
-                const formData = new FormData();
-                formData.append('imagen', file);
-
-                // Mostrar mensaje "pensando" para la subida de imagen
-                thinkingMessage = document.createElement('div');
-                thinkingMessage.className = 'bot-message';
-                thinkingMessage.textContent = '...';
-                if (messagesContainer) {
-                    messagesContainer.appendChild(thinkingMessage);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-
-                fetch(`${backendUrl}/subir-imagen`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                })
-                    .then(response => {
-                        // Eliminar mensaje "pensando" después de obtener respuesta
-                        removeThinkingMessage();
-
-                        if (!response.ok) {
-                            throw new Error(`Error del servidor: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.reply) {
-                            respond(data.reply, true);
-                        } else {
-                            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
-                        }
-                    })
-                    .catch(error => {
-                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
-                        removeThinkingMessage();
-
-                        console.error("Error al subir la imagen:", error);
-                        showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
-                    });
-            };
-
-            reader.readAsDataURL(file);
-        }
+        // Código comentado para deshabilitar la subida de imágenes
     });
 }
+*/
 
-// ==================== BOTÓN DE REINICIAR CONVERSACIÓN ====================
+// ==================== FUNCIONALIDAD PARA MOVILES ====================
 
-// Obtener referencia al botón de reiniciar
-const resetButton = document.getElementById('reset-button');
+// Función para ajustar el chatbot en dispositivos móviles
+function adjustChatbotForMobile() {
+    const chatbotBox = document.querySelector('.chatbot-box');
+    const chatbotContainer = document.querySelector('.chatbot-container');
 
-// Función para reiniciar la conversación
-if (resetButton) {
-    resetButton.addEventListener('click', () => {
-        // Mostrar confirmación
-        if (confirm('¿Estás segura de que deseas reiniciar la conversación? Se perderá el historial.')) {
-            // Llamar al endpoint de reiniciar en el backend
-            fetch(`${backendUrl}/reiniciar`, {
-                method: 'POST',
-                credentials: 'include'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // Limpiar el contenedor de mensajes
-                        if (messagesContainer) {
-                            messagesContainer.innerHTML = '';
-                            // Agregar mensaje inicial del bot
-                            const welcomeMessage = document.createElement('div');
-                            welcomeMessage.className = 'bot-message';
-                            welcomeMessage.textContent = 'Hola, soy Alzárea ¿Lista para una experiencia de moda?';
-                            messagesContainer.appendChild(welcomeMessage);
-                        }
-                    } else {
-                        console.error('Error al reiniciar la conversación');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al reiniciar la conversación:', error);
-                });
+    if (!chatbotBox || !chatbotContainer) return;
+
+    // Detectar si es un dispositivo móvil
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // Asegurarse de que el chatbot esté visiblemente dentro de la pantalla
+        const viewportWidth = window.innerWidth;
+        const chatbotWidth = chatbotBox.offsetWidth;
+
+        // Si el chatbot se sale por la derecha
+        if (chatbotContainer.getBoundingClientRect().right > viewportWidth) {
+            chatbotBox.style.right = '0';
+            chatbotBox.style.left = 'auto';
         }
-    });
+
+        // Si el chatbot se sale por la izquierda
+        if (chatbotContainer.getBoundingClientRect().left < 0) {
+            chatbotBox.style.left = '0';
+            chatbotBox.style.right = 'auto';
+        }
+    }
 }
+
+// Ejecutar al cargar y al redimensionar la ventana
+window.addEventListener('load', adjustChatbotForMobile);
+window.addEventListener('resize', adjustChatbotForMobile);
+
+// También ajustar después de abrir el chatbot
+const originalToggle = window.toggleChatbot;
+window.toggleChatbot = function () {
+    if (typeof originalToggle === 'function') {
+        originalToggle();
+    }
+    setTimeout(adjustChatbotForMobile, 100);
+};
