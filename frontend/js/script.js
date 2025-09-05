@@ -457,9 +457,10 @@ if (imageInput) {
     imageInput.addEventListener('change', () => {
         const file = imageInput.files[0];
         if (file) {
-            const formData = new FormData();
-            formData.append('imagen', file);
-            formData.append('sessionId', sessionId); // Agregar sessionId
+            const reader = new FileReader();
+            // const formData = new FormData();
+            // formData.append('imagen', file);
+            // formData.append('sessionId', sessionId); // Agregar sessionId
 
             reader.onload = function (e) {
                 const img = document.createElement('img');
