@@ -30,6 +30,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// Asegurar que exista el directorio de uploads
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Ruta de salud para verificar que el servidor funciona
 app.get('/health', (req, res) => {
     res.status(200).json({
@@ -317,17 +323,121 @@ app.get('/imagen-diseno/:nombre', (req, res) => {
     });
 });
 
-// Ruta para subir imágenes (si decides implementarlo después)
-app.post('/subir-imagen', (req, res) => {
-    res.status(501).json({ error: 'Funcionalidad de imágenes no implementada aún' });
+// Agregar multer para manejar la subida de archivos
+const multer = require('multer');
+const fs = require('fs');
+
+// Configurar almacenamiento para multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = 'uploads/';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir);
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        // Generar nombre único para el archivo
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
+    }
 });
 
-// Ruta para obtener el estado actual de una conversación
-app.get('/estado-conversacion/:sessionId', (req, res) => {
-    const { sessionId } = req.params;
-    const estado = userStates.get(sessionId) || { step: 1, presented: false };
-    res.json(estado);
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // Límite de 5MB
+    },
+    fileFilter: function (req, file, cb) {
+        // Solo permitir imágenes
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Solo se permiten archivos de imagen'), false);
+        }
+    }
 });
+
+// Ruta para subir imágenes ()
+app.post('/subir-imagen', upload.single('imagen'), async (req, res) => {
+    try {
+        const { sessionId = 'default' } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se proporcionó ninguna imagen' });
+        }
+
+        // Obtener o inicializar la conversación
+        if (!conversations.has(sessionId)) {
+            conversations.set(sessionId, [
+                {
+                    role: "system",
+                    content: systemPrompt
+                }
+            ]);
+        }
+
+        const conversation = conversations.get(sessionId);
+
+        // Agregar mensaje del usuario sobre la imagen subida
+        conversation.push({
+            role: "user",
+            content: `He subido una imagen: ${req.file.filename}`
+        });
+
+        // Simular análisis de imagen (en una implementación real, aquí integrarías un servicio de visión por computadora)
+        const analisisImagen = `
+He analizado tu imagen. Veo que tienes una complexión [tipo de complexión], 
+color de piel [tonalidad], cabello [color y tipo de cabello], y altura aproximada de [altura]. 
+Esto me ayudará a recomendarte prendas que se adapten perfectamente a tu silueta.
+`;
+
+        // Agregar el análisis a la conversación como si fuera del usuario
+        conversation.push({
+            role: "user",
+            content: analisisImagen
+        });
+
+        // Obtener respuesta de la IA
+        const response = await axios.post(
+            GROQ_API_URL,
+            {
+                model: "llama-3.3-70b-versatile",
+                messages: conversation,
+                temperature: 0.7,
+                max_tokens: 1000,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`,
+                },
+                timeout: 30000
+            }
+        );
+
+        let reply = response.data.choices[0].message.content;
+
+        // Agregar respuesta del asistente a la conversación
+        conversation.push({ role: "assistant", content: reply });
+
+        res.json({
+            reply,
+            imagenUrl: `/uploads/${req.file.filename}`
+        });
+
+    } catch (error) {
+        console.error('Error al procesar imagen:', error);
+        res.status(500).json({
+            error: 'Error al procesar la imagen',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+
+// Servir archivos subidos
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Usar el puerto proporcionado por Railway o 3000 por defecto
 const PORT = process.env.PORT || 3000;
