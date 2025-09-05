@@ -4,6 +4,12 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+// Asegurar que exista el directorio de uploads
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const app = express();
 
 // Configuración de CORS
@@ -30,11 +36,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Asegurar que exista el directorio de uploads
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
 
 // Ruta de salud para verificar que el servidor funciona
 app.get('/health', (req, res) => {
