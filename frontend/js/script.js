@@ -452,81 +452,81 @@ if (uploadButton) {
     });
 }
 
-// // Al seleccionar una imagen
-// if (imageInput) {
-//     imageInput.addEventListener('change', () => {
-//         const file = imageInput.files[0];
-//         if (file) {
-//             const formData = new FormData();
-//             formData.append('imagen', file);
-//             formData.append('sessionId', sessionId); // Agregar sessionId
+// Al seleccionar una imagen
+if (imageInput) {
+    imageInput.addEventListener('change', () => {
+        const file = imageInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('imagen', file);
+            formData.append('sessionId', sessionId); // Agregar sessionId
 
-//             reader.onload = function (e) {
-//                 const img = document.createElement('img');
-//                 img.src = e.target.result;
-//                 img.alt = 'Imagen subida';
-//                 img.style.maxWidth = '100px';
-//                 img.style.borderRadius = '8px';
-//                 img.style.margin = '5px 0';
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Imagen subida';
+                img.style.maxWidth = '100px';
+                img.style.borderRadius = '8px';
+                img.style.margin = '5px 0';
 
-//                 const messageDiv = document.createElement('div');
-//                 messageDiv.classList.add('user-message', 'solo-imagen');
-//                 messageDiv.appendChild(img);
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('user-message', 'solo-imagen');
+                messageDiv.appendChild(img);
 
-//                 img.onload = function () {
-//                     if (messagesContainer) {
-//                         messagesContainer.appendChild(messageDiv);
-//                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-//                     }
-//                 };
+                img.onload = function () {
+                    if (messagesContainer) {
+                        messagesContainer.appendChild(messageDiv);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                };
 
-//                 // Enviar imagen al backend
-//                 const formData = new FormData();
-//                 formData.append('imagen', file);
+                // Enviar imagen al backend
+                const formData = new FormData();
+                formData.append('imagen', file);
 
-//                 // Mostrar mensaje "pensando" para la subida de imagen
-//                 thinkingMessage = document.createElement('div');
-//                 thinkingMessage.className = 'bot-message';
-//                 thinkingMessage.textContent = '...';
-//                 if (messagesContainer) {
-//                     messagesContainer.appendChild(thinkingMessage);
-//                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-//                 }
+                // Mostrar mensaje "pensando" para la subida de imagen
+                thinkingMessage = document.createElement('div');
+                thinkingMessage.className = 'bot-message';
+                thinkingMessage.textContent = '...';
+                if (messagesContainer) {
+                    messagesContainer.appendChild(thinkingMessage);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
 
-//                 fetch(`${backendUrl}/subir-imagen`, {
-//                     method: 'POST',
-//                     body: formData,
-//                     credentials: 'include'
-//                 })
-//                     .then(response => {
-//                         // Eliminar mensaje "pensando" después de obtener respuesta
-//                         removeThinkingMessage();
+                fetch(`${backendUrl}/subir-imagen`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                })
+                    .then(response => {
+                        // Eliminar mensaje "pensando" después de obtener respuesta
+                        removeThinkingMessage();
 
-//                         if (!response.ok) {
-//                             throw new Error(`Error del servidor: ${response.status}`);
-//                         }
-//                         return response.json();
-//                     })
-//                     .then(data => {
-//                         if (data.reply) {
-//                             respond(data.reply, true);
-//                         } else {
-//                             showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
-//                         }
-//                     })
-//                     .catch(error => {
-//                         // Asegurarse de eliminar el mensaje "pensando" en caso de error
-//                         removeThinkingMessage();
+                        if (!response.ok) {
+                            throw new Error(`Error del servidor: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.reply) {
+                            respond(data.reply, true);
+                        } else {
+                            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
+                        }
+                    })
+                    .catch(error => {
+                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
+                        removeThinkingMessage();
 
-//                         console.error("Error al subir la imagen:", error);
-//                         showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
-//                     });
-//             };
+                        console.error("Error al subir la imagen:", error);
+                        showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
+                    });
+            };
 
-//             reader.readAsDataURL(file);
-//         }
-//     });
-// }
+            reader.readAsDataURL(file);
+        }
+    });
+}
 
 // ==================== FUNCIONALIDAD PARA MOVILES ====================
 
