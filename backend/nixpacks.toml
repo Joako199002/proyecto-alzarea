@@ -1,5 +1,5 @@
-[[providers]]
-name = "python"
+[build]
+provider = "python"
 version = "3.10.12"
 
 [phases.setup]
