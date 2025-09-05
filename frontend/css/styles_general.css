@@ -468,6 +468,22 @@ html {
     /* Margen inferior de 5px para separación del área de texto */
 }
 
+/* ===== ESTILOS COMUNES DEL FOOTER ===== */
+
+/* Footer */
+footer {
+    background-color: #000000;
+    /* Color de fondo azul oscuro */
+    color: white;
+    /* Color de texto blanco */
+    text-align: center;
+    /* Centra el texto horizontalmente */
+    padding: 20px;
+    /* Espaciado interno de 20px en todos los lados */
+    font-size: 0.9rem;
+    /* Tamaño de fuente ligeramente reducido */
+}
+
 /* Contenedor para los botones de subir imagen y reiniciar */
 .chatbot-buttons-container {
     display: flex;
@@ -496,20 +512,17 @@ html {
     background-color: #e0e0e0;
 }
 
-/* ===== ESTILOS COMUNES DEL FOOTER ===== */
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .chatbot-buttons-container {
+        flex-direction: row;
+    }
 
-/* Footer */
-footer {
-    background-color: #000000;
-    /* Color de fondo azul oscuro */
-    color: white;
-    /* Color de texto blanco */
-    text-align: center;
-    /* Centra el texto horizontalmente */
-    padding: 20px;
-    /* Espaciado interno de 20px en todos los lados */
-    font-size: 0.9rem;
-    /* Tamaño de fuente ligeramente reducido */
+    #upload-button,
+    #reset-button {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
 }
 
 /* ===== MEDIA QUERIES COMUNES ===== */
@@ -551,6 +564,27 @@ footer {
         height: 3px;
         margin: 3px 0;
     }
+
+    /* .chatbot-container {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .chatbot-toggle {
+        width: 70px;
+        height: 70px;
+        font-size: 40px;
+    }
+
+    .chatbot-box {
+        width: 90vw;
+        max-width: none;
+        height: 60vh;
+        bottom: 80px;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+    } */
 
     /* moviles chatbot v1.1 */
     .chatbot-container {
@@ -598,19 +632,23 @@ footer {
         background: white;
     }
 
-    /* Ajustes para dispositivos móviles */
-    .chatbot-buttons-container {
-        flex-direction: row;
-    }
-
-    #upload-button,
-    #reset-button {
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
 }
 
 @media (max-width: 480px) {
+    /* 
+    /* Estilos para móviles pequeños 
+    .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        font-size: 35px;
+    }
+
+    .chatbot-box {
+        width: 95vw;
+        height: 55vh;
+        bottom: 70px;
+    }
+*/
 
     /* estilos moviles pequenoos v1.1 */
     .chatbot-container {
@@ -646,4 +684,6 @@ footer {
             width: 350px;
         }
     }
+
+
 }

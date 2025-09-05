@@ -28,7 +28,12 @@ async function checkBackendHealth() {
     }
 }
 
-let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+// let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+let sessionId = localStorage.getItem('chatbot_session_id');
+if (!sessionId) {
+    sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('chatbot_session_id', sessionId);
+}
 
 // ==================== CÓDIGO DEL MENÚ HAMBURGUESA ====================
 
@@ -69,32 +74,6 @@ const imageInput = document.getElementById('chatbot-image');
 
 // Variable para almacenar la referencia al mensaje "pensando"
 let thinkingMessage = null;
-
-// Reiniciar la sesión del chatbot al cargar la página
-fetch(`${backendUrl}/reiniciar`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId: sessionId }),
-    credentials: 'include'
-}).catch(error => {
-    console.error('Error al reiniciar sesión:', error);
-});
-
-// Mostrar el chatbot al hacer clic en el botón de toggle
-if (toggleButton) {
-    toggleButton.addEventListener('click', () => {
-        chatbotBox.style.display = 'flex';
-        // Enfocar el campo de entrada cuando se abre el chatbot
-        setTimeout(() => inputField.focus(), 100);
-    });
-}
-
-// Ocultar el chatbot al hacer clic en el botón de cerrar
-if (closeButton) {
-    closeButton.addEventListener('click', () => {
-        chatbotBox.style.display = 'none';
-    });
-}
 
 // Función para ajustar automáticamente la altura del textarea
 function autoResizeTextarea() {
@@ -351,7 +330,7 @@ function showMessageWithAnimation(messageText, isError = false, disenos = []) {
     }, 50); // velocidad animación
 }
 
-// Función principal para procesar respuestas del chatbot - CORREGIDA
+// Función principal para procesar respuestas del chatbot - MODIFICADA PARA GROQ
 async function respond(text, isDirectReply = false) {
     try {
         let mensajeTexto = text;
@@ -367,15 +346,15 @@ async function respond(text, isDirectReply = false) {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
 
-            // Enviar mensaje al backend
+            // Enviar mensaje al backend Python (que se conecta con Groq)
             const response = await fetch(`${backendUrl}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include", // Permite creedenciales del backend
                 body: JSON.stringify({
                     mensaje: text,
-                    sessionId: sessionId
-                }),
-                credentials: 'include'
+                    //sessionId: sessionId // cambiado
+                })
             });
 
             // Quitar "..." después de obtener respuesta
@@ -387,22 +366,6 @@ async function respond(text, isDirectReply = false) {
             }
 
             const data = await response.json();
-
-            // Si la respuesta incluye una URL de imagen, mostrarla
-            if (data.imagenUrl) {
-                const img = document.createElement('img');
-                img.src = `${backendUrl}${data.imagenUrl}`;
-                img.alt = 'Imagen subida';
-                img.style.maxWidth = '100%';
-                img.style.borderRadius = '8px';
-                img.style.marginTop = '10px';
-
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('bot-message');
-                messageDiv.appendChild(img);
-                messagesContainer.appendChild(messageDiv);
-            }
-
             if (!data.reply) {
                 showMessageWithAnimation("Lo siento, no pude obtener una respuesta en este momento.", true);
                 return;
@@ -441,90 +404,109 @@ async function respond(text, isDirectReply = false) {
     }
 }
 
+// Agrega una función para reiniciar la conversación si es necesario
+function reiniciarConversacion() {
+    fetch(`${backendUrl}/reiniciar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionId })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Conversación reiniciada:', data);
+            // Limpiar el chat visualmente
+            if (messagesContainer) {
+                messagesContainer.innerHTML = '';
+                // Agregar mensaje inicial
+                const initialMessage = document.createElement('div');
+                initialMessage.className = 'bot-message';
+                initialMessage.textContent = 'Hola, soy Alzárea ¿Lista para una experiencia de moda?';
+                messagesContainer.appendChild(initialMessage);
+            }
+        })
+        .catch(error => {
+            console.error('Error al reiniciar la conversación:', error);
+        });
+}
+
+
+// ==================== CREAR BOTÓN DE REINICIO ====================
+
+// Crear botón de reinicio
+const resetButton = document.createElement('button');
+resetButton.id = 'reset-button';
+resetButton.textContent = '🔄 Reiniciar';
+
+// Insertar el botón de reinicio en el DOM
+const chatbotInput = document.querySelector('.chatbot-input');
+if (chatbotInput && uploadButton) {
+    // Crear contenedor para los botones
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'chatbot-buttons-container';
+
+    // Mover el botón de subir imagen al contenedor
+    uploadButton.parentNode.removeChild(uploadButton);
+    buttonsContainer.appendChild(uploadButton);
+
+    // Agregar el botón de reinicio al contenedor
+    buttonsContainer.appendChild(resetButton);
+
+    // Insertar el contenedor antes del textarea
+    inputField.parentNode.insertBefore(buttonsContainer, inputField);
+}
+
+// Agregar evento al botón de reinicio
+if (resetButton) {
+    resetButton.addEventListener('click', reiniciarConversacion);
+}
+
 // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
 
-// Al hacer clic en el botón, abrir el selector de imágenes
+// Función para manejar la subida de imágenes (preparada para el futuro)
 if (uploadButton) {
     uploadButton.addEventListener('click', () => {
-        if (imageInput) {
-            imageInput.click();
-        }
+        // Mostrar mensaje de que la función está en desarrollo
+        showMessageWithAnimation("La función de subir imágenes estará disponible pronto. Mientras tanto, puedes describir tu apariencia con texto.", false);
+
+        // Para cuando implementes la subida de imágenes:
+        // imageInput.click();
     });
 }
 
-// Al seleccionar una imagen
+// Evento change para cuando se seleccione una imagen (preparado para el futuro)
 if (imageInput) {
-    imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            // const formData = new FormData();
-            // formData.append('imagen', file);
-            // formData.append('sessionId', sessionId); // Agregar sessionId
+    imageInput.addEventListener('change', async () => {
+        if (imageInput.files && imageInput.files[0]) {
+            const file = imageInput.files[0];
 
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Imagen subida';
-                img.style.maxWidth = '100px';
-                img.style.borderRadius = '8px';
-                img.style.margin = '5px 0';
+            // Mostrar mensaje de que se está procesando la imagen
+            addMessage("Procesando imagen...", 'user');
 
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('user-message', 'solo-imagen');
-                messageDiv.appendChild(img);
-
-                img.onload = function () {
-                    if (messagesContainer) {
-                        messagesContainer.appendChild(messageDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                };
-
-                // Enviar imagen al backend
+            try {
+                // Crear FormData para enviar la imagen
                 const formData = new FormData();
-                formData.append('imagen', file);
+                formData.append('image', file);
+                formData.append('sessionId', sessionId);
 
-                // Mostrar mensaje "pensando" para la subida de imagen
-                thinkingMessage = document.createElement('div');
-                thinkingMessage.className = 'bot-message';
-                thinkingMessage.textContent = '...';
-                if (messagesContainer) {
-                    messagesContainer.appendChild(thinkingMessage);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                // Enviar imagen al backend para análisis
+                const response = await fetch(`${backendUrl}/analyze-image`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al procesar la imagen');
                 }
 
-                fetch(`${backendUrl}/subir-imagen`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                })
-                    .then(response => {
-                        // Eliminar mensaje "pensando" después de obtener respuesta
-                        removeThinkingMessage();
+                const data = await response.json();
 
-                        if (!response.ok) {
-                            throw new Error(`Error del servidor: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.reply) {
-                            respond(data.reply, true);
-                        } else {
-                            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
-                        }
-                    })
-                    .catch(error => {
-                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
-                        removeThinkingMessage();
+                // Usar el resultado del análisis para generar una respuesta
+                respond(`He subido una imagen. ${data.analysis}`, true);
 
-                        console.error("Error al subir la imagen:", error);
-                        showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);
-                    });
-            };
-
-            reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('Error al subir imagen:', error);
+                showMessageWithAnimation("Error al procesar la imagen. Por favor, intenta de nuevo o describe tu apariencia con texto.", true);
+            }
         }
     });
 }
@@ -560,15 +542,39 @@ function adjustChatbotForMobile() {
     }
 }
 
+// Mostrar el chatbot al hacer clic en el botón de toggle
+if (toggleButton) {
+    toggleButton.addEventListener('click', () => {
+        chatbotBox.style.display = 'flex';
+        // Enfocar el campo de entrada cuando se abre el chatbot
+        setTimeout(() => inputField.focus(), 100);
+        // Ajustar para móviles después de abrir
+        setTimeout(adjustChatbotForMobile, 100);
+    });
+}
+
+// Ocultar el chatbot al hacer clic en el botón de cerrar
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        chatbotBox.style.display = 'none';
+    });
+}
+
 // Ejecutar al cargar y al redimensionar la ventana
 window.addEventListener('load', adjustChatbotForMobile);
 window.addEventListener('resize', adjustChatbotForMobile);
 
-// También ajustar después de abrir el chatbot
-const originalToggle = window.toggleChatbot;
-window.toggleChatbot = function () {
-    if (typeof originalToggle === 'function') {
-        originalToggle();
+// ==================== INICIALIZACIÓN ====================
+
+// Verificar el estado del backend al cargar la página
+document.addEventListener('DOMContentLoaded', async () => {
+    const isBackendHealthy = await checkBackendHealth();
+
+    if (!isBackendHealthy) {
+        console.warn('El backend no está respondiendo. Algunas funciones pueden no estar disponibles.');
+        // Opcional: mostrar un mensaje al usuario
+        setTimeout(() => {
+            showMessageWithAnimation("Nota: Algunas funciones avanzadas pueden no estar disponibles temporalmente debido a problemas de conexión.", true);
+        }, 3000);
     }
-    setTimeout(adjustChatbotForMobile, 100);
-};
+});

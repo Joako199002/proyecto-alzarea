@@ -8,4 +8,3 @@ gunicorn==21.2.0
 pandas
 openpyxl
 numpy
-werkzeug==2.3.7
