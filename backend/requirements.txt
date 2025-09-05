@@ -1,20 +1,11 @@
-# flask==2.3.3
-# flask-cors==4.0.0
-# Flask-Session==0.8.0
-# groq
-# python-dotenv==1.0.0
-# requests==2.31.0
-# gunicorn==21.2.0
-# pandas
-# openpyxl
-# numpy
-# werkzeug==2.3.7
-#deepface==0.0.79
-#opencv-python==4.8.1.78
-#mediapipe==0.10.0
-#torch==2.0.1
-#torchvision==0.15.2
-#transformers==4.31.0
-pillow==10.0.0
-pandas==2.0.3
-numpy==1.24.3
+flask==2.3.3
+flask-cors==4.0.0
+Flask-Session==0.8.0
+groq
+python-dotenv==1.0.0
+requests==2.31.0
+gunicorn==21.2.0
+pandas
+openpyxl
+numpy
+werkzeug==2.3.7
