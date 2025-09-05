@@ -441,16 +441,16 @@ async function respond(text, isDirectReply = false) {
     }
 }
 
-// // ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
+// ==================== FUNCIONALIDAD PARA SUBIR IMÁGENES ====================
 
-// // Al hacer clic en el botón, abrir el selector de imágenes
-// if (uploadButton) {
-//     uploadButton.addEventListener('click', () => {
-//         if (imageInput) {
-//             imageInput.click();
-//         }
-//     });
-// }
+// Al hacer clic en el botón, abrir el selector de imágenes
+if (uploadButton) {
+    uploadButton.addEventListener('click', () => {
+        if (imageInput) {
+            imageInput.click();
+        }
+    });
+}
 
 // // Al seleccionar una imagen
 // if (imageInput) {
