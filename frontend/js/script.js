@@ -353,7 +353,7 @@ async function respond(text, isDirectReply = false) {
                 credentials: "include", // Permite creedenciales del backend
                 body: JSON.stringify({
                     mensaje: text,
-                    //sessionId: sessionId // cambiado
+                    sessionId: sessionId // cambiado
                 })
             });
 

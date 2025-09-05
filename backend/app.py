@@ -28,6 +28,7 @@ frontend_urls = [
 CORS(app, supports_credentials=True, origins=frontend_urls)
 
 # Diccionario global para almacenar el historial de conversación por cada sesión
+# NOTA: Ahora usamos un almacenamiento en memoria en lugar de cookies para historiales largos
 historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
@@ -45,7 +46,6 @@ try:
 except Exception as e:
     print(f"Error cargando base de vestidos: {e}")
     vestidos_formateados = "Base de vestidos no disponible"
-
 
 # Definir el prompt base para el asistente
 prompt_base = f"""
@@ -131,7 +131,7 @@ No debes solicitar aprobación sobre los accesorios ni condicionar su presentaci
 Justo después de hacer tu recomendación conecta la conversación con el siguiente punto.
 
 8.- Enfatíza las bondades de tu recomendación con respecto al evento y sus características físicas pero házle saber que contamos con
-una agenda disponible para que uno de nuestros expertos se contacte y juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
+una agenda disponible para que uno de nuestros expertos se contacte e juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
 
 9.- Si el cliente solicita una cita pídele numero de teléfono, e-mail, y una fecha tentativa que le sea conveniente para poder contactarlo.
 
@@ -151,8 +151,10 @@ def home():
 
 @app.route('/reiniciar', methods=['POST'])
 def reiniciar_historial():
-    session.pop('historial', None)
-    session.pop('caracteristicas_usuario', None)
+    session_id = request.json.get('sessionId')
+    if session_id and session_id in historial_conversaciones:
+        del historial_conversaciones[session_id]
+    session.clear()
     return jsonify({"status": "ok"})
 
 # Ruta para manejar el chat
@@ -165,14 +167,17 @@ def chat():
         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
 
     mensaje_usuario = data['mensaje'].strip()
+    session_id = data.get('sessionId', 'default_session')
+
     if not mensaje_usuario:
         return jsonify({"reply": "Lo siento, estamos teniendo algunos inconvenientes. Por favor, intenta nuevamente más tarde."}), 200
 
-    # Inicializa historial si no existe
-    if 'historial' not in session:
-        session['historial'] = [{"role": "system", "content": prompt_base}]
+    # Inicializa historial si no existe (en memoria, no en sesión)
+    if session_id not in historial_conversaciones:
+        historial_conversaciones[session_id] = [
+            {"role": "system", "content": prompt_base}]
 
-    historial = session['historial']
+    historial = historial_conversaciones[session_id]
     caracteristicas = session.get('caracteristicas_usuario')
 
     # Agregar características físicas si están disponibles y no se han agregado aún
@@ -191,7 +196,6 @@ def chat():
         # Llama a la API de Groq para obtener una respuesta
         chat_completion = client.chat.completions.create(
             messages=historial,
-            # messages=[{"role": "system", "content": prompt_base}] + historial,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
             max_tokens=300,
@@ -202,7 +206,12 @@ def chat():
 
         # Agregar la respuesta de la IA al historial
         historial.append({"role": "assistant", "content": response})
-        session['historial'] = historial
+
+        # Limitar el tamaño del historial para evitar problemas de memoria
+        if len(historial) > 20:  # Mantener solo los últimos 20 mensajes
+            # Conservar el primer mensaje (system) y los últimos 19
+            historial = [historial[0]] + historial[-19:]
+            historial_conversaciones[session_id] = historial
 
         return jsonify({"reply": response})
 
@@ -219,6 +228,7 @@ def subir_imagen():
         return jsonify({"reply": "No se recibió ninguna imagen."}), 400
 
     imagen = request.files['imagen']
+    session_id = request.form.get('sessionId', 'default_session')
     image_bytes = imagen.read()
 
     try:
@@ -228,10 +238,11 @@ def subir_imagen():
         session['caracteristicas_usuario'] = resultados
 
         # Inicializa historial si no existe
-        if 'historial' not in session:
-            session['historial'] = [{"role": "system", "content": prompt_base}]
+        if session_id not in historial_conversaciones:
+            historial_conversaciones[session_id] = [
+                {"role": "system", "content": prompt_base}]
 
-        historial = session['historial']
+        historial = historial_conversaciones[session_id]
 
         # Agregar características físicas si aún no están
         if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
@@ -247,7 +258,7 @@ def subir_imagen():
 
         # Llama a la API para obtener una respuesta
         chat_completion = client.chat.completions.create(
-            messages=[{"role": "system", "content": prompt_base}] + historial,
+            messages=historial,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
             max_tokens=300,
@@ -258,7 +269,6 @@ def subir_imagen():
 
         if respuesta_ia:
             historial.append({"role": "assistant", "content": respuesta_ia})
-            session['historial'] = historial
             return jsonify({"reply": respuesta_ia})
         else:
             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
@@ -273,6 +283,19 @@ def subir_imagen():
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "ok"})
+
+# Función placeholder para detección de características faciales
+
+
+def detect_facial_features(image_bytes):
+    # Esta es una función placeholder - debes implementar tu lógica real aquí
+    # Por ahora, devolvemos un diccionario de ejemplo
+    return {
+        "tono_piel": "claro",
+        "color_ojos": "marrones",
+        "color_cabello": "castaño",
+        "forma_rostro": "ovalada"
+    }
 
 
 if __name__ == '__main__':
