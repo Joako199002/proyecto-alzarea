@@ -458,9 +458,6 @@ if (imageInput) {
         const file = imageInput.files[0];
         if (file) {
             const reader = new FileReader();
-            // const formData = new FormData();
-            // formData.append('imagen', file);
-            // formData.append('sessionId', sessionId); // Agregar sessionId
 
             reader.onload = function (e) {
                 const img = document.createElement('img');
@@ -474,25 +471,21 @@ if (imageInput) {
                 messageDiv.classList.add('user-message', 'solo-imagen');
                 messageDiv.appendChild(img);
 
-                img.onload = function () {
-                    if (messagesContainer) {
-                        messagesContainer.appendChild(messageDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                };
+                // Agregar mensaje de "Analizando imagen..."
+                const analyzingMessage = document.createElement('div');
+                analyzingMessage.className = 'bot-message';
+                analyzingMessage.textContent = 'Analizando imagen...';
+
+                if (messagesContainer) {
+                    messagesContainer.appendChild(messageDiv);
+                    messagesContainer.appendChild(analyzingMessage);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
 
                 // Enviar imagen al backend
                 const formData = new FormData();
                 formData.append('imagen', file);
-
-                // Mostrar mensaje "pensando" para la subida de imagen
-                thinkingMessage = document.createElement('div');
-                thinkingMessage.className = 'bot-message';
-                thinkingMessage.textContent = '...';
-                if (messagesContainer) {
-                    messagesContainer.appendChild(thinkingMessage);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
+                formData.append('sessionId', sessionId);
 
                 fetch(`${backendUrl}/subir-imagen`, {
                     method: 'POST',
@@ -500,8 +493,10 @@ if (imageInput) {
                     credentials: 'include'
                 })
                     .then(response => {
-                        // Eliminar mensaje "pensando" después de obtener respuesta
-                        removeThinkingMessage();
+                        // Eliminar mensaje "Analizando imagen..."
+                        if (messagesContainer && messagesContainer.contains(analyzingMessage)) {
+                            messagesContainer.removeChild(analyzingMessage);
+                        }
 
                         if (!response.ok) {
                             throw new Error(`Error del servidor: ${response.status}`);
@@ -510,14 +505,33 @@ if (imageInput) {
                     })
                     .then(data => {
                         if (data.reply) {
+                            // Mostrar la respuesta del análisis
                             respond(data.reply, true);
+
+                            // Si hay URL de imagen, mostrarla
+                            if (data.imagenUrl) {
+                                const uploadedImg = document.createElement('img');
+                                uploadedImg.src = `${backendUrl}${data.imagenUrl}`;
+                                uploadedImg.alt = 'Imagen analizada';
+                                uploadedImg.style.maxWidth = '100%';
+                                uploadedImg.style.borderRadius = '8px';
+                                uploadedImg.style.marginTop = '10px';
+
+                                const imgMessage = document.createElement('div');
+                                imgMessage.classList.add('bot-message');
+                                imgMessage.appendChild(uploadedImg);
+                                messagesContainer.appendChild(imgMessage);
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }
                         } else {
                             showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
                         }
                     })
                     .catch(error => {
-                        // Asegurarse de eliminar el mensaje "pensando" en caso de error
-                        removeThinkingMessage();
+                        // Eliminar mensaje "Analizando imagen..." en caso de error
+                        if (messagesContainer && messagesContainer.contains(analyzingMessage)) {
+                            messagesContainer.removeChild(analyzingMessage);
+                        }
 
                         console.error("Error al subir la imagen:", error);
                         showMessageWithAnimation("Ocurrió un error al subir la imagen.", true);

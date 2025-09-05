@@ -1,0 +1,17 @@
+[providers.python]
+version = "3.10.12"
+
+[phases.setup]
+cmds = [
+    "apt-get update",
+    "apt-get install -y libglib2.0-0 libsm6 libxrender1 libxext6",
+]
+
+[phases.install]
+cmds = [
+    "pip install -r requirements.txt",
+    "npm install",
+]
+
+[start]
+cmd = "node server.js"
