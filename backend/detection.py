@@ -1,4 +1,3 @@
-import sys
 import cv2
 import math
 import torch
@@ -8,7 +7,6 @@ from PIL import Image
 from deepface import DeepFace
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 import mediapipe as mp
-import json
 
 mp_pose = mp.solutions.pose
 
@@ -237,15 +235,17 @@ def analizar_rostro(img_path):
             return None
 
 
-# def detect_facial_features(image_data):
-def detect_facial_features(image_path)
-   try:
-        # temp_path = "temp_image.jpg"
-        # with open(temp_path, "wb") as f:
-        #     f.write(image_data)
+def detect_facial_features(image_data):
+    try:
+        temp_path = "temp_image.jpg"
+        with open(temp_path, "wb") as f:
+            f.write(image_data)
 
-        # df = analizar_rostro(temp_path)
-        df = analizar_rostro(image_path)
+        df = analizar_rostro(temp_path)
+
+        # Limpia el archivo temporal
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
 
         if df is not None:
             return {
@@ -262,14 +262,17 @@ def detect_facial_features(image_path)
             }
     except Exception as e:
         print(f"Error en detección facial: {str(e)}")
+        # Limpia el archivo temporal en caso de error
+        if os.path.exists("temp_image.jpg"):
+            os.remove("temp_image.jpg")
         return {
             "Rostro Detectado": False
         }
 
 
-if name == "main":
-    import sys
-    if len(sys.argv) > 1:
-        image_path = sys.argv[1]
-        resultados = detect_facial_features(image_path)
-        print(json.dumps(resultados))
+# if __name__ == "__main__":
+#     with open(r"C:\Users\Joaquin\Desktop\pruebas\prueba22.jpg", "rb") as f:
+#         image_bytes = f.read()
+
+#     resultados = detect_facial_features(image_bytes)
+#     print(resultados)

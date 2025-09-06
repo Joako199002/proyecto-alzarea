@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
 import base64
+import detection
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -340,36 +341,49 @@ def health_check():
 
 def detect_facial_features(image_bytes):
     try:
-        image = Image.open(BytesIO(image_bytes))
-        width, height = image.size
+        # Usa tu función de detection.py
+        resultados = detection.detect_facial_features(image_bytes)
 
-        # Lógica de detección mejorada
-        if width > height:
+        # Si no se detectó un rostro, devuelve valores por defecto
+        if not resultados.get("Rostro Detectado", False):
             return {
-                "tono_piel": "claro",
-                "color_ojos": "marrones",
-                "color_cabello": "castaño",
-                "forma_rostro": "ovalada",
-                "altura_aprox": "165-170 cm",
-                "complexion": "mediana",
-                "ancho_hombros": "normal",
-                "ancho_cadera": "normal"
+                "tono_piel": "no detectado",
+                "color_ojos": "no detectado",
+                "color_cabello": "no detectado",
+                "forma_rostro": "no detectado",
+                "altura_aprox": "no detectado",
+                "complexion": "no detectado",
+                "ancho_hombros": "no detectado",
+                "ancho_cadera": "no detectado"
             }
-        else:
-            return {
-                "tono_piel": "moreno",
-                "color_ojos": "negros",
-                "color_cabello": "negro",
-                "forma_rostro": "redonda",
-                "altura_aprox": "170-175 cm",
-                "complexion": "mediana",
-                "ancho_hombros": "normal",
-                "ancho_cadera": "normal"
-            }
+
+        # Mapeo completo con estimaciones para campos faltantes
+        return {
+            "tono_piel": resultados.get("Color de Piel", "no detectado"),
+            # Función que podrías añadir
+            "color_ojos": estimar_color_ojos(resultados),
+            "color_cabello": resultados.get("Color de Cabello", "no detectado"),
+            # Función que podrías añadir
+            "forma_rostro": estimar_forma_rostro(resultados),
+            # Basado en complexión u otros factores
+            "altura_aprox": estimar_altura(resultados),
+            "complexion": resultados.get("Silueta", "no detectado"),
+            "ancho_hombros": resultados.get("ancho_hombros", "no detectado"),
+            "ancho_cadera": resultados.get("ancho_cadera", "no detectado")
+        }
 
     except Exception as e:
-        print(f"Error en procesamiento de imagen: {str(e)}")
-        return None
+        print(f"Error en detección facial con detection.py: {e}")
+        return {
+            "tono_piel": "no detectado",
+            "color_ojos": "no detectado",
+            "color_cabello": "no detectado",
+            "forma_rostro": "no detectado",
+            "altura_aprox": "no detectado",
+            "complexion": "no detectado",
+            "ancho_hombros": "no detectado",
+            "ancho_cadera": "no detectado"
+        }
 
 
 if __name__ == '__main__':
