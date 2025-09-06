@@ -472,7 +472,83 @@ if (uploadButton) {
     });
 }
 
-// Al seleccionar una imagen
+// // Al seleccionar una imagen
+// if (imageInput) {
+//     imageInput.addEventListener('change', async () => {
+//         const file = imageInput.files[0];
+//         if (file) {
+//             // Mostrar la imagen en el chat
+//             const reader = new FileReader();
+
+//             reader.onload = function (e) {
+//                 const img = document.createElement('img');
+//                 img.src = e.target.result;
+//                 img.alt = 'Imagen subida';
+//                 img.style.maxWidth = '100px';
+//                 img.style.borderRadius = '8px';
+//                 img.style.margin = '5px 0';
+
+//                 const messageDiv = document.createElement('div');
+//                 messageDiv.classList.add('user-message', 'solo-imagen');
+//                 messageDiv.appendChild(img);
+
+//                 if (messagesContainer) {
+//                     messagesContainer.appendChild(messageDiv);
+//                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+//                 }
+//             };
+
+//             reader.readAsDataURL(file);
+
+//             // Mostrar mensaje "pensando" para la subida de imagen
+//             thinkingMessage = document.createElement('div');
+//             thinkingMessage.className = 'bot-message';
+//             thinkingMessage.textContent = '...';
+//             if (messagesContainer) {
+//                 messagesContainer.appendChild(thinkingMessage);
+//                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+//             }
+
+//             try {
+//                 // Crear FormData para enviar la imagen
+//                 const formData = new FormData();
+//                 formData.append('imagen', file);
+//                 formData.append('sessionId', sessionId);
+
+//                 // Enviar imagen al backend para análisis
+//                 const response = await fetch(`${backendUrl}/subir-imagen`, {
+//                     method: 'POST',
+//                     body: formData,
+//                     credentials: 'include'
+//                 });
+
+//                 // Quitar "..." después de obtener respuesta
+//                 removeThinkingMessage();
+
+//                 if (!response.ok) {
+//                     throw new Error(`Error del servidor: ${response.status}`);
+//                 }
+
+//                 const data = await response.json();
+
+//                 if (data.reply) {
+//                     // Procesar la respuesta del backend
+//                     respond(data.reply, true);
+//                 } else {
+//                     showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
+//                 }
+//             } catch (error) {
+//                 // Asegurarse de eliminar el mensaje "pensando" en caso de error
+//                 removeThinkingMessage();
+
+//                 console.error("Error al subir la imagen:", error);
+//                 showMessageWithAnimation("Ocurrió un error al subir la imagen. Por favor, intenta de nuevo.", true);
+//             }
+//         }
+//     });
+// }
+
+// Modifica el evento change de imageInput para usar showMessageWithAnimation
 if (imageInput) {
     imageInput.addEventListener('change', async () => {
         const file = imageInput.files[0];
@@ -495,57 +571,53 @@ if (imageInput) {
                 if (messagesContainer) {
                     messagesContainer.appendChild(messageDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Mostrar mensaje de análisis después de mostrar la imagen
+                    showMessageWithAnimation("Analizando imagen...", false, []);
+
+                    // Enviar la imagen al backend después de un breve delay
+                    setTimeout(() => {
+                        uploadImageToBackend(file);
+                    }, 1000);
                 }
             };
 
             reader.readAsDataURL(file);
-
-            // Mostrar mensaje "pensando" para la subida de imagen
-            thinkingMessage = document.createElement('div');
-            thinkingMessage.className = 'bot-message';
-            thinkingMessage.textContent = '...';
-            if (messagesContainer) {
-                messagesContainer.appendChild(thinkingMessage);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-            try {
-                // Crear FormData para enviar la imagen
-                const formData = new FormData();
-                formData.append('imagen', file);
-                formData.append('sessionId', sessionId);
-
-                // Enviar imagen al backend para análisis
-                const response = await fetch(`${backendUrl}/subir-imagen`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                });
-
-                // Quitar "..." después de obtener respuesta
-                removeThinkingMessage();
-
-                if (!response.ok) {
-                    throw new Error(`Error del servidor: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.reply) {
-                    // Procesar la respuesta del backend
-                    respond(data.reply, true);
-                } else {
-                    showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
-                }
-            } catch (error) {
-                // Asegurarse de eliminar el mensaje "pensando" en caso de error
-                removeThinkingMessage();
-
-                console.error("Error al subir la imagen:", error);
-                showMessageWithAnimation("Ocurrió un error al subir la imagen. Por favor, intenta de nuevo.", true);
-            }
         }
     });
+}
+
+// Función para subir la imagen al backend (simplificada)
+async function uploadImageToBackend(file) {
+    try {
+        // Crear FormData para enviar la imagen
+        const formData = new FormData();
+        formData.append('imagen', file);
+        formData.append('sessionId', sessionId);
+
+        // Enviar imagen al backend para análisis
+        const response = await fetch(`${backendUrl}/subir-imagen`, {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error del servidor: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.reply) {
+            // Procesar la respuesta del backend
+            respond(data.reply, true);
+        } else {
+            showMessageWithAnimation("La imagen fue enviada, pero no recibimos respuesta del servidor.", true);
+        }
+    } catch (error) {
+        console.error("Error al subir la imagen:", error);
+        showMessageWithAnimation("Ocurrió un error al subir la imagen. Por favor, intenta de nuevo.", true);
+    }
 }
 
 // // Evento change para cuando se seleccione una imagen (preparado para el futuro)
