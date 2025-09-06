@@ -263,7 +263,8 @@ function showMessageWithAnimation(messageText, isError = false, disenos = []) {
                     const nombreArchivo = mapeoImagenes[nombreDiseno.toUpperCase()] || nombreDiseno;
 
                     const img = document.createElement('img');
-                    img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
+                    img.src = `imagenes/${nombreArchivo}.jpg`;
+                    //img.src = `${backendUrl}/imagenes/${nombreArchivo}.jpg`;
                     img.alt = nombreDiseno;
                     img.style.maxWidth = '100%';
                     img.style.borderRadius = '8px';
