@@ -564,9 +564,10 @@ if (imageInput) {
                 formData.append('sessionId', sessionId);
 
                 // Enviar imagen al backend para análisis
-                const response = await fetch(`${backendUrl}/analyze-image`, {
+                const response = await fetch(`${backendUrl}/subir-imagen`, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    credentials: 'include' // Asegúrate de incluir las credenciales si usas cookies
                 });
 
                 if (!response.ok) {
