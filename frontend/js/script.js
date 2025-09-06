@@ -548,44 +548,44 @@ if (imageInput) {
     });
 }
 
-// Evento change para cuando se seleccione una imagen (preparado para el futuro)
-if (imageInput) {
-    imageInput.addEventListener('change', async () => {
-        if (imageInput.files && imageInput.files[0]) {
-            const file = imageInput.files[0];
+// // Evento change para cuando se seleccione una imagen (preparado para el futuro)
+// if (imageInput) {
+//     imageInput.addEventListener('change', async () => {
+//         if (imageInput.files && imageInput.files[0]) {
+//             const file = imageInput.files[0];
 
-            // Mostrar mensaje de que se está procesando la imagen
-            addMessage("Procesando imagen...", 'user');
+//             // Mostrar mensaje de que se está procesando la imagen
+//             addMessage("Procesando imagen...", 'user');
 
-            try {
-                // Crear FormData para enviar la imagen
-                const formData = new FormData();
-                formData.append('image', file);
-                formData.append('sessionId', sessionId);
+//             try {
+//                 // Crear FormData para enviar la imagen
+//                 const formData = new FormData();
+//                 formData.append('image', file);
+//                 formData.append('sessionId', sessionId);
 
-                // Enviar imagen al backend para análisis
-                const response = await fetch(`${backendUrl}/subir-imagen`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include' // Asegúrate de incluir las credenciales si usas cookies
-                });
+//                 // Enviar imagen al backend para análisis
+//                 const response = await fetch(`${backendUrl}/subir-imagen`, {
+//                     method: 'POST',
+//                     body: formData,
+//                     credentials: 'include' // Asegúrate de incluir las credenciales si usas cookies
+//                 });
 
-                if (!response.ok) {
-                    throw new Error('Error al procesar la imagen');
-                }
+//                 if (!response.ok) {
+//                     throw new Error('Error al procesar la imagen');
+//                 }
 
-                const data = await response.json();
+//                 const data = await response.json();
 
-                // Usar el resultado del análisis para generar una respuesta
-                respond(`He subido una imagen. ${data.analysis}`, true);
+//                 // Usar el resultado del análisis para generar una respuesta
+//                 respond(`He subido una imagen. ${data.analysis}`, true);
 
-            } catch (error) {
-                console.error('Error al subir imagen:', error);
-                showMessageWithAnimation("Error al procesar la imagen. Por favor, intenta de nuevo o describe tu apariencia con texto.", true);
-            }
-        }
-    });
-}
+//             } catch (error) {
+//                 console.error('Error al subir imagen:', error);
+//                 showMessageWithAnimation("Error al procesar la imagen. Por favor, intenta de nuevo o describe tu apariencia con texto.", true);
+//             }
+//         }
+//     });
+// }
 
 // ==================== FUNCIONALIDAD PARA MOVILES ====================
 

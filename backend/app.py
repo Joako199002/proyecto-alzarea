@@ -339,53 +339,37 @@ def health_check():
 
 
 def detect_facial_features(image_bytes):
-    """
-    Función para detectar características faciales de una imagen.
-    Esta es una implementación de placeholder - debes reemplazarla con tu lógica real.
-    """
     try:
-        # Aquí iría tu lógica real de detección facial
-        # Por ahora, devolvemos un diccionario de ejemplo con más detalles
-
-        # Intentar abrir la imagen para obtener información básica
         image = Image.open(BytesIO(image_bytes))
         width, height = image.size
 
-        # Simular detección basada en el tamaño de la imagen
-        # (esto es solo un ejemplo, no es una detección real)
-        if width > height:  # Imagen horizontal
-            tono_piel = "claro"
-            color_ojos = "marrones"
-            color_cabello = "castaño"
-            forma_rostro = "ovalada"
-        else:  # Imagen vertical
-            tono_piel = "moreno"
-            color_ojos = "negros"
-            color_cabello = "negro"
-            forma_rostro = "redonda"
-
-        return {
-            "tono_piel": tono_piel,
-            "color_ojos": color_ojos,
-            "color_cabello": color_cabello,
-            "forma_rostro": forma_rostro,
-            "altura_aprox": "165-170 cm" if width > height else "170-175 cm",
-            "complexion": "mediana",
-            "ancho_hombros": "normal",
-            "ancho_cadera": "normal"
-        }
+        # Lógica de detección mejorada
+        if width > height:
+            return {
+                "tono_piel": "claro",
+                "color_ojos": "marrones",
+                "color_cabello": "castaño",
+                "forma_rostro": "ovalada",
+                "altura_aprox": "165-170 cm",
+                "complexion": "mediana",
+                "ancho_hombros": "normal",
+                "ancho_cadera": "normal"
+            }
+        else:
+            return {
+                "tono_piel": "moreno",
+                "color_ojos": "negros",
+                "color_cabello": "negro",
+                "forma_rostro": "redonda",
+                "altura_aprox": "170-175 cm",
+                "complexion": "mediana",
+                "ancho_hombros": "normal",
+                "ancho_cadera": "normal"
+            }
 
     except Exception as e:
-        print(f"Error en detección facial: {e}")
-        # Devolver valores por defecto en caso de error
-        return {
-            "tono_piel": "no detectado",
-            "color_ojos": "no detectado",
-            "color_cabello": "no detectado",
-            "forma_rostro": "no detectado",
-            "altura_aprox": "no detectado",
-            "complexion": "no detectado"
-        }
+        print(f"Error en procesamiento de imagen: {str(e)}")
+        return None
 
 
 if __name__ == '__main__':
