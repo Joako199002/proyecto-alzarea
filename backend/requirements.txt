@@ -8,3 +8,5 @@ gunicorn==21.2.0
 pandas
 openpyxl
 numpy
+Werkzeug==2.3.7
+Pillow==10.0.0
