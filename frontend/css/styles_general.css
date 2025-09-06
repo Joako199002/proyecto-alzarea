@@ -448,25 +448,7 @@ html {
     /* Grosor de fuente medium (500) */
 }
 
-/* Botón de subir imagen */
-#upload-button {
-    padding: 8px 12px;
-    /* Espaciado interno: 8px arriba/abajo, 12px izquierda/derecha */
-    background-color: #f1f1f1;
-    /* Fondo gris claro */
-    color: #333;
-    /* Texto color gris oscuro */
-    border: 1px solid #ccc;
-    /* Borde gris claro de 1px */
-    border-radius: 6px;
-    /* Bordes redondeados de 6px */
-    cursor: pointer;
-    /* Cambia el cursor al pasar por encima a una mano, indicando que es clickeable */
-    font-size: 0.9rem;
-    /* Tamaño de fuente de 0.9rem (ligeramente más pequeño que otros botones) */
-    margin-bottom: 5px;
-    /* Margen inferior de 5px para separación del área de texto */
-}
+
 
 /* ===== ESTILOS COMUNES DEL FOOTER ===== */
 
