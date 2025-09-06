@@ -7,3 +7,7 @@ env/
 *.log
 uploads/
 .DS_Store
+
+# Ignorar el contenido de la carpeta uploads pero mantener la carpeta
+backend/uploads/*
+!backend/uploads/.gitkeep

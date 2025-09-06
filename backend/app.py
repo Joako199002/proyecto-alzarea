@@ -1,10 +1,14 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
 import os
 import pandas as pd
 import requests
 from groq import Groq
 from datetime import timedelta
+from werkzeug.utils import secure_filename
+from io import BytesIO
+from PIL import Image
+import base64
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -18,6 +22,11 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=timedelta(
         hours=12)  # Opcional: duración de la sesión
 )
+
+# Configuración para subir imágenes
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB máximo
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Configura CORS para permitir solicitudes desde distintos orígenes
 frontend_urls = [
@@ -130,7 +139,7 @@ ya que nuestro catálogo no cuenta con ellos. Muestra la imagen del vestido
 No debes solicitar aprobación sobre los accesorios ni condicionar su presentación. Son parte de la experiencia de asesoramiento.
 Justo después de hacer tu recomendación conecta la conversación con el siguiente punto.
 
-8.- Enfatíza las bondades de tu recomendación con respecto al evento y sus características físicas pero házle saber que contamos con
+8.- Enfatíza las bondades de tu recomendación con respecto ao evento y sus características físicas pero házle saber que contamos con
 una agenda disponible para que uno de nuestros expertos se contacte e juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
 
 9.- Si el cliente solicita una cita pídele numero de teléfono, e-mail, y una fecha tentativa que le sea conveniente para poder contactarlo.
@@ -140,6 +149,26 @@ una agenda disponible para que uno de nuestros expertos se contacte e juntos pue
 "Todo lo que te propuse forma parte de nuestra colección cápsula. Si quieres algo aún más personalizado, también puedo agendarte una
 cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde cero, exclusivamente para ti."
 """
+
+# Ruta para servir imágenes estáticas
+
+
+@app.route('/imagenes/<path:filename>')
+def servir_imagenes(filename):
+    # Intenta servir desde la carpeta 'imagenes' en el directorio actual
+    imagenes_dir = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'imagenes')
+    if os.path.exists(imagenes_dir):
+        return send_from_directory(imagenes_dir, filename)
+
+    # Si no existe, intenta servir desde 'static/imagenes'
+    static_imagenes_dir = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'static', 'imagenes')
+    if os.path.exists(static_imagenes_dir):
+        return send_from_directory(static_imagenes_dir, filename)
+
+    # Si no encuentra la imagen en ningún lugar, devuelve 404
+    return "Imagen no encontrada", 404
 
 # Ruta para reiniciar el historial
 
@@ -175,7 +204,8 @@ def chat():
     # Inicializa historial si no existe (en memoria, no en sesión)
     if session_id not in historial_conversaciones:
         historial_conversaciones[session_id] = [
-            {"role": "system", "content": prompt_base}]
+            {"role": "system", "content": prompt_base}
+        ]
 
     historial = historial_conversaciones[session_id]
     caracteristicas = session.get('caracteristicas_usuario')
@@ -224,23 +254,37 @@ def chat():
 
 @app.route('/subir-imagen', methods=['POST'])
 def subir_imagen():
+    print("📸 Imagen recibida en el backend")
     if 'imagen' not in request.files:
         return jsonify({"reply": "No se recibió ninguna imagen."}), 400
 
     imagen = request.files['imagen']
     session_id = request.form.get('sessionId', 'default_session')
-    image_bytes = imagen.read()
+
+    # Verificar que se haya seleccionado un archivo
+    if imagen.filename == '':
+        return jsonify({"reply": "No se seleccionó ningún archivo."}), 400
 
     try:
-        # Aquí debes incluir la lógica de detección de características
-        # Asumiendo que tienes esta función definida
+        # Leer y procesar la imagen
+        image_bytes = imagen.read()
+
+        # Guardar la imagen temporalmente (opcional, para debugging)
+        filename = secure_filename(imagen.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        with open(filepath, 'wb') as f:
+            f.write(image_bytes)
+
+        # Detectar características faciales
         resultados = detect_facial_features(image_bytes)
         session['caracteristicas_usuario'] = resultados
+        print("Características detectadas:", resultados)
 
         # Inicializa historial si no existe
         if session_id not in historial_conversaciones:
             historial_conversaciones[session_id] = [
-                {"role": "system", "content": prompt_base}]
+                {"role": "system", "content": prompt_base}
+            ]
 
         historial = historial_conversaciones[session_id]
 
@@ -277,6 +321,13 @@ def subir_imagen():
         print("Error al analizar imagen:", e)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
 
+# Ruta para servir imágenes subidas (opcional, para debugging)
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 # Ruta para verificar el estado del servidor
 
 
@@ -284,18 +335,57 @@ def subir_imagen():
 def health_check():
     return jsonify({"status": "ok"})
 
-# Función placeholder para detección de características faciales
+# Función para detección de características faciales
 
 
 def detect_facial_features(image_bytes):
-    # Esta es una función placeholder - debes implementar tu lógica real aquí
-    # Por ahora, devolvemos un diccionario de ejemplo
-    return {
-        "tono_piel": "claro",
-        "color_ojos": "marrones",
-        "color_cabello": "castaño",
-        "forma_rostro": "ovalada"
-    }
+    """
+    Función para detectar características faciales de una imagen.
+    Esta es una implementación de placeholder - debes reemplazarla con tu lógica real.
+    """
+    try:
+        # Aquí iría tu lógica real de detección facial
+        # Por ahora, devolvemos un diccionario de ejemplo con más detalles
+
+        # Intentar abrir la imagen para obtener información básica
+        image = Image.open(BytesIO(image_bytes))
+        width, height = image.size
+
+        # Simular detección basada en el tamaño de la imagen
+        # (esto es solo un ejemplo, no es una detección real)
+        if width > height:  # Imagen horizontal
+            tono_piel = "claro"
+            color_ojos = "marrones"
+            color_cabello = "castaño"
+            forma_rostro = "ovalada"
+        else:  # Imagen vertical
+            tono_piel = "moreno"
+            color_ojos = "negros"
+            color_cabello = "negro"
+            forma_rostro = "redonda"
+
+        return {
+            "tono_piel": tono_piel,
+            "color_ojos": color_ojos,
+            "color_cabello": color_cabello,
+            "forma_rostro": forma_rostro,
+            "altura_aprox": "165-170 cm" if width > height else "170-175 cm",
+            "complexion": "mediana",
+            "ancho_hombros": "normal",
+            "ancho_cadera": "normal"
+        }
+
+    except Exception as e:
+        print(f"Error en detección facial: {e}")
+        # Devolver valores por defecto en caso de error
+        return {
+            "tono_piel": "no detectado",
+            "color_ojos": "no detectado",
+            "color_cabello": "no detectado",
+            "forma_rostro": "no detectado",
+            "altura_aprox": "no detectado",
+            "complexion": "no detectado"
+        }
 
 
 if __name__ == '__main__':
