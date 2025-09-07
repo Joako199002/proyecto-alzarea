@@ -169,6 +169,89 @@
     /* Elimina espacio inferior inherente a las imágenes inline */
 }
 
+/* Estilos adicionales para los carruseles */
+.carrusel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carrusel-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+}
+
+.carrusel-item {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carrusel-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carrusel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 100;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.carrusel-control:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carrusel-prev {
+    left: 10px;
+}
+
+.carrusel-next {
+    right: 10px;
+}
+
+.carrusel-indicadores {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+.carrusel-indicador {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.carrusel-indicador.active {
+    background-color: white;
+}
+
 /* Contenedor del logo superpuesto */
 .logo-contenedor {
     position: absolute;
@@ -405,6 +488,13 @@
         /* Previene que se reduzcan */
     }
 
+    .carrusel-control {
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
     .logo-contenedor {
         padding: 5px;
         transform: translate(-50%, -50%) scale(0.7);
@@ -412,9 +502,9 @@
     }
 
     .logo {
-        width: 120px;
+        width: 270px;
         /* Ajusta el tamaño del logo */
-        height: 100px;
+        height: 250px;
     }
 
     .descripcion {
@@ -453,8 +543,8 @@
     }
 
     .logo {
-        width: 100px;
-        height: 80px;
+        width: 150px;
+        height: 130px;
     }
 
     .newsletter-popup,
