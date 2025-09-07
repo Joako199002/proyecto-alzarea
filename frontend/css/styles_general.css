@@ -531,19 +531,6 @@ footer {
     pointer-events: none;
 }
 
-/* Ajustes para dispositivos móviles */
-@media (max-width: 768px) {
-    .chatbot-buttons-container {
-        flex-direction: row;
-    }
-
-    #upload-button,
-    #reset-button {
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-}
-
 /* ===== MEDIA QUERIES COMUNES ===== */
 
 /* Media queries */
@@ -568,6 +555,7 @@ footer {
         overflow-x: hidden;
         width: 100%;
         position: relative;
+        font-size: 14px;
     }
 
     /* Estilos para móviles */
@@ -628,6 +616,16 @@ footer {
         right: 0;
         padding: 10px;
         background: white;
+    }
+
+    .chatbot-buttons-container {
+        flex-direction: row;
+    }
+
+    #upload-button,
+    #reset-button {
+        font-size: 0.8rem;
+        padding: 6px 10px;
     }
 
 }
