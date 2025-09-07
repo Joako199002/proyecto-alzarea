@@ -620,6 +620,81 @@ async function uploadImageToBackend(file) {
     }
 }
 
+
+// ==================== FUNCIONALIDAD DE CARRUSEL DE IMAGENES =================
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Inicializar ambos carruseles
+    initCarrusel('carruselIzquierda');
+    initCarrusel('carruselDerecha');
+
+    // Función para inicializar cada carrusel
+    function initCarrusel(carruselId) {
+        const carrusel = document.getElementById(carruselId);
+        const inner = carrusel.querySelector('.carrusel-inner');
+        const items = carrusel.querySelectorAll('.carrusel-item');
+        const prevBtn = carrusel.querySelector('.carrusel-prev');
+        const nextBtn = carrusel.querySelector('.carrusel-next');
+        const indicadoresContainer = carrusel.querySelector('.carrusel-indicadores');
+
+        let currentIndex = 0;
+        const totalItems = items.length;
+
+        // Crear indicadores
+        for (let i = 0; i < totalItems; i++) {
+            const indicador = document.createElement('button');
+            indicador.classList.add('carrusel-indicador');
+            if (i === 0) indicador.classList.add('active');
+            indicador.addEventListener('click', () => goToSlide(i));
+            indicadoresContainer.appendChild(indicador);
+        }
+
+        // Función para ir a una slide específica
+        function goToSlide(index) {
+            if (index < 0) index = totalItems - 1;
+            if (index >= totalItems) index = 0;
+
+            inner.style.transform = `translateX(-${index * 100}%)`;
+            currentIndex = index;
+
+            // Actualizar indicadores
+            carrusel.querySelectorAll('.carrusel-indicador').forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // Event listeners para botones
+        prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+        // Auto avanzar slides cada 5 segundos
+        setInterval(() => goToSlide(currentIndex + 1), 5000);
+
+        // Soporte para deslizar en dispositivos táctiles
+        let startX = 0;
+        let currentX = 0;
+
+        carrusel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        carrusel.addEventListener('touchmove', (e) => {
+            currentX = e.touches[0].clientX;
+        });
+
+        carrusel.addEventListener('touchend', () => {
+            const diff = startX - currentX;
+            if (Math.abs(diff) > 50) { // Umbral mínimo para considerar un deslizamiento
+                if (diff > 0) {
+                    goToSlide(currentIndex + 1); // Deslizar hacia la izquierda -> siguiente
+                } else {
+                    goToSlide(currentIndex - 1); // Deslizar hacia la derecha -> anterior
+                }
+            }
+        });
+    }
+});
+
 // ==================== FUNCIONALIDAD PARA MOVILES ====================
 
 // Función para ajustar el chatbot en dispositivos móviles
