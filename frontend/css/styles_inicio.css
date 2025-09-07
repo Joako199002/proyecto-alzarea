@@ -528,7 +528,7 @@
     .contenedor {
         flex-direction: row;
         /* Mantiene la dirección horizontal */
-        height: 98vh;
+        height: 80vh;
         /* Ajusta la altura para móviles */
         overflow-x: auto;
         /* Permite scroll horizontal si es necesario */
