@@ -668,6 +668,14 @@ footer {
         height: 65vh;
     }
 
+    .chatbot-container {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
     .chatbot-messages {
         padding-bottom: 10px;
     }
