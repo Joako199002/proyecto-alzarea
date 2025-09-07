@@ -608,8 +608,10 @@ footer {
         padding: 12px;
         margin-bottom: 0;
         /* Eliminamos el margen inferior porque ahora el input está debajo */
-        padding: 12px 12px 60px;
+        /*padding: 12px 12px 60px;
         /* Reducimos el padding inferior */
+        padding-bottom: 0;
+        /* quitar padding del fondo de los mensajes*/
     }
 
     .chatbot-input {
@@ -665,37 +667,36 @@ footer {
     .chatbot-input {
         min-height: 130px;
     }
-}
 
-/* Estilo adicional para asegurar que los mensajes sean visibles */
-.chatbot-messages {
-    scroll-behavior: smooth;
-}
-
-/* Asegurar que el área de mensajes tenga un z-index adecuado */
-.chatbot-messages {
-    position: relative;
-    z-index: 1;
-}
-
-/* Asegurar que el área de entrada tenga un z-index menor */
-.chatbot-input {
-    position: relative;
-    z-index: 2;
-}
-
-/* Para tablets en orientación vertical */
-@media (max-width: 768px) and (orientation: portrait) {
-    .chatbot-box {
-        height: 60vh;
+    /* Estilo adicional para asegurar que los mensajes sean visibles */
+    .chatbot-messages {
+        scroll-behavior: smooth;
     }
-}
 
-/* Para tablets en orientación horizontal */
-@media (max-width: 1024px) and (orientation: landscape) {
-    .chatbot-box {
-        height: 70vh;
-        width: 350px;
+    /* Asegurar que el área de mensajes tenga un z-index adecuado */
+    .chatbot-messages {
+        position: relative;
+        z-index: 1;
     }
-}
+
+    /* Asegurar que el área de entrada tenga un z-index menor */
+    .chatbot-input {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Para tablets en orientación vertical */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .chatbot-box {
+            height: 60vh;
+        }
+    }
+
+    /* Para tablets en orientación horizontal */
+    @media (max-width: 1024px) and (orientation: landscape) {
+        .chatbot-box {
+            height: 70vh;
+            width: 350px;
+        }
+    }
 }
