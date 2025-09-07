@@ -605,10 +605,10 @@ footer {
     .chatbot-messages {
         flex: 1;
         overflow-y: auto;
-        padding-bottom: 70px;
-        /* Espacio adicional para los botones */
-        max-height: none;
-        /* Eliminamos la altura máxima fija */
+        padding: 12px;
+        margin-bottom: 0;
+        /* Eliminamos el margen inferior porque ahora el input está debajo */
+        padding-bottom: 80px;
     }
 
     .chatbot-input {
@@ -619,6 +619,8 @@ footer {
         padding: 10px;
         background: white;
         border-top: 1px solid #eee;
+        /* Aseguramos que la altura sea suficiente para los botones */
+        min-height: 120px;
     }
 
 
@@ -638,30 +640,35 @@ footer {
 
 @media (max-width: 480px) {
 
-    /* estilos moviles pequenoos v1.1 */
-    .chatbot-container {
-        bottom: 10px;
-        right: 10px;
-        left: 10px;
-    }
-
-    .chatbot-toggle {
-        width: 50px;
-        height: 50px;
-        font-size: 25px;
-    }
-
     .chatbot-box {
         width: calc(100vw - 20px);
         height: 65vh;
-        /* Más altura en pantallas pequeñas */
-
     }
 
     .chatbot-messages {
-        padding-bottom: 80px;
-        /* Más espacio para botones */
+        padding-bottom: 90px;
     }
+
+    .chatbot-input {
+        min-height: 130px;
+    }
+}
+
+/* Estilo adicional para asegurar que los mensajes sean visibles */
+.chatbot-messages {
+    scroll-behavior: smooth;
+}
+
+/* Asegurar que el área de mensajes tenga un z-index adecuado */
+.chatbot-messages {
+    position: relative;
+    z-index: 1;
+}
+
+/* Asegurar que el área de entrada tenga un z-index menor */
+.chatbot-input {
+    position: relative;
+    z-index: 2;
 }
 
 /* Para tablets en orientación vertical */
