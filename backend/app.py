@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
 import base64
-# import detection
+import detection
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
