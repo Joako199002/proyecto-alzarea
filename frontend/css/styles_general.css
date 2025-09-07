@@ -577,10 +577,8 @@ footer {
         bottom: 15px;
         right: 15px;
         left: 15px;
-        /* Añadido para controlar el ancho máximo */
         display: flex;
         justify-content: flex-end;
-        /* Mantiene el botón a la derecha */
     }
 
     .chatbot-toggle {
@@ -593,20 +591,24 @@ footer {
 
     .chatbot-box {
         width: calc(100vw - 30px);
-        /* Ocupa todo el ancho menos los márgenes */
         max-width: 400px;
-        /* Limita el ancho máximo */
-        height: 50vh;
+        height: 60vh;
+        /* Aumentamos la altura */
         bottom: 80px;
         right: 0;
         left: 0;
         margin: 0 auto;
-        /* Centra horizontalmente */
+        display: flex;
+        flex-direction: column;
     }
 
     .chatbot-messages {
-        max-height: calc(100% - 100px);
+        flex: 1;
         overflow-y: auto;
+        padding-bottom: 70px;
+        /* Espacio adicional para los botones */
+        max-height: none;
+        /* Eliminamos la altura máxima fija */
     }
 
     .chatbot-input {
@@ -616,19 +618,23 @@ footer {
         right: 0;
         padding: 10px;
         background: white;
+        border-top: 1px solid #eee;
     }
 
+
+    /* Ajustamos el contenedor de botones */
     .chatbot-buttons-container {
         flex-direction: row;
+        margin-bottom: 8px;
     }
 
     #upload-button,
     #reset-button {
         font-size: 0.8rem;
-        padding: 6px 10px;
+        padding: 8px 10px;
     }
-
 }
+
 
 @media (max-width: 480px) {
 
@@ -647,23 +653,29 @@ footer {
 
     .chatbot-box {
         width: calc(100vw - 20px);
-        /* Ajuste fino para móviles muy pequeños */
-        height: 55vh;
-        bottom: 70px;
+        height: 65vh;
+        /* Más altura en pantallas pequeñas */
+
     }
 
-    /* Para tablets en orientación vertical */
-    @media (max-width: 768px) and (orientation: portrait) {
-        .chatbot-box {
-            height: 60vh;
-        }
+    .chatbot-messages {
+        padding-bottom: 80px;
+        /* Más espacio para botones */
     }
+}
 
-    /* Para tablets en orientación horizontal */
-    @media (max-width: 1024px) and (orientation: landscape) {
-        .chatbot-box {
-            height: 70vh;
-            width: 350px;
-        }
+/* Para tablets en orientación vertical */
+@media (max-width: 768px) and (orientation: portrait) {
+    .chatbot-box {
+        height: 60vh;
     }
+}
+
+/* Para tablets en orientación horizontal */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .chatbot-box {
+        height: 70vh;
+        width: 350px;
+    }
+}
 }
