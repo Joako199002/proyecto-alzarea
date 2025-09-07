@@ -387,7 +387,7 @@
     .contenedor {
         flex-direction: row;
         /* Mantiene la dirección horizontal */
-        height: 50vh;
+        height: 100vh;
         /* Ajusta la altura para móviles */
         overflow-x: auto;
         /* Permite scroll horizontal si es necesario */
@@ -434,6 +434,18 @@
 }
 
 @media (max-width: 480px) {
+
+    .contenedor {
+        flex-direction: row;
+        /* Mantiene la dirección horizontal */
+        height: 100vh;
+        /* Ajusta la altura para móviles */
+        overflow-x: auto;
+        /* Permite scroll horizontal si es necesario */
+        flex-wrap: nowrap;
+        /* Evita que los elementos se envuelvan */
+    }
+
     .mitad {
         width: 50%;
         /* Mantiene el 50% incluso en pantallas muy pequeñas */
