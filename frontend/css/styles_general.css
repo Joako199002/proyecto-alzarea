@@ -548,15 +548,23 @@ footer {
     }
 }
 
-@media (max-width: 768px) {
+/* Para tablets en orientación horizontal */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .chatbot-box {
+        height: 70vh;
+        width: 350px;
+    }
+}
 
+@media (max-width: 768px) {
+    /* 
     body,
     html {
         overflow-x: hidden;
         width: 100%;
         position: relative;
         font-size: 14px;
-    }
+    } */
 
     /* Estilos para móviles */
     .menu-hamburguesa {
@@ -689,14 +697,6 @@ footer {
     @media (max-width: 768px) and (orientation: portrait) {
         .chatbot-box {
             height: 60vh;
-        }
-    }
-
-    /* Para tablets en orientación horizontal */
-    @media (max-width: 1024px) and (orientation: landscape) {
-        .chatbot-box {
-            height: 70vh;
-            width: 350px;
         }
     }
 }
