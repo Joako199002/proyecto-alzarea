@@ -12,6 +12,7 @@ Werkzeug==2.3.7
 Pillow==10.0.0
 opencv-python-headless==4.8.1.78
 torch
-deepface==0.0.79
+deepface
 transformers==4.30.2
 mediapipe==0.10.14  # Cambiado a versión compatible
+#tensorflow==2.10.0
