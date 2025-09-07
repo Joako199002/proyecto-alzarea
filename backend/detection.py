@@ -4,9 +4,15 @@ import torch
 import numpy as np
 import pandas as pd
 from PIL import Image
-from deepface import DeepFace
+# from deepface import DeepFace
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 import mediapipe as mp
+
+try:
+    from deepface import DeepFace
+except ImportError:
+    # Fallback para evitar errores de importación
+    pass
 
 mp_pose = mp.solutions.pose
 
