@@ -10,9 +10,7 @@ from io import BytesIO
 from PIL import Image
 import base64
 import detection
-
-for var in ["http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY"]:
-    os.environ.pop(var, None)
+import httpx
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -44,7 +42,9 @@ CORS(app, supports_credentials=True, origins=frontend_urls)
 # NOTA: Ahora usamos un almacenamiento en memoria en lugar de cookies para historiales largos
 historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-client = Groq(api_key=GROQ_API_KEY)
+http_client = httpx.Client(proxies=None)  # fuerza que no pase proxies
+client = Groq(api_key=GROQ_API_KEY, http_client=http_client)
+# client = Groq(api_key=GROQ_API_KEY)
 
 # Variable global para almacenar los vestidos cargados
 vestidos_formateados = ""
