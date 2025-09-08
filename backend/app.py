@@ -11,6 +11,9 @@ from PIL import Image
 import base64
 import detection
 import httpx
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -102,7 +105,7 @@ Nunca uses frases genéricas como "hecho con amor". Enfócate en:
 - Experiencia única - Proceso artesanal - Detalles que marcan la diferencia.
 
 Asegurate de saber siempre si es un invitado o quien celebra el evento
-Asegúrate de recibir una respuesta coherente a cada pregunta, si no es así vuelve a preguntar. 
+Asegúrate de recibir una respuesta coherente a cada pregunta, si no es así vuelve a preguntar.
 Haz solo una pregunta a la vez.
 El flujo que seguiras será:
 
@@ -283,9 +286,11 @@ def subir_imagen():
         resultados = detect_facial_features(image_bytes)
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
+        # Logea los resultados
+        logging.info(f"Características extraídas: {resultados}")
 
-        # Inicializa historial si no existe
-        if session_id not in historial_conversaciones:
+       # Inicializa historial si no existe
+       if session_id not in historial_conversaciones:
             historial_conversaciones[session_id] = [
                 {"role": "system", "content": prompt_base}
             ]
