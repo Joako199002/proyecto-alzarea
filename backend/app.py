@@ -11,6 +11,9 @@ from PIL import Image
 import base64
 import detection
 
+for var in ["http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY"]:
+    os.environ.pop(var, None)
+
 # Inicializa la aplicación Flask
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "iofaen55!!$scjasncskn")
