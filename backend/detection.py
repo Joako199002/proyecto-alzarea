@@ -7,6 +7,7 @@ from PIL import Image
 # from deepface import DeepFace
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 import mediapipe as mp
+import os
 
 try:
     from deepface import DeepFace
