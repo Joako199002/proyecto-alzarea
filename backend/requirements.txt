@@ -23,4 +23,3 @@ tensorflow==2.16.1
 #keras==2.13.1
 tf-keras
 httpx==0.27.0
-retinaface==0.0.6

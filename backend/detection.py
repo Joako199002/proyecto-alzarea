@@ -20,7 +20,7 @@ mp_pose = mp.solutions.pose
 def detectar_y_clasificar_tono_piel(img_path):
     try:
         face_obj = DeepFace.extract_faces(
-            img_path=img_path, enforce_detection=True)[0]
+            img_path=img_path, enforce_detection=True, detector_backend="retinaface")[0]
         face_img = face_obj['face']
 
         if face_img.dtype != np.uint8:
