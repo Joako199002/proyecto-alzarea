@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 COPY base_vestidos.xlsx .
 
-# Añade estas variables de entorno para evitar conflictos
+# Evita problemas de compatibilidad con TF/Keras
 ENV TF_ENABLE_ONEDNN_OPTS=0
 ENV TF_USE_LEGACY_KERAS=0
 

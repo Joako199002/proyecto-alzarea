@@ -282,11 +282,20 @@ def subir_imagen():
         with open(filepath, 'wb') as f:
             f.write(image_bytes)
 
+        # 🔍 Debug: Verifica tamaño de la imagen
+        logging.info(f"📏 Imagen recibida: {len(image_bytes)} bytes")
+
         # Detectar características faciales
-        resultados = detection.detect_facial_features(image_bytes)
+        try:
+            resultados = detection.detect_facial_features(image_bytes)
+            logging.info(f"✅ Resultados brutos detection: {resultados}")
+        except Exception as det_err:
+            logging.error(
+                "❌ Falló detection.detect_facial_features", exc_info=True)
+            return jsonify({"reply": "Error interno en la detección facial."}), 500
+
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
-        logging.info(f"Características extraídas: {resultados}")
 
         # Inicializa historial si no existe
         if session_id not in historial_conversaciones:
@@ -326,9 +335,8 @@ def subir_imagen():
             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
 
     except Exception as e:
-        print("Error al analizar imagen:", e)
+        logging.error("❌ Error inesperado en /subir-imagen", exc_info=True)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
-
 
 # Ruta para servir imágenes subidas (opcional, para debugging)
 
