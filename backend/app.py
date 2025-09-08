@@ -286,11 +286,10 @@ def subir_imagen():
         resultados = detect_facial_features(image_bytes)
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
-        # Logea los resultados
         logging.info(f"Características extraídas: {resultados}")
 
-       # Inicializa historial si no existe
-       if session_id not in historial_conversaciones:
+        # Inicializa historial si no existe
+        if session_id not in historial_conversaciones:
             historial_conversaciones[session_id] = [
                 {"role": "system", "content": prompt_base}
             ]
@@ -329,6 +328,7 @@ def subir_imagen():
     except Exception as e:
         print("Error al analizar imagen:", e)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
 
 # Ruta para servir imágenes subidas (opcional, para debugging)
 
