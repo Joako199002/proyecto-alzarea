@@ -283,7 +283,7 @@ def subir_imagen():
             f.write(image_bytes)
 
         # Detectar características faciales
-        resultados = detect_facial_features(image_bytes)
+        resultados = detection.detect_facial_features(image_bytes)
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
         logging.info(f"Características extraídas: {resultados}")
