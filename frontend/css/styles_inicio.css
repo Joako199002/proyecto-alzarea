@@ -1,7 +1,18 @@
-/* Estilos para el pop-up de newsletter y agradecimiento */
+/* ==================== ESTILOS GENERALES Y RESET ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ==================== POP-UPS ==================== */
 .newsletter-popup,
 .thankyou-popup {
-    /* Cambiamos display: none por opacity y visibility para mantener las dimensiones */
     opacity: 0;
     visibility: hidden;
     position: fixed;
@@ -18,7 +29,6 @@
     transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
 }
 
-/* Clase para mostrar el pop-up */
 .popup-visible {
     opacity: 1;
     visibility: visible;
@@ -109,67 +119,198 @@
     visibility: visible;
 }
 
-/* Contenedor principal que ocupa el 100% del viewport height */
+/* ==================== BARRA SUPERIOR ==================== */
+.barra-superior {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 12vh;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Menú hamburguesa superior */
+.menu-hamburguesa-superior {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+}
+
+.menu-hamburguesa-superior .linea {
+    width: 100%;
+    height: 3px;
+    background-color: #4b4b4b;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+}
+
+/* Logo en la barra superior */
+.logo-superior-contenedor {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo-superior {
+    height: 150px;
+    width: auto;
+}
+
+/* Contenedor de iconos a la derecha */
+.iconos-derecha {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    position: relative;
+    z-index: 1003;
+}
+
+.iconos-derecha .icono {
+    color: #4b4b4b;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.iconos-derecha .icono:hover {
+    color: #858585;
+}
+
+/* ==================== BARRA DE BÚSQUEDA ==================== */
+.barra-busqueda {
+    position: absolute;
+    top: 50%;
+    right: 120px;
+    transform: translateY(-50%);
+    width: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 1002;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.barra-busqueda.activa {
+    width: 500px;
+    opacity: 1;
+    padding: 8px 15px;
+    right: 200px;
+}
+
+.barra-busqueda input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 5px 0;
+    font-size: 14px;
+    background: transparent;
+    width: 100%;
+}
+
+.cerrar-busqueda {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4b4b4b;
+    font-size: 16px;
+    margin-left: 8px;
+    padding: 0;
+}
+
+/* Ocultar el icono de búsqueda cuando la barra está activa - SELECTOR CORREGIDO */
+.barra-superior .barra-busqueda.activa~.iconos-derecha #icono-busqueda {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ==================== MEJORAS PARA ÁREA DE CLIC ==================== */
+/* Aumentar el área de clic de los iconos */
+.iconos-derecha .icono {
+    position: relative;
+    padding: 12px;
+    /* Aumentar el área de clic */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Aumentar específicamente el área de clic del icono de búsqueda */
+#icono-busqueda {
+    min-width: 44px;
+    /* Tamaño mínimo recomendado para áreas de clic */
+    min-height: 44px;
+}
+
+/* Mantener el tamaño visual del icono */
+.iconos-derecha .icono i {
+    font-size: 18px;
+    /* Mantener el tamaño del icono */
+    position: relative;
+    z-index: 2;
+}
+
+/* Efecto visual al pasar el cursor sobre los iconos */
+.iconos-derecha .icono:hover::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background-color: rgba(75, 75, 75, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Ajustar la barra de búsqueda para el nuevo tamaño de los iconos */
+.barra-busqueda {
+    right: 140px;
+    /* Ajustado para el nuevo tamaño de los iconos */
+}
+
+/* ==================== CONTENEDOR PRINCIPAL ==================== */
 .contenedor {
     display: flex;
-    /* Usa flexbox para layout */
-    height: 100vh;
-    /* Ocupa toda la altura de la ventana */
+    height: 88vh;
     width: 100%;
-    /* Ocupa todo el ancho disponible */
     position: relative;
-    /* Establece contexto de posicionamiento para el logo */
 }
 
-/* Efecto de zoom suave al pasar el cursor sobre las mitades */
-/* .mitad:hover {
-    transform: scale(1.02);
-    /* Aumenta ligeramente el tamaño al pasar el cursor */
-/* }  */
-
-/* Estilos para cada mitad del contenedor */
+/* Mitades del contenedor */
 .mitad {
     width: 50%;
-    /* Cada mitad ocupa el 50% del ancho */
     height: 100%;
-    /* Ocupa toda la altura del contenedor */
     overflow: hidden;
-    /* Oculta cualquier contenido que desborde */
     position: relative;
-    /* Establece contexto de posicionamiento */
     display: flex;
-    /* Flexbox para centrar contenido */
     justify-content: center;
-    /* Centra horizontalmente */
     align-items: center;
-    /* Centra verticalmente */
-    border: 0px solid #2c3e50;
-    /* Borde de 2px sólido color azul oscuro */
 }
 
-/* Mitad izquierda con color de fondo temporal */
 .izquierda {
-    background-color: lab(61.7% 0 -0.01 / 0.722);
+    background-color: #f5f5f5;
 }
 
-/* Mitad derecha con color de fondo temporal */
 .derecha {
-    background-color: #a6a6a6;
+    background-color: #f0f0f0;
 }
 
-/* Estilos para las imágenes */
-.imagen {
-    width: 100%;
-    /* Ancho del 60% del contenedor padre */
-    height: 100%;
-    /* Alto del 80% del contenedor padre */
-    object-fit: cover;
-    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
-    display: block;
-    /* Elimina espacio inferior inherente a las imágenes inline */
-}
-
-/* Estilos adicionales para los carruseles */
+/* ==================== CARRUSEL ==================== */
 .carrusel {
     position: relative;
     width: 100%;
@@ -187,19 +328,23 @@
     min-width: 100%;
     height: 100%;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .carrusel-imagen {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
 }
 
 .carrusel-control {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     padding: 10px;
@@ -252,190 +397,264 @@
     background-color: white;
 }
 
-/* Contenedor del logo superpuesto */
-.logo-contenedor {
-    position: absolute;
-    /* Posicionamiento absoluto respecto al contenedor padre */
-    top: 50%;
-    /* Centrado vertical */
-    left: 50%;
-    /* Centrado horizontal */
-    transform: translate(-50%, -50%);
-    /* Ajuste fino para centrado perfecto */
-    z-index: 10;
-    /* Asegura que el logo esté por encima de las otras imágenes */
-    background-color: rgba(255, 255, 255, 0);
-    /* Fondo blanco semitransparente */
-    /*border-radius: 50%;
-    /* Forma circular */
-    padding: 0px;
-    /* Espaciado interno */
-    /*box-shadow: 0 0 25px rgba(0, 0, 0, 0.3); /* Sombra para efecto de elevación */
-    animation: pulse 2s infinite;
-    /* Animación de pulsación */
+/* ==================== HEADER CONTENIDO ==================== */
+.header-contenido {
+    margin-top: 12vh;
+    height: 88vh;
 }
 
-/* Estilos para el logo */
-.logo {
-    width: 450px;
-    /* Ancho del logo */
-    height: 350px;
-    /* Alto del logo */
-    /*border-radius: 50%;
-    /* Forma circular */
-    object-fit: contain;
-    /* Mantiene proporciones sin recortar */
-    display: block;
-    /* Elimina espacio inferior */
+/* ==================== SECCION NEWSLETTER ======================
+
+        /* Estilos para la nueva sección de newsletter */
+.seccion-newsletter {
+    padding: 40px 40px 40px 20px;
+    /* Más padding a la derecha */
+    background-color: #f8f8f8;
+    text-align: right;
+    /* Alineación a la derecha */
 }
 
-/* Animación de pulsación para el logo */
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        /* Tamaño normal */
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.0);
-        /* Sombra normal */
-    }
-
-    50% {
-        transform: translate(-50%, -50%) scale(1.05);
-        /* Ligero agrandamiento */
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.0);
-        /* Sombra más pronunciada */
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        /* Vuelve al tamaño normal */
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.0);
-        /* Vuelve a sombra normal */
-    }
-}
-
-/* Sección de descripción */
-.descripcion {
-    padding: 40px 20px;
-    /* Espaciado interno: 40px arriba/abajo, 20px izquierda/derecha */
-    background: white;
-    /* Fondo con gradiente azul a púrpura en diagonal */
-    color: rgb(75, 75, 75);
-    /* Color de texto blanco */
-    min-height: 30vh;
-    /* Altura mínima de 30% del viewport height */
+.contenedor-newsletter {
+    max-width: 100%;
+    margin-left: auto;
+    /* Empuja el contenedor hacia la derecha */
+    margin-right: 0;
+    /* Elimina margen derecho */
     display: flex;
-    /* Usa flexbox para layout */
     flex-direction: column;
-    /* Organiza los elementos en columna */
-    justify-content: center;
-    /* Centra verticalmente los elementos */
-    align-items: center;
-    /* Centra horizontalmente los elementos */
-    text-align: center;
-    /* Alinea el texto al centro */
+    align-items: flex-end;
+    /* Alinea hijos a la derecha */
 }
 
-/* Título de la sección de descripción */
-.descripcion h2 {
-    font-size: 2.5rem;
-    /* Tamaño de fuente de 2.5rem (40px aprox) */
+.seccion-newsletter h2 {
+    font-size: 1.5rem;
+    /* Reducido de 2rem */
+    margin-bottom: 12px;
+    /* Reducido */
+    color: #333;
+    text-align: left;
+    /* Alineado a la izquierda */
+}
+
+.seccion-newsletter p {
+    font-size: 0.95rem;
+    /* Reducido de 1.1rem */
+    color: #666;
     margin-bottom: 20px;
-    /* Espacio inferior de 20px */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    /* Sombra de texto para mejor legibilidad */
+    /* Reducido de 30px */
+    line-height: 1.5;
+    text-align: left;
+    /* Alineado a la izquierda */
 }
 
-/* Párrafos de la sección de descripción */
-.descripcion p {
-    font-size: 1.2rem;
-    /* Tamaño de fuente de 1.2rem (19px aprox) */
-    max-width: 800px;
-    /* Ancho máximo de 800px para mejor lectura */
-    line-height: 1.6;
-    /* Interlineado de 1.6 para mejor legibilidad */
-    margin-bottom: 25px;
-    /* Espacio inferior de 25px entre párrafos */
+.formulario-newsletter {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-/* Botón de llamada a la acción */
+.campo-email {
+    padding: 10px 15px;
+    /* Reducido de 15px 20px */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    /* Reducido */
+    flex: 1;
+    min-width: 350px;
+    box-sizing: border-box;
+}
+
+.boton-suscribir {
+    padding: 10px 20px;
+    /* Reducido de 15px 30px */
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    /* Reducido */
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    /* Reducido de 1px */
+    white-space: nowrap;
+}
+
+.boton-suscribir:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== SECCIÓN DESCRIPCIÓN ==================== */
+/* Estilos para la sección de tres columnas */
+.descripcion-columnas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.columna {
+    flex: 1;
+    min-width: 250px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.columna h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    color: #333;
+}
+
+.columna p {
+    margin: 12px 0;
+    padding-left: 15px;
+    position: relative;
+}
+
+.columna p:before {
+    content: "*";
+    position: absolute;
+    left: 0;
+    color: #888;
+}
+
+.redes-sociales {
+    display: flex;
+    gap: 15px;
+    margin-top: 60px;
+    justify-content: center;
+}
+
+.redes-sociales a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.redes-sociales a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.boton-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
 .boton {
     display: inline-block;
-    /* Permite dimensionar como bloque pero fluye como inline */
     padding: 12px 30px;
-    /* Espaciado interno: 12px arriba/abajo, 30px izquierda/derecha */
-    background-color: rgb(75, 75, 75);
-    /* Color de fondo rojo */
+    background-color: #333;
     color: white;
-    /* Color de texto blanco */
     text-decoration: none;
-    /* Elimina subrayado de enlace */
-    border-radius: 30px;
-    /* Bordes completamente redondeados */
-    font-weight: bold;
-    /* Texto en negrita */
+    border-radius: 4px;
     transition: all 0.3s ease;
-    /* Transición suave para todos los cambios de estado */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    /* Sombra suave */
 }
 
-/* Efecto al pasar el cursor sobre el botón */
 .boton:hover {
-    background-color: #858585;
-    /* Color de fondo más oscuro al pasar el cursor */
-    transform: translateY(-3px);
-    /* Efecto de levitación (se mueve hacia arriba 3px) */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    /* Sombra más pronunciada al pasar el cursor */
+    background-color: #555;
+    transform: translateY(-2px);
 }
 
-/* Animación de entrada para la sección de descripción */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        /* Comienza completamente transparente */
         transform: translateY(20px);
-        /* Comienza 20px más abajo */
     }
 
     to {
         opacity: 1;
-        /* Termina completamente opaco */
         transform: translateY(0);
-        /* Termina en su posición original */
     }
 }
 
-/* Aplicar la animación a la sección de descripción */
-.descripcion {
-    animation: fadeIn 1s ease-out;
-    /* Duración de 1 segundo con función de easing ease-out */
+/* ==================== OPCIONES MENÚ ==================== */
+.opciones-menu {
+    position: fixed;
+    top: 12vh;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
+    background-color: white;
+    z-index: 999;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-/* Media queries */
-/* @media (max-width: 768px) {
+.menu-abierto .opciones-menu {
+    left: 0;
+}
 
-    .contenedor {
-        flex-direction: column;
-        height: auto;
+.opciones-menu ul {
+    list-style: none;
+}
+
+.opciones-menu li {
+    margin-bottom: 15px;
+}
+
+.opciones-menu a {
+    color: #4b4b4b;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.opciones-menu a:hover {
+    color: #858585;
+}
+
+/* ==================== MEDIA QUERIES ==================== */
+@media (max-width: 768px) {
+    .barra-superior {
+        height: 10vh;
+        padding: 0 15px;
     }
 
-    .mitad {
-        width: 100%;
-        height: 40vh;
+    .logo-superior {
+        height: 50px;
     }
 
-    .logo-contenedor {
-        padding: 10px;
+    .header-contenido {
+        margin-top: 10vh;
+        height: 90vh;
     }
 
-    .logo {
-        width: 80px;
-        height: 80px;
+    .barra-busqueda.activa {
+        width: 200px;
+        right: 100px;
     }
 
-    .descripcion {
-        padding: 30px 15px;
+    .iconos-derecha {
+        gap: 12px;
+    }
+
+    .iconos-derecha .icono {
+        font-size: 16px;
     }
 
     .descripcion h2 {
@@ -445,47 +664,19 @@
     .descripcion p {
         font-size: 1rem;
     }
-}
 
-@media (max-width: 480px) {
-
-    .newsletter-popup,
-    .thankyou-popup {
-        width: 90%;
-        padding: 15px;
-    }
-
-    .close-popup {
-        top: -10px;
-        right: -10px;
-        width: 25px;
-        height: 25px;
-        font-size: 18px;
-    }
-} */
-
-/* ****** PARA IMAGEN PRINCIPAL EN UNA SOLA FILA **** */
-/* Media queries */
-@media (max-width: 768px) {
     .contenedor {
         flex-direction: row;
-        /* Mantiene la dirección horizontal */
-        height: 92vh;
-        /* Ajusta la altura para móviles */
+        height: 100vh;
         overflow-x: auto;
-        /* Permite scroll horizontal si es necesario */
         flex-wrap: nowrap;
-        /* Evita que los elementos se envuelvan */
     }
 
     .mitad {
         width: 50%;
-        /* Cada mitad ocupa el 50% del ancho */
         height: 100%;
         min-width: 50%;
-        /* Evita que se encojan más del 50% */
         flex-shrink: 0;
-        /* Previene que se reduzcan */
     }
 
     .carrusel-control {
@@ -494,57 +685,29 @@
         padding: 5px;
         font-size: 14px;
     }
-
-    .logo-contenedor {
-        padding: 5px;
-        transform: translate(-50%, -50%) scale(0.7);
-        /* Reduce el tamaño del logo */
-    }
-
-    .logo {
-        width: 270px;
-        /* Ajusta el tamaño del logo */
-        height: 250px;
-    }
-
-    .descripcion {
-        padding: 20px 15px;
-        min-height: 25vh;
-        /* Reduce la altura mínima */
-    }
-
-    .descripcion h2 {
-        font-size: 1.8rem;
-        /* Ajusta el tamaño de fuente */
-    }
-
-    .descripcion p {
-        font-size: 1rem;
-    }
 }
 
 @media (max-width: 480px) {
-
-    .contenedor {
-        flex-direction: row;
-        /* Mantiene la dirección horizontal */
-        height: 92vh;
-        /* Ajusta la altura para móviles */
-        overflow-x: auto;
-        /* Permite scroll horizontal si es necesario */
-        flex-wrap: nowrap;
-        /* Evita que los elementos se envuelvan */
+    .barra-superior {
+        height: 10vh;
+        padding: 0 10px;
     }
 
-    .mitad {
-        width: 50%;
-        /* Mantiene el 50% incluso en pantallas muy pequeñas */
-        min-width: 50%;
+    .logo-superior {
+        height: 40px;
     }
 
-    .logo {
-        width: 220px;
-        height: 200px;
+    .barra-busqueda.activa {
+        width: 150px;
+        right: 80px;
+    }
+
+    .iconos-derecha {
+        gap: 10px;
+    }
+
+    .iconos-derecha .icono {
+        font-size: 14px;
     }
 
     .newsletter-popup,
@@ -559,5 +722,9 @@
         width: 25px;
         height: 25px;
         font-size: 18px;
+    }
+
+    .contenedor {
+        height: 92vh;
     }
 }

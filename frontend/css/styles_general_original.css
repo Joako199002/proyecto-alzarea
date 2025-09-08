@@ -36,7 +36,7 @@ html {
     /* Asegura que esté por encima de otros elementos */
     cursor: pointer;
     /* Cambia el cursor al pasar por encima */
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
     /* Fondo blanco semitransparente */
     border-radius: 50%;
     /* Forma circular */
@@ -106,7 +106,7 @@ html {
     /* Ancho del menú desplegado */
     height: 100vh;
     /* Altura completa de la ventana */
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.3);
     /* Fondo blanco semitransparente */
     z-index: 999;
     /* Por debajo del botón pero sobre el contenido */
@@ -152,7 +152,7 @@ html {
 }
 
 .opciones-menu a {
-    color: #1f262d;
+    color: #2c3e50;
     /* Color del texto */
     text-decoration: none;
     /* Elimina el subrayado */
@@ -455,34 +455,16 @@ html {
 /* Footer */
 footer {
     background-color: #000000;
+    /* Color de fondo azul oscuro */
     color: white;
+    /* Color de texto blanco */
+    text-align: center;
+    /* Centra el texto horizontalmente */
     padding: 20px;
+    /* Espaciado interno de 20px en todos los lados */
     font-size: 0.9rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+    /* Tamaño de fuente ligeramente reducido */
 }
-
-.footer-left {
-    text-align: left;
-}
-
-.footer-right {
-    text-align: right;
-}
-
-.footer-right a {
-    color: white;
-    text-decoration: none;
-    margin-left: 15px;
-    transition: opacity 0.3s ease;
-}
-
-.footer-right a:hover {
-    opacity: 0.8;
-}
-
 
 /* Contenedor para los botones de subir imagen y reiniciar */
 .chatbot-buttons-container {

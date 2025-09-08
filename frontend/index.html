@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="css/styles_general.css">
     <!-- CSS específico de esta página -->
     <link rel="stylesheet" href="css/styles_inicio.css">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -40,53 +42,75 @@
     <!-- Fondo ensombrecido -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Menú hamburguesa -->
-    <div class="menu-hamburguesa" id="menuHamburguesa">
-        <div class="linea"></div>
-        <div class="linea"></div>
-        <div class="linea"></div>
+    <!-- NUEVA BARRA SUPERIOR CON MARGEN BLANCO -->
+    <div class="barra-superior">
+        <!-- Menú hamburguesa (nuevo) -->
+        <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div>
+
+        <!-- Logo centrado -->
+        <div class="logo-superior-contenedor">
+            <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
+        </div>
+
+        <!-- Barra de búsqueda (oculta inicialmente) - MOVIDA DENTRO DE BARRA SUPERIOR -->
+        <div class="barra-busqueda" id="barraBusqueda">
+            <input type="text" placeholder="Buscar productos...">
+            <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Iconos a la derecha -->
+        <div class="iconos-derecha">
+            <a href="#" class="icono" id="icono-busqueda"><i class="fas fa-search"></i></a>
+            <a href="#" class="icono"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="icono"><i class="fas fa-user"></i></a>
+            <a href="#" class="icono"><i class="fas fa-shopping-cart"></i></a>
+        </div>
     </div>
 
-    <!-- Opciones del menú -->
+    <!-- Barra de búsqueda (oculta inicialmente) -->
+    <!-- <div class="barra-busqueda" id="barraBusqueda">
+        <input type="text" placeholder="Buscar productos...">
+        <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+    </div> -->
+
+    <!-- Opciones del menú (modificado para funcionar con el nuevo menú hamburguesa) -->
     <div class="opciones-menu" id="opcionesMenu">
         <ul>
             <li><a href="index.html">Inicio</a></li>
-            <li><a href="quienes_somos.html">Quiénes somos</a></li>
-            <li><a href="productos.html">Productos</a></li>
+            <li><a href="productos.html">Colección</a></li>
+            <li><a href="#newsletters">Accesorios</a></li>
+            <li><a href="#newsletters">Servicios (Personalización / Upcycling)</a></li>
             <li><a href="#contacto">Contacto</a></li>
-            <li><a href="#newsletters">Newsletter</a></li>
-
+            <li><a href="#newsletters">Blog</a></li>
+            <li><a href="#newsletters">Stories</a></li>
+            <li><a href="quienes_somos.html">Quiénes somos</a></li>
         </ul>
     </div>
 
-    <header>
+    <!-- Header principal (modificado para desplazarse hacia abajo) -->
+    <header class="header-contenido">
         <div class="contenedor">
             <!-- Contenedor del logo superpuesto -->
-            <div class="logo-contenedor">
+            <!-- <div class="logo-contenedor">
                 <img src="imagenes/logo_4.png" alt="Logo" class="logo">
-            </div>
+            </div> -->
 
-            <!-- Mitad izquierda del encabezado -->
-            <!--<div class="mitad izquierda">
-                <img src="imagenes/CENEFA.jpg" alt="Imagen 1" class="imagen">
-            </div>-->
-
-            <!-- Mitad derecha del encabezado -->
-            <!--<div class="mitad derecha">
-                <img src="imagenes/LIRIA_STRIPS.jpg" alt="Imagen 2" class="imagen">
-            </div>-->
             <!-- Mitad izquierda del encabezado con carrusel -->
             <div class="mitad izquierda">
                 <div class="carrusel" id="carruselIzquierda">
                     <div class="carrusel-inner">
                         <div class="carrusel-item">
-                            <img src="imagenes/CENEFA.jpg" alt="Imagen 1" class="carrusel-imagen">
+                            <img src="imagenes/FRISO_FLOWER.jpg" alt="Imagen 1" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/FRISO.jpg" alt="Imagen 2" class="carrusel-imagen">
+                            <img src="imagenes/ALMENA.jpg" alt="Imagen 2" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/ALMENA.jpg" alt="Imagen 3" class="carrusel-imagen">
+                            <img src="imagenes/SKIRT_BLACK.jpg" alt="Imagen 3" class="carrusel-imagen">
                         </div>
                     </div>
                     <button class="carrusel-control carrusel-prev">&#10094;</button>
@@ -100,10 +124,10 @@
                 <div class="carrusel" id="carruselDerecha">
                     <div class="carrusel-inner">
                         <div class="carrusel-item">
-                            <img src="imagenes/LIRIA_STRIPS.jpg" alt="Imagen 1" class="carrusel-imagen">
+                            <img src="imagenes/LIRIA_WHITE.jpg" alt="Imagen 1" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/LIRIA_WHITE.jpg" alt="Imagen 2" class="carrusel-imagen">
+                            <img src="imagenes/LIRIA_STRIPS.jpg" alt="Imagen 2" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
                             <img src="imagenes/SOPHIE.jpg" alt="Imagen 3" class="carrusel-imagen">
@@ -115,26 +139,77 @@
                 </div>
             </div>
         </div>
-
-
-        </div>
     </header>
 
     <!-- Sección de descripción -->
-    <section class="descripcion">
+    <!-- <section class="descripcion">
         <h2>Bienvenido a nuestro sitio web</h2>
-        <p>Somos una empresa dedicada a ofrecer soluciones innovadoras y creativas para nuestros clientes. Con años de
-            experiencia en el mercado, nos especializamos en brindar servicios de alta calidad que superan las
-            expectativas.</p>
-        <p>Nuestro equipo de profesionales está comprometido con la excelencia y siempre busca las mejores alternativas
-            para cada proyecto. ¡Conócenos y descubre cómo podemos ayudarte a alcanzar tus objetivos!</p>
+        <p>* Contacto</p>
+        <p>* Reserva tu cita</p>
+        <p>* Devoluciones</p>
+        <p>* Tienda</p>
+        <h2>Comienza segunda lista</h2>
+        <p>* Nuestra historia</p>
+        <p>* Prensa</p>
+        <p>* Tarjetas de regalo</p>
+        <h2>Aqui agregar los iconos de redes sociales</h2>
+        <p></p>
         <a href="#contacto" class="boton">Más información</a>
+    </section> -->
+    <!-- NUEVA SECCIÓN DE NEWSLETTER -->
+    <section class="seccion-newsletter">
+        <div class="contenedor-newsletter">
+            <h2>Únete a nuestra comunidad</h2>
+            <p>Suscríbete a nuestro newsletter para recibir las últimas novedades, beneficios, eventos y tendencias de
+                moda directamente en tu correo.</p>
+            <form class="formulario-newsletter">
+                <input type="email" class="campo-email" placeholder="Ingresa tu correo electrónico" required>
+                <button type="submit" class="boton-suscribir">Suscribirse</button>
+            </form>
+        </div>
     </section>
 
+    <!-- Sección de descripción con tres columnas -->
+    <section class="descripcion-columnas">
+        <div class="columna">
+            <h2>Ayuda</h2>
+            <p>Contacto</p>
+            <p>Reserva tu cita</p>
+            <p>Devoluciones</p>
+            <p>Tienda</p>
+        </div>
+
+        <div class="columna">
+            <h2>Nosotros</h2>
+            <p>Nuestra historia</p>
+            <p>Prensa</p>
+            <p>Stories</p>
+            <p>Tarjetas de regalo</p>
+        </div>
+
+        <div class="columna">
+            <h2>Síguenos en redes sociales</h2>
+            <div class="redes-sociales">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+
+            <!-- <div class="boton-container">
+                <a href="#contacto" class="boton">Más información</a>
+            </div> -->
     </section>
 
     <footer>
-        <p>&copy; 2025 Alzárea. Todos los derechos reservados.</p>
+        <div class="footer-left">
+            &copy; 2025 Alzárea. Todos los derechos reservados.
+        </div>
+        <div class="footer-right">
+            <a href="#">Aviso Legal y Privacidad</a>
+            <a href="#">Accesibilidad</a>
+            <a href="#">Política de cookies</a>
+        </div>
     </footer>
 
     <!-- Chatbot flotante -->
@@ -164,80 +239,87 @@
     <!-- Script para mejorar experiencia en móviles -->
     <script src="js/script_mobile.js"></script>
 
-    <!-- Script para los carruseles
+    <!-- Script para la nueva barra superior y funcionalidades -->
     <script>
+        // Funcionalidad para el nuevo menú hamburguesa
         document.addEventListener('DOMContentLoaded', function () {
-            // Inicializar ambos carruseles
-            initCarrusel('carruselIzquierda');
-            initCarrusel('carruselDerecha');
+            const menuHamburguesaSuperior = document.getElementById('menuHamburguesaSuperior');
+            const opcionesMenu = document.getElementById('opcionesMenu');
+            const body = document.body;
 
-            // Función para inicializar cada carrusel
-            function initCarrusel(carruselId) {
-                const carrusel = document.getElementById(carruselId);
-                const inner = carrusel.querySelector('.carrusel-inner');
-                const items = carrusel.querySelectorAll('.carrusel-item');
-                const prevBtn = carrusel.querySelector('.carrusel-prev');
-                const nextBtn = carrusel.querySelector('.carrusel-next');
-                const indicadoresContainer = carrusel.querySelector('.carrusel-indicadores');
+            // Alternar menú al hacer clic en el icono de hamburguesa
+            if (menuHamburguesaSuperior) {
+                menuHamburguesaSuperior.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    body.classList.toggle('menu-abierto');
+                });
+            }
 
-                let currentIndex = 0;
-                const totalItems = items.length;
+            // Cerrar menú al hacer clic en una opción
+            const enlacesMenu = document.querySelectorAll('.opciones-menu a');
+            enlacesMenu.forEach(enlace => {
+                enlace.addEventListener('click', () => {
+                    body.classList.remove('menu-abierto');
+                });
+            });
 
-                // Crear indicadores
-                for (let i = 0; i < totalItems; i++) {
-                    const indicador = document.createElement('button');
-                    indicador.classList.add('carrusel-indicador');
-                    if (i === 0) indicador.classList.add('active');
-                    indicador.addEventListener('click', () => goToSlide(i));
-                    indicadoresContainer.appendChild(indicador);
+            // Cerrar menú al hacer clic fuera de él
+            document.addEventListener('click', function (e) {
+                if (!opcionesMenu.contains(e.target) && !menuHamburguesaSuperior.contains(e.target)) {
+                    body.classList.remove('menu-abierto');
                 }
+            });
 
-                // Función para ir a una slide específica
-                function goToSlide(index) {
-                    if (index < 0) index = totalItems - 1;
-                    if (index >= totalItems) index = 0;
+            // Funcionalidad para la barra de búsqueda
+            const iconoBusqueda = document.getElementById('icono-busqueda');
+            const barraBusqueda = document.getElementById('barraBusqueda');
+            const cerrarBusqueda = document.getElementById('cerrarBusqueda');
+            const inputBusqueda = barraBusqueda.querySelector('input');
 
-                    inner.style.transform = `translateX(-${index * 100}%)`;
-                    currentIndex = index;
-
-                    // Actualizar indicadores
-                    carrusel.querySelectorAll('.carrusel-indicador').forEach((ind, i) => {
-                        ind.classList.toggle('active', i === currentIndex);
-                    });
-                }
-
-                // Event listeners para botones
-                prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-                nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-
-                // Auto avanzar slides cada 5 segundos
-                setInterval(() => goToSlide(currentIndex + 1), 5000);
-
-                // Soporte para deslizar en dispositivos táctiles
-                let startX = 0;
-                let currentX = 0;
-
-                carrusel.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
+            if (iconoBusqueda && barraBusqueda && cerrarBusqueda) {
+                // Abrir barra de búsqueda
+                iconoBusqueda.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    barraBusqueda.classList.add('activa');
+                    setTimeout(() => inputBusqueda.focus(), 100);
                 });
 
-                carrusel.addEventListener('touchmove', (e) => {
-                    currentX = e.touches[0].clientX;
+                // Cerrar barra de búsqueda
+                cerrarBusqueda.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    barraBusqueda.classList.remove('activa');
+                    inputBusqueda.value = '';
                 });
 
-                carrusel.addEventListener('touchend', () => {
-                    const diff = startX - currentX;
-                    if (Math.abs(diff) > 50) { // Umbral mínimo para considerar un deslizamiento
-                        if (diff > 0) {
-                            goToSlide(currentIndex + 1); // Deslizar hacia la izquierda -> siguiente
-                        } else {
-                            goToSlide(currentIndex - 1); // Deslizar hacia la derecha -> anterior
-                        }
+                // Cerrar barra de búsqueda al hacer clic fuera
+                document.addEventListener('click', function (e) {
+                    if (!barraBusqueda.contains(e.target) && e.target !== iconoBusqueda) {
+                        barraBusqueda.classList.remove('activa');
+                    }
+                });
+
+                // Prevenir que el clic en la barra de búsqueda la cierre
+                barraBusqueda.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+
+
+            // Funcionalidad para el formulario de newsletter
+            const formularioNewsletter = document.querySelector('.formulario-newsletter');
+            if (formularioNewsletter) {
+                formularioNewsletter.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const email = this.querySelector('.campo-email').value;
+                    if (email) {
+                        alert('¡Gracias por suscribirte! Hemos enviado un correo de confirmación a: ' + email);
+                        this.reset();
                     }
                 });
             }
         });
-    </script> -->
+
+    </script>
 
 </body>
 
