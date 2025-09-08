@@ -1,6 +1,6 @@
 /* Header de la página Productos */
 .header-productos {
-    height: 100vh;
+    height: 30vh;
     /* Altura del 30% del viewport */
     width: 100%;
     /* Ancho completo */
@@ -16,7 +16,7 @@
     /* Ancho completo del contenedor */
     height: 100%;
     /* Alto completo del contenedor */
-    object-fit: none;
+    object-fit: cover;
     /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
     display: block;
     /* Elimina espacio inferior inherente a las imágenes inline */

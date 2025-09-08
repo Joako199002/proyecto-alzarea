@@ -82,11 +82,11 @@
         <ul>
             <li><a href="index.html">Inicio</a></li>
             <li><a href="productos.html">Colección</a></li>
-            <li><a href="#newsletters">Accesorios</a></li>
+            <li><a href="Accesorios.html">Accesorios</a></li>
             <li><a href="#newsletters">Servicios (Personalización / Upcycling)</a></li>
             <li><a href="#contacto">Contacto</a></li>
             <li><a href="#newsletters">Blog</a></li>
-            <li><a href="#newsletters">Stories</a></li>
+            <li><a href="#newsletters">Red mujeres ALZAREA</a></li>
             <li><a href="quienes_somos.html">Quiénes somos</a></li>
         </ul>
     </div>
@@ -159,7 +159,7 @@
     <!-- NUEVA SECCIÓN DE NEWSLETTER -->
     <section class="seccion-newsletter">
         <div class="contenedor-newsletter">
-            <h2>Únete a nuestra comunidad</h2>
+            <h2>Únete a nuestra red ALZÁREA y disfruta</h2>
             <p>Suscríbete a nuestro newsletter para recibir las últimas novedades, beneficios, eventos y tendencias de
                 moda directamente en tu correo.</p>
             <form class="formulario-newsletter">
@@ -243,66 +243,66 @@
     <script>
         // Funcionalidad para el nuevo menú hamburguesa
         document.addEventListener('DOMContentLoaded', function () {
-            const menuHamburguesaSuperior = document.getElementById('menuHamburguesaSuperior');
-            const opcionesMenu = document.getElementById('opcionesMenu');
-            const body = document.body;
+            // const menuHamburguesaSuperior = document.getElementById('menuHamburguesaSuperior');
+            // const opcionesMenu = document.getElementById('opcionesMenu');
+            // const body = document.body;
 
-            // Alternar menú al hacer clic en el icono de hamburguesa
-            if (menuHamburguesaSuperior) {
-                menuHamburguesaSuperior.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    body.classList.toggle('menu-abierto');
-                });
-            }
+            // // Alternar menú al hacer clic en el icono de hamburguesa
+            // if (menuHamburguesaSuperior) {
+            //     menuHamburguesaSuperior.addEventListener('click', function (e) {
+            //         e.stopPropagation();
+            //         body.classList.toggle('menu-abierto');
+            //     });
+            // }
 
-            // Cerrar menú al hacer clic en una opción
-            const enlacesMenu = document.querySelectorAll('.opciones-menu a');
-            enlacesMenu.forEach(enlace => {
-                enlace.addEventListener('click', () => {
-                    body.classList.remove('menu-abierto');
-                });
-            });
+            // // Cerrar menú al hacer clic en una opción
+            // const enlacesMenu = document.querySelectorAll('.opciones-menu a');
+            // enlacesMenu.forEach(enlace => {
+            //     enlace.addEventListener('click', () => {
+            //         body.classList.remove('menu-abierto');
+            //     });
+            // });
 
-            // Cerrar menú al hacer clic fuera de él
-            document.addEventListener('click', function (e) {
-                if (!opcionesMenu.contains(e.target) && !menuHamburguesaSuperior.contains(e.target)) {
-                    body.classList.remove('menu-abierto');
-                }
-            });
+            // // Cerrar menú al hacer clic fuera de él
+            // document.addEventListener('click', function (e) {
+            //     if (!opcionesMenu.contains(e.target) && !menuHamburguesaSuperior.contains(e.target)) {
+            //         body.classList.remove('menu-abierto');
+            //     }
+            // });
 
-            // Funcionalidad para la barra de búsqueda
-            const iconoBusqueda = document.getElementById('icono-busqueda');
-            const barraBusqueda = document.getElementById('barraBusqueda');
-            const cerrarBusqueda = document.getElementById('cerrarBusqueda');
-            const inputBusqueda = barraBusqueda.querySelector('input');
+            // // Funcionalidad para la barra de búsqueda
+            // const iconoBusqueda = document.getElementById('icono-busqueda');
+            // const barraBusqueda = document.getElementById('barraBusqueda');
+            // const cerrarBusqueda = document.getElementById('cerrarBusqueda');
+            // const inputBusqueda = barraBusqueda.querySelector('input');
 
-            if (iconoBusqueda && barraBusqueda && cerrarBusqueda) {
-                // Abrir barra de búsqueda
-                iconoBusqueda.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    barraBusqueda.classList.add('activa');
-                    setTimeout(() => inputBusqueda.focus(), 100);
-                });
+            // if (iconoBusqueda && barraBusqueda && cerrarBusqueda) {
+            //     // Abrir barra de búsqueda
+            //     iconoBusqueda.addEventListener('click', function (e) {
+            //         e.preventDefault();
+            //         barraBusqueda.classList.add('activa');
+            //         setTimeout(() => inputBusqueda.focus(), 100);
+            //     });
 
-                // Cerrar barra de búsqueda
-                cerrarBusqueda.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    barraBusqueda.classList.remove('activa');
-                    inputBusqueda.value = '';
-                });
+            //     // Cerrar barra de búsqueda
+            //     cerrarBusqueda.addEventListener('click', function (e) {
+            //         e.stopPropagation();
+            //         barraBusqueda.classList.remove('activa');
+            //         inputBusqueda.value = '';
+            //     });
 
-                // Cerrar barra de búsqueda al hacer clic fuera
-                document.addEventListener('click', function (e) {
-                    if (!barraBusqueda.contains(e.target) && e.target !== iconoBusqueda) {
-                        barraBusqueda.classList.remove('activa');
-                    }
-                });
+            //     // Cerrar barra de búsqueda al hacer clic fuera
+            //     document.addEventListener('click', function (e) {
+            //         if (!barraBusqueda.contains(e.target) && e.target !== iconoBusqueda) {
+            //             barraBusqueda.classList.remove('activa');
+            //         }
+            //     });
 
-                // Prevenir que el clic en la barra de búsqueda la cierre
-                barraBusqueda.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                });
-            }
+            //     // Prevenir que el clic en la barra de búsqueda la cierre
+            //     barraBusqueda.addEventListener('click', function (e) {
+            //         e.stopPropagation();
+            //     });
+            // }
 
 
             // Funcionalidad para el formulario de newsletter

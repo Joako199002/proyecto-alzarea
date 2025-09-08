@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
         // Auto avanzar slides cada 5 segundos
-        setInterval(() => goToSlide(currentIndex + 1), 4000);
+        setInterval(() => goToSlide(currentIndex + 1), 5000);
 
         // Soporte para deslizar en dispositivos táctiles
         let startX = 0;
@@ -748,73 +748,6 @@ if (closeButton) {
 window.addEventListener('load', adjustChatbotForMobile);
 window.addEventListener('resize', adjustChatbotForMobile);
 
-/* =================== Script para la nueva barra superior y funcionalidades ========================== */
-
-
-// Funcionalidad para el nuevo menú hamburguesa
-document.addEventListener('DOMContentLoaded', function () {
-    const menuHamburguesaSuperior = document.getElementById('menuHamburguesaSuperior');
-    const opcionesMenu = document.getElementById('opcionesMenu');
-    const body = document.body;
-
-    // Alternar menú al hacer clic en el icono de hamburguesa
-    if (menuHamburguesaSuperior) {
-        menuHamburguesaSuperior.addEventListener('click', function (e) {
-            e.stopPropagation();
-            body.classList.toggle('menu-abierto');
-        });
-    }
-
-    // Cerrar menú al hacer clic en una opción
-    const enlacesMenu = document.querySelectorAll('.opciones-menu a');
-    enlacesMenu.forEach(enlace => {
-        enlace.addEventListener('click', () => {
-            body.classList.remove('menu-abierto');
-        });
-    });
-
-    // Cerrar menú al hacer clic fuera de él
-    document.addEventListener('click', function (e) {
-        if (!opcionesMenu.contains(e.target) && !menuHamburguesaSuperior.contains(e.target)) {
-            body.classList.remove('menu-abierto');
-        }
-    });
-
-    // Funcionalidad para la barra de búsqueda
-    const iconoBusqueda = document.getElementById('icono-busqueda');
-    const barraBusqueda = document.getElementById('barraBusqueda');
-    const cerrarBusqueda = document.getElementById('cerrarBusqueda');
-    const inputBusqueda = barraBusqueda.querySelector('input');
-
-    if (iconoBusqueda && barraBusqueda && cerrarBusqueda) {
-        // Abrir barra de búsqueda
-        iconoBusqueda.addEventListener('click', function (e) {
-            e.preventDefault();
-            barraBusqueda.classList.add('activa');
-            setTimeout(() => inputBusqueda.focus(), 100);
-        });
-
-        // Cerrar barra de búsqueda
-        cerrarBusqueda.addEventListener('click', function (e) {
-            e.stopPropagation();
-            barraBusqueda.classList.remove('activa');
-            inputBusqueda.value = '';
-        });
-
-        // Cerrar barra de búsqueda al hacer clic fuera
-        document.addEventListener('click', function (e) {
-            if (!barraBusqueda.contains(e.target) && e.target !== iconoBusqueda) {
-                barraBusqueda.classList.remove('activa');
-            }
-        });
-
-        // Prevenir que el clic en la barra de búsqueda la cierre
-        barraBusqueda.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-    }
-});
-
 // ==================== INICIALIZACIÓN ====================
 
 // Verificar el estado del backend al cargar la página
@@ -829,4 +762,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000);
     }
 });
-
