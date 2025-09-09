@@ -17,6 +17,16 @@ except ImportError:
 
 mp_pose = mp.solutions.pose
 
+# Funcion para convertir numeros en enteros
+
+
+def to_serializable(val):
+    if isinstance(val, (np.integer,)):
+        return int(val)
+    if isinstance(val, (np.floating,)):
+        return float(val)
+    return val
+
 
 def detectar_y_clasificar_tono_piel(img_path):
     try:
@@ -261,7 +271,7 @@ def detect_facial_features(image_data):
             os.remove(temp_path)
 
         if df is not None:
-            return {
+            pre_resultados = {
                 "Silueta": df['complexion'].iloc[0],
                 "Color de Piel": df['tono_piel'].iloc[0],
                 "Género": df['genero'].iloc[0],
@@ -269,6 +279,21 @@ def detect_facial_features(image_data):
                 "Color de Cabello": df['color_cabello'].iloc[0],
                 "Rostro Detectado": True
             }
+
+            # Conversión segura antes de devolver
+            resultados = {k: to_serializable(v)
+                          for k, v in pre_resultados.items()}
+
+            return resultados
+
+            # return {
+            #     "Silueta": df['complexion'].iloc[0],
+            #     "Color de Piel": df['tono_piel'].iloc[0],
+            #     "Género": df['genero'].iloc[0],
+            #     "Edad": df['edad'].iloc[0],
+            #     "Color de Cabello": df['color_cabello'].iloc[0],
+            #     "Rostro Detectado": True
+            # }
         else:
             return {"Rostro Detectado": False}
 
