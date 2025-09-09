@@ -8,12 +8,14 @@ from PIL import Image
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 import mediapipe as mp
 import os
+import logging
 
 try:
     from deepface import DeepFace
+    from deepface.detectors import FaceDetector
 except ImportError:
-    # Fallback para evitar errores de importación
-    pass
+    DeepFace = None
+    FaceDetector = None
 
 mp_pose = mp.solutions.pose
 
@@ -197,10 +199,29 @@ def estimar_complexion_cuerpo(img_path, mostrar=True):
         return None, "Error en cálculo", None
 
 
+# ✅ Forzar carga de RetinaFace al inicio (si está disponible)
+retina_model = None
+if FaceDetector is not None:
+    try:
+        retina_model = FaceDetector.build_model("retinaface")
+        logging.info("✅ RetinaFace cargado correctamente")
+    except Exception as e:
+        logging.error(f"❌ No se pudo cargar RetinaFace: {e}")
+
+
 def analizar_rostro(img_path):
     try:
-        result = DeepFace.analyze(img_path=img_path, actions=[
-                                  'age', 'gender', 'race'], enforce_detection=True, silent=True)[0]
+        if DeepFace is None:
+            logging.error("DeepFace no está instalado")
+            return None
+
+        result = DeepFace.analyze(
+            img_path=img_path,
+            actions=['age', 'gender', 'race'],
+            enforce_detection=True,
+            detector_backend="retinaface",   # ✅ fuerza retinaface
+            silent=True
+        )[0]
 
         race_mapping = {
             'white': "Caucásico",
@@ -216,41 +237,37 @@ def analizar_rostro(img_path):
             result['dominant_race'], result['dominant_race'])
 
         color_rgb, tono_clasificado = detectar_y_clasificar_tono_piel(img_path)
-
         color_cabello, cabello_nombre = detectar_color_cabello_con_segmentacion(
             img_path)
-
         body_info, complexion, score = estimar_complexion_cuerpo(img_path)
 
-        caracteristicas = {
+        return pd.DataFrame([{
             'edad': result['age'],
             'genero': 'Mujer' if result['dominant_gender'] == 'Woman' else 'Hombre',
             'raza': raza,
             'tono_piel': tono_clasificado,
             'color_cabello': cabello_nombre,
             'complexion': complexion
-        }
-
-        return pd.DataFrame([caracteristicas])
+        }])
 
     except Exception as e:
         if "Face could not be detected" in str(e):
-            print("\nRostro no detectado")
+            logging.warning("⚠️ Rostro no detectado en la imagen")
             return None
-        else:
-            print(f"Error en análisis de rostro: {str(e)}")
-            return None
+        logging.error(f"❌ Error en analizar_rostro: {e}", exc_info=True)
+        return None
 
 
 def detect_facial_features(image_data):
     try:
-        temp_path = "temp_image.jpg"
+        temp_path = "/tmp/temp_image.jpg"  # ✅ usar /tmp
         with open(temp_path, "wb") as f:
             f.write(image_data)
 
+        logging.info(f"Imagen guardada temporalmente en {temp_path}")
+
         df = analizar_rostro(temp_path)
 
-        # Limpia el archivo temporal
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
@@ -264,17 +281,13 @@ def detect_facial_features(image_data):
                 "Rostro Detectado": True
             }
         else:
-            return {
-                "Rostro Detectado": False
-            }
+            return {"Rostro Detectado": False}
+
     except Exception as e:
-        print(f"Error en detección facial: {str(e)}")
-        # Limpia el archivo temporal en caso de error
-        if os.path.exists("temp_image.jpg"):
-            os.remove("temp_image.jpg")
-        return {
-            "Rostro Detectado": False
-        }
+        logging.error(f"❌ Error en detect_facial_features: {e}", exc_info=True)
+        if os.path.exists("/tmp/temp_image.jpg"):
+            os.remove("/tmp/temp_image.jpg")
+        return {"Rostro Detectado": False}
 
 
 # if __name__ == "__main__":
