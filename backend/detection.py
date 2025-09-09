@@ -10,12 +10,8 @@ import mediapipe as mp
 import os
 import logging
 
-try:
-    from deepface import DeepFace
-    from deepface.detectors import FaceDetector
-except ImportError:
-    DeepFace = None
-    FaceDetector = None
+from deepface import DeepFace
+from deepface.detectors import FaceDetector
 
 mp_pose = mp.solutions.pose
 
