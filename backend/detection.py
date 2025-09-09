@@ -205,7 +205,7 @@ def analizar_rostro(img_path):
 
         result = DeepFace.analyze(
             img_path=img_path,
-            actions=['age', 'gender']  # , 'race'],
+            actions=['age', 'gender'],  # , 'race'],
             enforce_detection=True,
             detector_backend="retinaface",   # ✅ fuerza retinaface
             silent=True
