@@ -10,7 +10,8 @@ body,
 html {
     height: 100%;
     width: 100%;
-    font-family: Arial, sans-serif;
+    /*font-family: Arial, sans-serif;*/
+    font-family: 'Raleway', sans-serif;
     scroll-behavior: smooth;
 }
 
@@ -212,6 +213,44 @@ html {
     background-color: rgba(44, 62, 80, 0.1);
 }
 
+/* ==================== SUBMENÚ ==================== */
+
+.menu-con-submenu {
+    position: relative;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    left: 40%;
+    top: 0%;
+    background-color: white(0, 0, 0, .4);
+    width: 100%;
+    padding: 5px 0;
+    /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);*/
+    border-radius: 0 0 4px 4px;
+    z-index: 1001;
+}
+
+.menu-con-submenu:hover .submenu {
+    display: block;
+}
+
+.submenu li {
+    margin-bottom: 0;
+    padding: 0 10px;
+}
+
+.submenu a {
+    font-size: 1rem;
+    padding: 8px 10px;
+    color: #4b4b4b;
+}
+
+.submenu a:hover {
+    background-color: rgba(44, 62, 80, 0.1);
+}
+
 /* ===== ESTILOS COMUNES DEL CHATBOT ===== */
 
 /* Contenedor del chatbot */
@@ -270,7 +309,7 @@ html {
 
 /* Caja del chatbot */
 .chatbot-box {
-    display: flex;
+    display: none;
     /* Oculta inicialmente la caja de chat (se mostrará con JavaScript) */
     flex-direction: column;
     /* Organiza los elementos hijos en una columna vertical */

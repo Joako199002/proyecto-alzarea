@@ -10,7 +10,10 @@
     <!-- CSS específico de esta página -->
     <link rel="stylesheet" href="css/styles_productos.css">
     <!-- Enlace a Google Fonts para Quicksand -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!--<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">-->
+    <!-- Enlace a Google Fonts para Raleway (nuevo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Iconos de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -51,18 +54,27 @@
             <li><a href="index.html">Inicio</a></li>
             <li><a href="productos.html">Colección</a></li>
             <li><a href="Accesorios.html">Accesorios</a></li>
-            <li><a href="#newsletters">Servicios (Personalización / Upcycling)</a></li>
+            <li class="menu-con-submenu">
+                <a href="#servicios">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="#personalizacion">Personalización</a></li>
+                    <li><a href="#upcycling">Upcycling</a></li>
+                </ul>
+            </li>
+            <li><a href="#newsletters">Red mujeres ALZAREA</a></li>
             <li><a href="#contacto">Contacto</a></li>
             <li><a href="#newsletters">Blog</a></li>
-            <li><a href="#newsletters">Red mujeres ALZAREA</a></li>
-            <li><a href="quienes_somos.html">Quiénes somos</a></li>
         </ul>
     </div>
 
     <!-- Header de la página -->
     <header class="header-productos">
+        <!-- Contenedor del logo superpuesto -->
+        <div class="logo-contenedor">
+            <img src="imagenes/logo_5.png" alt="Logo" class="logo">
+        </div>
         <img src="imagenes/COLECCION.jpg" alt="Header Productos">
-        <div class="leyenda-header">Colección</div>
+        <div class="leyenda-header">Colección SS26</div>
     </header>
 
     <!-- Sección de productos -->

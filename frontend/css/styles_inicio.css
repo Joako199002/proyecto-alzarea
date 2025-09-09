@@ -235,48 +235,52 @@
     padding: 40px 40px 40px 20px;
     /* Más padding a la derecha */
     background-color: #f8f8f8;
-    text-align: right;
+    /*text-align: center;
     /* Alineación a la derecha */
 }
 
 .contenedor-newsletter {
-    max-width: 100%;
+    max-width: 40%;
     margin-left: auto;
     /* Empuja el contenedor hacia la derecha */
-    margin-right: 0;
+    /*margin-right: 0;
     /* Elimina margen derecho */
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    /* Alinea hijos a la derecha */
+    /*align-items: flex-end;
+    /* Alinea items dentro del contenedir */
 }
 
 .seccion-newsletter h2 {
     font-size: 1.5rem;
     /* Reducido de 2rem */
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     /* Reducido */
     color: #333;
-    text-align: left;
-    /* Alineado a la izquierda */
+    text-align: center;
+    /* Alineado al centro */
+    max-width: 100%;
 }
 
 .seccion-newsletter p {
     font-size: 0.95rem;
     /* Reducido de 1.1rem */
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     /* Reducido de 30px */
     line-height: 1.5;
-    text-align: left;
-    /* Alineado a la izquierda */
+    text-align: center;
+    /* Alineado a la centro */
+    max-width: 100%;
 }
 
 .formulario-newsletter {
     display: flex;
     gap: 10px;
-    align-items: center;
+    /*align-items: center;*/
+    justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .campo-email {
@@ -287,7 +291,8 @@
     font-size: 0.9rem;
     /* Reducido */
     flex: 1;
-    min-width: 350px;
+    max-width: 100%;
+    min-width: 0px;
     box-sizing: border-box;
 }
 
@@ -334,6 +339,7 @@
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /*align-content: center;*/
 }
 
 .columna h2 {
@@ -342,16 +348,18 @@
     padding-bottom: 10px;
     border-bottom: 2px solid #e0e0e0;
     color: #333;
+    text-align: center;
 }
 
 .columna p {
     margin: 12px 0;
     padding-left: 15px;
     position: relative;
+    text-align: center;
 }
 
 .columna p:before {
-    content: "*";
+    /*content: "*";*/
     position: absolute;
     left: 0;
     color: #888;
@@ -360,7 +368,7 @@
 .redes-sociales {
     display: flex;
     gap: 15px;
-    margin-top: 60px;
+    margin-top: 55px;
     justify-content: center;
 }
 

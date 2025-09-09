@@ -12,12 +12,14 @@
 
 /* Imagen del header */
 .header-productos img {
+    padding-top: 50px;
     width: 100%;
     /* Ancho completo del contenedor */
     height: 100%;
     /* Alto completo del contenedor */
-    object-fit: none;
+    object-fit: cover;
     /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    object-position: center top;
     display: block;
     /* Elimina espacio inferior inherente a las imágenes inline */
 }
@@ -26,15 +28,15 @@
 .leyenda-header {
     position: absolute;
     /* Posicionamiento absoluto respecto al header */
-    top: 50%;
+    top: 15%;
     /* Centrado vertical */
-    left: 50%;
+    left: 1.5%;
     /* Centrado horizontal */
-    transform: translate(-50%, -50%);
+    /*transform: translate(-50%, -50%);
     /* Ajuste fino para centrado perfecto */
     color: white;
     /* Color de texto blanco */
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     /* Tamaño de fuente grande */
     font-weight: 600;
     /* Grosor de fuente semi-bold */
@@ -42,11 +44,81 @@
     /* Sombra de texto para mejor legibilidad */
     text-align: center;
     /* Alineación centrada */
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Raleway', sans-serif;
     /* Fuente Quicksand de Google Fonts */
     letter-spacing: 1px;
     /* Espaciado entre letras para mejor legibilidad */
 }
+
+/* ==================== LOGO SUPERPUESTO ======================= */
+
+/* Contenedor del logo superpuesto */
+.logo-contenedor {
+    position: absolute;
+    /* Posicionamiento absoluto respecto al contenedor padre */
+    top: 50%;
+    /* Centrado vertical */
+    left: 50%;
+    /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    /* Ajuste fino para centrado perfecto */
+    z-index: 10;
+    /* Asegura que el logo esté por encima de las otras imágenes */
+    background-color: rgba(255, 255, 255, 0);
+    /* Fondo blanco semitransparente */
+    /*border-radius: 50%;
+    /* Forma circular */
+    padding: 0px;
+    /* Espaciado interno */
+    /*box-shadow: 0 0 25px rgba(0, 0, 0, 0.3); /* Sombra para efecto de elevación */
+    animation: pulse 2s infinite;
+    /* Animación de pulsación */
+    width: 350px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos para el logo */
+.logo {
+    width: 100%;
+    /* Ancho del logo */
+    height: auto;
+    /* Alto del logo */
+    /*border-radius: 50%;
+    /* Forma circular */
+    object-fit: none;
+    /* Mantiene proporciones sin recortar */
+    display: block;
+    /* Elimina espacio inferior */
+}
+
+/* Animación de pulsación para el logo */
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        /* Tamaño normal */
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.0);
+        /* Sombra normal */
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        /* Ligero agrandamiento */
+        box-shadow: 0 0 35px rgba(255, 255, 255, 0.0);
+        /* Sombra más pronunciada */
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        /* Vuelve al tamaño normal */
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.0);
+        /* Vuelve a sombra normal */
+    }
+}
+
+/* ================= SECCION PRODUCTOS ===========================*/
 
 /* Sección de productos */
 .seccion-productos {
@@ -70,6 +142,7 @@
     /* Alineación centrada */
     position: relative;
     /* Posicionamiento relativo para pseudo-elementos */
+    font-family: 'Raleway', sans-serif;
 }
 
 .titulo-seccion::after {
