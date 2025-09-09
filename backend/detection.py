@@ -10,8 +10,10 @@ import mediapipe as mp
 import os
 import logging
 
-from deepface import DeepFace
-from deepface.detectors import FaceDetector
+try:
+    from deepface import DeepFace
+except ImportError:
+    DeepFace = None
 
 mp_pose = mp.solutions.pose
 
@@ -193,16 +195,6 @@ def estimar_complexion_cuerpo(img_path, mostrar=True):
     except Exception as e:
         print(f"Error en análisis de complexión: {str(e)}")
         return None, "Error en cálculo", None
-
-
-# ✅ Forzar carga de RetinaFace al inicio (si está disponible)
-retina_model = None
-if FaceDetector is not None:
-    try:
-        retina_model = FaceDetector.build_model("retinaface")
-        logging.info("✅ RetinaFace cargado correctamente")
-    except Exception as e:
-        logging.error(f"❌ No se pudo cargar RetinaFace: {e}")
 
 
 def analizar_rostro(img_path):
