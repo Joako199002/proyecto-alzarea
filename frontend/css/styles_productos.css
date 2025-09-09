@@ -83,6 +83,16 @@
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+/* Solo flecha izquierda para el carrusel izquierdo */
+#carruselIzquierda .carrusel-next {
+    display: none;
+}
+
+/* Solo flecha derecha para el carrusel derecho */
+#carruselDerecha .carrusel-prev {
+    display: none;
+}
+
 .carrusel-prev {
     left: 10px;
 }
