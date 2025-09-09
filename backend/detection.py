@@ -205,7 +205,7 @@ def analizar_rostro(img_path):
 
         result = DeepFace.analyze(
             img_path=img_path,
-            actions=['age', 'gender', 'race'],
+            actions=['age', 'gender']  # , 'race'],
             enforce_detection=True,
             detector_backend="retinaface",   # ✅ fuerza retinaface
             silent=True
@@ -221,8 +221,9 @@ def analizar_rostro(img_path):
             'southeast asian': "Asiático Suroriental",
             'asian': "Asiático"
         }
-        raza = race_mapping.get(
-            result['dominant_race'], result['dominant_race'])
+        # raza = race_mapping.get(
+        #     result['dominant_race'], result['dominant_race'])
+        raza = 'No Detectada'
 
         color_rgb, tono_clasificado = detectar_y_clasificar_tono_piel(img_path)
         color_cabello, cabello_nombre = detectar_color_cabello_con_segmentacion(
