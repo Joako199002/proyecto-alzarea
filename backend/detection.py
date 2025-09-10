@@ -295,17 +295,16 @@ def detect_facial_features(image_data):
             #     "Rostro Detectado": True
             # }
         else:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                logging.info(f"Imagen temporal eliminada: {temp_path}")
             return {"Rostro Detectado": False}
+
     except Exception as e:
         logging.error(f"❌ Error en detect_facial_features: {e}", exc_info=True)
         if os.path.exists("/tmp/temp_image.jpg"):
             os.remove("/tmp/temp_image.jpg")
         return {"Rostro Detectado": False}
-
-
-if os.path.exists(temp_path):
-    os.remove(temp_path)
-    logging.info(f"Imagen temporal eliminada: {temp_path}")
 
 
 # if __name__ == "__main__":
