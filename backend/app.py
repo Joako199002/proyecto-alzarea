@@ -289,11 +289,13 @@ def subir_imagen():
         try:
             resultados = detection.detect_facial_features(image_bytes)
             logging.info(f"✅ Resultados brutos detection: {resultados}")
+
         except Exception as det_err:
             logging.error(
                 "❌ Falló detection.detect_facial_features", exc_info=True)
             return jsonify({"reply": "Error interno en la detección facial."}), 500
 
+        # Reemplaza siempre las características previas en la sesión
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
 
@@ -305,14 +307,18 @@ def subir_imagen():
 
         historial = historial_conversaciones[session_id]
 
-        # Agregar características físicas si aún no están
-        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
-            descripcion = ", ".join(
-                [f"{k}: {v}" for k, v in resultados.items()])
-            historial.append({
-                "role": "system",
-                "content": f"Características físicas detectadas del usuario: {descripcion}"
-            })
+        # Reemplaza o agrega la entrada de características físicas en el historial
+        descripcion = ", ".join([f"{k}: {v}" for k, v in resultados.items()])
+        caracteristicas_entry = {
+            "role": "system",
+            "content": f"Características físicas detectadas del usuario: {descripcion}"
+        }
+
+        # Elimina cualquier entrada anterior de características detectadas
+        historial = [
+            h for h in historial if "Características físicas detectadas" not in h.get("content", "")]
+        historial.append(caracteristicas_entry)
+        historial_conversaciones[session_id] = historial
 
         # Simular un mensaje del usuario para que la IA continúe el flujo
         historial.append({"role": "user", "content": "Ya subí mi imagen"})
@@ -331,12 +337,14 @@ def subir_imagen():
         if respuesta_ia:
             historial.append({"role": "assistant", "content": respuesta_ia})
             return jsonify({"reply": respuesta_ia})
+
         else:
             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
 
     except Exception as e:
         logging.error("❌ Error inesperado en /subir-imagen", exc_info=True)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
 
 # Ruta para servir imágenes subidas (opcional, para debugging)
 
