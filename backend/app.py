@@ -9,7 +9,11 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
 import base64
-# import detection
+import detection
+import httpx
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -41,7 +45,9 @@ CORS(app, supports_credentials=True, origins=frontend_urls)
 # NOTA: Ahora usamos un almacenamiento en memoria en lugar de cookies para historiales largos
 historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-client = Groq(api_key=GROQ_API_KEY)
+http_client = httpx.Client(proxies=None)  # fuerza que no pase proxies
+client = Groq(api_key=GROQ_API_KEY, http_client=http_client)
+# client = Groq(api_key=GROQ_API_KEY)
 
 # Variable global para almacenar los vestidos cargados
 vestidos_formateados = ""
@@ -116,7 +122,6 @@ El flujo ideal es este, pero puede darse en cualquier orden:
 Base de vestidos y colores disponibles:
 {vestidos_formateados}
 """
-
 
 # Ruta para servir imágenes estáticas
 
@@ -243,8 +248,20 @@ def subir_imagen():
         with open(filepath, 'wb') as f:
             f.write(image_bytes)
 
+        # 🔍 Debug: Verifica tamaño de la imagen
+        logging.info(f"📏 Imagen recibida: {len(image_bytes)} bytes")
+
         # Detectar características faciales
-        resultados = detect_facial_features(image_bytes)
+        try:
+            resultados = detection.detect_facial_features(image_bytes)
+            logging.info(f"✅ Resultados brutos detection: {resultados}")
+
+        except Exception as det_err:
+            logging.error(
+                "❌ Falló detection.detect_facial_features", exc_info=True)
+            return jsonify({"reply": "Error interno en la detección facial."}), 500
+
+        # Reemplaza siempre las características previas en la sesión
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
 
@@ -256,14 +273,18 @@ def subir_imagen():
 
         historial = historial_conversaciones[session_id]
 
-        # Agregar características físicas si aún no están
-        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
-            descripcion = ", ".join(
-                [f"{k}: {v}" for k, v in resultados.items()])
-            historial.append({
-                "role": "system",
-                "content": f"Características físicas detectadas del usuario: {descripcion}"
-            })
+        # Reemplaza o agrega la entrada de características físicas en el historial
+        descripcion = ", ".join([f"{k}: {v}" for k, v in resultados.items()])
+        caracteristicas_entry = {
+            "role": "system",
+            "content": f"Características físicas detectadas del usuario: {descripcion}"
+        }
+
+        # Elimina cualquier entrada anterior de características detectadas
+        historial = [
+            h for h in historial if "Características físicas detectadas" not in h.get("content", "")]
+        historial.append(caracteristicas_entry)
+        historial_conversaciones[session_id] = historial
 
         # Simular un mensaje del usuario para que la IA continúe el flujo
         historial.append({"role": "user", "content": "Ya subí mi imagen"})
@@ -282,12 +303,14 @@ def subir_imagen():
         if respuesta_ia:
             historial.append({"role": "assistant", "content": respuesta_ia})
             return jsonify({"reply": respuesta_ia})
+
         else:
             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
 
     except Exception as e:
-        print("Error al analizar imagen:", e)
+        logging.error("❌ Error inesperado en /subir-imagen", exc_info=True)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
 
 # Ruta para servir imágenes subidas (opcional, para debugging)
 
