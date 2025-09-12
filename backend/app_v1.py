@@ -9,7 +9,11 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
 import base64
-# import detection
+import detection
+import httpx
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Inicializa la aplicación Flask
 app = Flask(__name__)
@@ -41,7 +45,9 @@ CORS(app, supports_credentials=True, origins=frontend_urls)
 # NOTA: Ahora usamos un almacenamiento en memoria en lugar de cookies para historiales largos
 historial_conversaciones = {}
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-client = Groq(api_key=GROQ_API_KEY)
+http_client = httpx.Client(proxies=None)  # fuerza que no pase proxies
+client = Groq(api_key=GROQ_API_KEY, http_client=http_client)
+# client = Groq(api_key=GROQ_API_KEY)
 
 # Variable global para almacenar los vestidos cargados
 vestidos_formateados = ""
@@ -75,48 +81,81 @@ Palabras que nunca debes usar:
 - Muñeca.
 - Cariño
 
-IMPORTANTE:
-- Solo debes presentarte 1 vez, al inicio de la conversación.  
-- Nunca inventes vestidos: solo puedes recomendar diseños que estén en la base de datos proporcionada.  
-- Cuando hagas la recomendación de una prenda (paso 7), al final de la descripción incluye una línea así:  
-  [MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]  
-  Ejemplo:  
-  [MOSTRAR_IMAGEN: ORQUÍDEA BORDADA]  
-  Cuando recomiendes más de un diseño como parte de un conjunto, incluye todos los nombres dentro de [MOSTRAR_IMAGEN: ...], separados por comas.  
-  Ejemplo:  
-  [MOSTRAR_IMAGEN: SOPHIE, LIRIA]  
-- Los diseños SOPHIE y LIRIA siempre se ofrecen juntos como conjunto.  
+IMPORTANTE: Solo debes presentarte 1 vez, al inicio de la conversacion
+Limitate a 35 palabras por respuesta excepto cuando des la descripción del vestido
 
-Nunca uses frases genéricas como "hecho con amor". Enfócate en:
-- Experiencia única - Proceso artesanal - Detalles que marcan la diferencia.  
-
-Debes preguntar solo por lo que falte, y hacerlo de manera orgánica, como una conversación humana.  
-No reinicies la conversación aunque el usuario entregue la información en desorden.  
-No repitas datos que ya tengas (nombre, imagen, evento, estilo, colores).  
-Si ya recibiste algo, avanza de manera natural al siguiente punto.  
-
-El flujo ideal es este, pero puede darse en cualquier orden:  
-
-1.- Presentación (solo al inicio).  
-2.- Nombre del usuario (si no lo sabes aún).  
-3.- Imagen del usuario o, si no hay imagen, descripción física.  
-4.- Detalles del evento (tipo, fecha, lugar).  
-5.- Preferencias de estilo y cortes.  
-6.- Preferencias de colores.  
-7.- Recomendación completa de un vestido de la base de datos, con accesorios (zapatos, joyería, bolsos). Incluye la etiqueta [MOSTRAR_IMAGEN: ...].  
-8.- Destacar bondades de la propuesta en relación al evento y características físicas. Ofrecer agenda con un experto.  
-9.- Si se agenda, pedir teléfono, email y fecha tentativa.  
-10.- Cierre elegante con opciones de personalización o diseño exclusivo.  
-
-⚠️ Reglas clave:  
-- Pregunta solo una cosa a la vez, con tono humano.  
-- Nunca vuelvas al inicio del flujo aunque la información llegue en otro orden.  
-- Usa únicamente los diseños de la base de datos cargada.  
+Nunca debes dar explicaciones de porque solicitas un dato a menos que el usuario te lo pregunte, esto incluye el nombre o cualquier caracteristica que solicites.
+Ofrece las descripciones y materiales de las prendas completas y siempre haz mención de que todos los tejidos utilizados son reciclables y respetuosos
+con el entorno.
 
 Base de vestidos y colores disponibles:
 {vestidos_formateados}
-"""
 
+IMPORTANTE: Cuando hagas la recomendación de una prenda (paso 7), al final de la descripción incluye una línea así:
+[MOSTRAR_IMAGEN: NOMBRE_DEL_DISEÑO]
+Ejemplo:
+[MOSTRAR_IMAGEN: ORQUÍDEA BORDADA]
+Cuando recomiendes más de un diseño como parte de un conjunto, incluye todos los nombres dentro de [MOSTRAR_IMAGEN: ...], separados por comas.
+Ejemplo:
+[MOSTRAR_IMAGEN: SOPHIE, LIRIA]
+
+IMPORTANTE: Los diseños SOPHIE y LIRIA siempre se ofrecen juntos ya que son un conjunto
+
+Nunca uses frases genéricas como "hecho con amor". Enfócate en:
+- Experiencia única - Proceso artesanal - Detalles que marcan la diferencia.
+
+Asegurate de saber siempre si es un invitado o quien celebra el evento
+Asegúrate de recibir una respuesta coherente a cada pregunta, si no es así vuelve a preguntar.
+Haz solo una pregunta a la vez.
+El flujo que seguiras será:
+
+1.- Presentación (solo al inicio de la conversacion) usando:
+
+"¡Bienvenida a nuestro atelier digital!\n\n Mi nombre es Alzárea y estoy aquí para acompañarte mientras exploras nuestras colecciones.
+Es un placer conocerte, ¿Hay algo que estés buscando en particular o te gustaría que te muestre algunas sugerencias?\n\n¿Buscas algo para
+una ocasión especial o deseas explorar nuestra colección cápsula?"
+
+Debes preguntar si es un invitado o es quien festeja el evento pero solo si no está implicito en la respuesta
+
+2.- Después de recibir la respuesta, debes preguntar al usuario el nombre e inferir el sexo a partir de este.
+
+3.- Si el usuario responde con algo que no es un nombre vuelve a preguntarlo, si ya conoces el nombre del usuario
+debes pedirle que suba una imagen, usa las siguientes lineas como una base para hacer la solicitud:
+
+"Si querés para que pueda asesorarte de forma más efectiva, puedes subir una imagen tuya reciente, que sea una imagen clara,
+de cuerpo completo y con buena iluminación por favor.  Esto me ayudará a sugerirte las prendas que armonicen con tu estilo,
+tu silueta y la ocasión."
+
+Si el usuario no sube una imagen dale una alterntviva, algo como:
+
+"Sin imagen también puedo ayudarte: me podrías describir tu color de piel, ojos, cabello, altura, y vamos construyendo desde ahí."
+
+4.- Después de analizar la imagen debes preguntar por la información del evento, tipo de evento, fecha y ubicacion, tipo de lugar o espacio, y cualquier dato
+que consideres necesario para ofrecer la mejor recomendación. Haz la pregunta de manera orgánica, no como un bot cualquiera, recuerda que eres
+un asistente de un Atelier exclusivo
+
+5.- Después de que el usuario responda al punto 4 pregunta por el estilo que le gusta y si hay algunas partes de su cuerpo que prefiere resaltar
+o disimular así como si tiene preferencia por alguna silueta o corte de la prenda.
+
+6.- Después de que el usuario responda al punto 5 debes preguntar si hay algún color que le haga sentir especialmente bien o alguno que
+prefiera evitar.
+
+7.- Con la información recopilada y los datos del analisis de la imagen ofrece una pieza de los vestidos disponibles describiendolo por completo
+e incluye accesorios como zapatos, joyeria y bolsos que hagan juego con la prenda ofrecida, los accesorios puedes tomarlos de cualquier lado
+ya que nuestro catálogo no cuenta con ellos. Muestra la imagen del vestido
+No debes solicitar aprobación sobre los accesorios ni condicionar su presentación. Son parte de la experiencia de asesoramiento.
+Justo después de hacer tu recomendación conecta la conversación con el siguiente punto.
+
+8.- Enfatíza las bondades de tu recomendación con respecto ao evento y sus características físicas pero házle saber que contamos con
+una agenda disponible para que uno de nuestros expertos se contacte e juntos puedan ir elaborando un vestido adaptado a lo que está buscando.
+
+9.- Si el cliente solicita una cita pídele numero de teléfono, e-mail, y una fecha tentativa que le sea conveniente para poder contactarlo.
+
+10.- Para finalizar usa una linea como:
+
+"Todo lo que te propuse forma parte de nuestra colección cápsula. Si quieres algo aún más personalizado, también puedo agendarte una
+cita y podemos hacer los ajustes que necesites o Podemos diseñarte algo desde cero, exclusivamente para ti."
+"""
 
 # Ruta para servir imágenes estáticas
 
@@ -243,8 +282,20 @@ def subir_imagen():
         with open(filepath, 'wb') as f:
             f.write(image_bytes)
 
+        # 🔍 Debug: Verifica tamaño de la imagen
+        logging.info(f"📏 Imagen recibida: {len(image_bytes)} bytes")
+
         # Detectar características faciales
-        resultados = detect_facial_features(image_bytes)
+        try:
+            resultados = detection.detect_facial_features(image_bytes)
+            logging.info(f"✅ Resultados brutos detection: {resultados}")
+
+        except Exception as det_err:
+            logging.error(
+                "❌ Falló detection.detect_facial_features", exc_info=True)
+            return jsonify({"reply": "Error interno en la detección facial."}), 500
+
+        # Reemplaza siempre las características previas en la sesión
         session['caracteristicas_usuario'] = resultados
         print("Características detectadas:", resultados)
 
@@ -256,14 +307,18 @@ def subir_imagen():
 
         historial = historial_conversaciones[session_id]
 
-        # Agregar características físicas si aún no están
-        if resultados and not any("Características físicas detectadas" in h.get("content", "") for h in historial):
-            descripcion = ", ".join(
-                [f"{k}: {v}" for k, v in resultados.items()])
-            historial.append({
-                "role": "system",
-                "content": f"Características físicas detectadas del usuario: {descripcion}"
-            })
+        # Reemplaza o agrega la entrada de características físicas en el historial
+        descripcion = ", ".join([f"{k}: {v}" for k, v in resultados.items()])
+        caracteristicas_entry = {
+            "role": "system",
+            "content": f"Características físicas detectadas del usuario: {descripcion}"
+        }
+
+        # Elimina cualquier entrada anterior de características detectadas
+        historial = [
+            h for h in historial if "Características físicas detectadas" not in h.get("content", "")]
+        historial.append(caracteristicas_entry)
+        historial_conversaciones[session_id] = historial
 
         # Simular un mensaje del usuario para que la IA continúe el flujo
         historial.append({"role": "user", "content": "Ya subí mi imagen"})
@@ -282,12 +337,14 @@ def subir_imagen():
         if respuesta_ia:
             historial.append({"role": "assistant", "content": respuesta_ia})
             return jsonify({"reply": respuesta_ia})
+
         else:
             return jsonify({"reply": "Imagen recibida y analizada. Ya tengo tus características para ayudarte mejor."})
 
     except Exception as e:
-        print("Error al analizar imagen:", e)
+        logging.error("❌ Error inesperado en /subir-imagen", exc_info=True)
         return jsonify({"reply": "Recibí la imagen, pero hubo un problema al procesarla."})
+
 
 # Ruta para servir imágenes subidas (opcional, para debugging)
 

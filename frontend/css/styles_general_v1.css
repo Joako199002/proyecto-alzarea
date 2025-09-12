@@ -84,23 +84,6 @@ html {
 }
 
 /* ==================== BARRA DE BÚSQUEDA ==================== */
-
-/* Añadir estilos para el icono de búsqueda móvil */
-.icono-busqueda-movil {
-    display: none;
-    color: #4b4b4b;
-    font-size: 18px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-    padding: 12px;
-    position: relative;
-    z-index: 1003;
-}
-
-.icono-busqueda-movil:hover {
-    color: #858585;
-}
-
 .barra-busqueda {
     position: absolute;
     top: 50%;
@@ -119,7 +102,7 @@ html {
 }
 
 .barra-busqueda.activa {
-    width: 480px;
+    width: 500px;
     opacity: 1;
     padding: 8px 15px;
     right: 200px;
@@ -185,7 +168,7 @@ html {
 }
 
 .barra-busqueda {
-    right: 200px;
+    right: 140px;
 }
 
 /* ==================== OPCIONES MENÚ ==================== */
@@ -560,7 +543,7 @@ footer {
     text-align: left;
 }
 
-z .footer-right {
+.footer-right {
     text-align: right;
 }
 
@@ -643,8 +626,30 @@ z .footer-right {
 
 /* ===== MEDIA QUERIES COMUNES ===== */
 
-@media (max-width: 768px) {
+/* Media queries */
+@media (max-width: 1024px) {
 
+    /* Estilos para tablets */
+    .chatbot-toggle {
+        width: 80px;
+        height: 80px;
+        font-size: 50px;
+    }
+
+    .chatbot-box {
+        bottom: 90px;
+    }
+}
+
+/* Para tablets en orientación horizontal */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .chatbot-box {
+        height: 70vh;
+        width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
     /* 
     body,
     html {
@@ -653,85 +658,9 @@ z .footer-right {
         position: relative;
         font-size: 14px;
     } */
-    /* Reorganizar barra superior solo en móviles */
-    .barra-superior {
-        height: 10vh;
-        padding: 0 15px;
-        justify-content: space-between;
-    }
-
-    .opciones-menu {
-        top: 10vh;
-    }
-
-    .menu-hamburguesa-superior {
-        order: 1;
-        margin-right: 10px;
-    }
-
-    /* Ocultar icono de búsqueda original en iconos-derecha */
-    .iconos-derecha #icono-busqueda {
-        display: none;
-    }
-
-    /* Mostrar icono de búsqueda móvil */
-    .icono-busqueda-movil {
-        display: flex !important;
-        margin-right: 15px;
-        order: 2;
-    }
-
-    /* Ocultar icono de WhatsApp solo en móviles */
-    .iconos-derecha .icono:nth-child(2) {
-        display: none;
-    }
-
-    /* Mover búsqueda a la izquierda solo en móviles */
-    .iconos-derecha {
-        order: 3;
-    }
-
-    #icono-busqueda {
-        order: 2;
-        margin-right: auto;
-    }
-
-    /* .logo-superior-contenedor {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    } */
-
-    .logo-superior-contenedor {
-        position: static;
-        transform: none;
-        order: 3;
-        flex: 1;
-        display: flex;
-        justify-content: center;
-    }
-
-    .logo-superior {
-        height: 100px;
-        max-width: 100%;
-    }
-
-    /* Barra de búsqueda que se despliega hacia abajo solo en móviles */
-    .barra-busqueda.activa {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        right: 0;
-        transform: none;
-        border-radius: 80;
-        padding: 15px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1002;
-    }
 
     /* Estilos para móviles */
-    /* .menu-hamburguesa {
+    .menu-hamburguesa {
         width: 50px;
         height: 50px;
         top: 15px;
@@ -742,7 +671,7 @@ z .footer-right {
         width: 25px;
         height: 3px;
         margin: 3px 0;
-    } */
+    }
 
     /* moviles chatbot v1.1 */
     .chatbot-container {
@@ -822,48 +751,10 @@ z .footer-right {
         font-size: 0.8rem;
         padding: 6px 8px;
     }
-
-    /* Ajustes para el footer en dispositivos móviles */
-    footer {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px;
-    }
-
-    .footer-left,
-    .footer-right {
-        text-align: left;
-        width: 100%;
-    }
-
-    .footer-right {
-        margin-top: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .footer-right a {
-        margin-left: 0;
-        display: block;
-    }
 }
 
 
 @media (max-width: 480px) {
-
-    .barra-superior {
-        height: 8vh;
-        padding: 0 10px;
-    }
-
-    .opciones-menu {
-        top: 8vh;
-    }
-
-    .icono-busqueda-movil {
-        margin: 0 5px;
-    }
 
     .chatbot-box {
         width: calc(100vw - 20px);

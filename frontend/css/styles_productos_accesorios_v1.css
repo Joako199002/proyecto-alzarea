@@ -1,0 +1,631 @@
+/* Header de la página Productos */
+.header-productos {
+    height: 30vh;
+    /* Altura del 30% del viewport */
+    width: 100%;
+    /* Ancho completo */
+    position: relative;
+    /* Posicionamiento relativo para elementos absolutos internos */
+    overflow: hidden;
+    /* Oculta cualquier desbordamiento */
+}
+
+/* Imagen del header */
+.header-productos img {
+    width: 100%;
+    /* Ancho completo del contenedor */
+    height: 100%;
+    /* Alto completo del contenedor */
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior inherente a las imágenes inline */
+}
+
+/* Leyenda superpuesta en el header */
+.leyenda-header {
+    position: absolute;
+    /* Posicionamiento absoluto respecto al header */
+    top: 50%;
+    /* Centrado vertical */
+    left: 50%;
+    /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    /* Ajuste fino para centrado perfecto */
+    color: white;
+    /* Color de texto blanco */
+    font-size: 3.5rem;
+    /* Tamaño de fuente grande */
+    font-weight: 600;
+    /* Grosor de fuente semi-bold */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    /* Sombra de texto para mejor legibilidad */
+    text-align: center;
+    /* Alineación centrada */
+    font-family: 'Quicksand', sans-serif;
+    /* Fuente Quicksand de Google Fonts */
+    letter-spacing: 1px;
+    /* Espaciado entre letras para mejor legibilidad */
+}
+
+/* Sección de productos */
+.seccion-productos {
+    padding: 60px 20px;
+    /* Espaciado interno generoso */
+    max-width: 1200px;
+    /* Ancho máximo para pantallas grandes */
+    margin: 0 auto;
+    /* Centrado horizontal */
+}
+
+/* Título de sección */
+.titulo-seccion {
+    font-size: 2.2rem;
+    /* Tamaño de fuente grande */
+    color: #2c3e50;
+    /* Color azul oscuro */
+    margin-bottom: 15px;
+    /* Espacio inferior */
+    text-align: center;
+    /* Alineación centrada */
+    position: relative;
+    /* Posicionamiento relativo para pseudo-elementos */
+}
+
+.titulo-seccion::after {
+    content: '';
+    /* Contenido vacío para el pseudo-elemento */
+    display: block;
+    /* Comportamiento de bloque */
+    width: 80px;
+    /* Ancho de la línea decorativa */
+    height: 4px;
+    /* Alto de la línea decorativa */
+    background: linear-gradient(to right, #667eea, #764ba2);
+    /* Gradiente de color */
+    margin: 15px auto 0;
+    /* Centrado y espaciado */
+    border-radius: 2px;
+    /* Bordes ligeramente redondeados */
+}
+
+/* Descripción de la sección */
+.descripcion-seccion {
+    text-align: center;
+    /* Alineación centrada */
+    font-size: 1.1rem;
+    /* Tamaño de fuente */
+    color: #666;
+    /* Color de texto gris */
+    margin-bottom: 40px;
+    /* Espacio inferior */
+    max-width: 800px;
+    /* Ancho máximo */
+    margin-left: auto;
+    /* Centrado horizontal */
+    margin-right: auto;
+    /* Centrado horizontal */
+    line-height: 1.6;
+    /* Interlineado para mejor legibilidad */
+}
+
+/* Grid de productos */
+.grid-productos {
+    display: grid;
+    /* Usa CSS Grid para el layout */
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columnas de igual tamaño */
+    gap: 30px;
+    /* Espacio entre elementos del grid */
+    margin-top: 40px;
+    /* Espacio superior */
+}
+
+/* Producto individual */
+.producto {
+    background-color: white;
+    /* Fondo blanco */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    overflow: hidden;
+    /* Oculta cualquier desbordamiento */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Transiciones suaves */
+}
+
+/* Efecto al pasar el cursor sobre el producto */
+.producto:hover {
+    transform: translateY(-5px);
+    /* Efecto de levitación */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    /* Sombra más pronunciada */
+}
+
+/* Imagen del producto */
+.imagen-producto {
+    width: 100%;
+    /* Ancho completo del contenedor */
+    height: 250px;
+    /* Alto fijo para uniformidad */
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior */
+}
+
+/* Información del producto */
+.info-producto {
+    padding: 20px;
+    /* Espaciado interno */
+}
+
+/* Nombre del producto */
+.nombre-producto {
+    font-size: 1.3rem;
+    /* Tamaño de fuente */
+    color: #2c3e50;
+    /* Color azul oscuro */
+    margin-bottom: 10px;
+    /* Espacio inferior */
+    font-weight: 600;
+    /* Grosor de fuente semi-bold */
+}
+
+/* Descripción del producto */
+.descripcion-producto {
+    font-size: 0.95rem;
+    /* Tamaño de fuente */
+    color: #666;
+    /* Color de texto gris */
+    line-height: 1.5;
+    /* Interlineado para mejor legibilidad */
+}
+
+/* Producto vacío (para completar el grid) */
+.producto.vacio {
+    display: flex;
+    /* Usa flexbox para centrar contenido */
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
+    background-color: #f8f9fa;
+    /* Fondo gris muy claro */
+    border: 2px dashed #dee2e6;
+    /* Borde punteado */
+}
+
+/* Modal para detalles del producto */
+.modal-producto {
+    display: none;
+    /* Oculta el modal por defecto */
+    position: fixed;
+    /* Posicionamiento fijo */
+    z-index: 1000;
+    /* Por encima de otros elementos */
+    left: 0;
+    /* Alineado a la izquierda */
+    top: 0;
+    /* Alineado arriba */
+    width: 100%;
+    /* Ancho completo */
+    height: 100%;
+    /* Alto completo */
+    overflow: auto;
+    /* Habilita scroll si es necesario */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Fondo negro semitransparente */
+    animation: fadeIn 0.3s ease;
+    /* Animación de entrada */
+}
+
+/* Contenido del modal */
+.modal-contenido {
+    position: relative;
+    /* Posicionamiento relativo */
+    background-color: #fefefe;
+    /* Color de fondo */
+    margin: 5% auto;
+    /* Centrado vertical con margen */
+    padding: 0;
+    /* Sin padding */
+    width: 80%;
+    /* Ancho del 80% del viewport */
+    max-width: 900px;
+    /* Ancho máximo */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    /* Sombra pronunciada */
+    display: flex;
+    /* Usa flexbox para layout */
+    flex-direction: row;
+    /* Dirección horizontal */
+    overflow: hidden;
+    /* Oculta desbordamiento */
+}
+
+/* Parte izquierda (70%) - Imagen */
+.modal-imagen {
+    flex: 7;
+    /* Ocupa 7 partes de 10 (70%) */
+    overflow: hidden;
+    /* Oculta desbordamiento */
+}
+
+.modal-imagen img {
+    width: 100%;
+    /* Ancho completo */
+    height: 100%;
+    /* Alto completo */
+    object-fit: cover;
+    /* Cubre el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior */
+}
+
+/* Parte derecha (30%) - Información */
+.modal-info {
+    flex: 3;
+    /* Ocupa 3 partes de 10 (30%) */
+    padding: 30px;
+    /* Espaciado interno */
+    display: flex;
+    /* Usa flexbox para layout */
+    flex-direction: column;
+    /* Dirección vertical */
+    justify-content: center;
+    /* Centra verticalmente */
+}
+
+/* Nombre del producto en el modal */
+.modal-nombre {
+    font-size: 1.8rem;
+    /* Tamaño de fuente grande */
+    color: #2c3e50;
+    /* Color azul oscuro */
+    margin-bottom: 15px;
+    /* Espacio inferior */
+    font-weight: 600;
+    /* Grosor de fuente semi-bold */
+}
+
+/* Precio del producto */
+.modal-precio {
+    font-size: 1.5rem;
+    /* Tamaño de fuente */
+    color: #667eea;
+    /* Color azul */
+    margin-bottom: 20px;
+    /* Espacio inferior */
+    font-weight: 600;
+    /* Grosor de fuente semi-bold */
+}
+
+/* Descripción del producto en el modal */
+.modal-descripcion {
+    font-size: 1rem;
+    /* Tamaño de fuente */
+    color: #666;
+    /* Color de texto gris */
+    line-height: 1.6;
+    /* Interlineado para mejor legibilidad */
+    margin-bottom: 25px;
+    /* Espacio inferior */
+}
+
+/* Botón de contacto */
+.boton-contacto {
+    padding: 12px 25px;
+    /* Espaciado interno */
+    background-color: #667eea;
+    /* Color de fondo azul */
+    color: white;
+    /* Color de texto blanco */
+    border: none;
+    /* Sin borde */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    font-size: 1rem;
+    /* Tamaño de fuente */
+    font-weight: 600;
+    /* Grosor de fuente semi-bold */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease;
+    /* Transición suave */
+    align-self: flex-start;
+    /* Alineado a la izquierda */
+}
+
+.boton-contacto:hover {
+    background-color: #5a67d8;
+    /* Color de fondo más oscuro al pasar el cursor */
+}
+
+/* Botón de cerrar modal */
+.modal-cerrar {
+    position: absolute;
+    /* Posicionamiento absoluto */
+    top: 15px;
+    /* Distancia desde arriba */
+    right: 15px;
+    /* Distancia desde la derecha */
+    color: #aaa;
+    /* Color gris */
+    font-size: 28px;
+    /* Tamaño de fuente grande */
+    font-weight: bold;
+    /* Texto en negrita */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima */
+    z-index: 1001;
+    /* Por encima del contenido del modal */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Fondo blanco semitransparente */
+    width: 40px;
+    /* Ancho fijo */
+    height: 40px;
+    /* Alto fijo */
+    border-radius: 50%;
+    /* Forma circular */
+    display: flex;
+    /* Usa flexbox para centrar */
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
+    transition: all 0.3s ease;
+    /* Transición suave */
+}
+
+.modal-cerrar:hover {
+    color: #000;
+    /* Color negro al pasar el cursor */
+    background-color: rgba(255, 255, 255, 1);
+    /* Fondo blanco sólido */
+}
+
+/* Animación de entrada del modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    /* Comienza transparente */
+    to {
+        opacity: 1;
+    }
+
+    /* Termina opaco */
+}
+
+/* Media queries */
+
+/* Media queries para tablets */
+@media (max-width: 1024px) {
+    .grid-productos {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columnas en tablets */
+        gap: 20px;
+    }
+
+    .modal-contenido {
+        flex-direction: row;
+        /* Volvemos a disposición horizontal */
+        height: 80vh;
+    }
+
+    .modal-imagen {
+        flex: 0 0 50%;
+        height: 100%;
+    }
+
+    .modal-info {
+        flex: 0 0 50%;
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    /* Estilos para móviles */
+
+    .descripcion {
+        padding: 30px 15px;
+    }
+
+    .descripcion h2 {
+        font-size: 2rem;
+    }
+
+    .descripcion p {
+        font-size: 1rem;
+    }
+
+    /* grid productos */
+
+    .grid-productos {
+        grid-template-columns: 1fr;
+        /* 1 columna en móviles */
+        gap: 15px;
+    }
+
+    .producto {
+        margin-bottom: 15px;
+        transition: transform 0.2s ease;
+        /*interaccion tactil */
+    }
+
+    /* interaccion moviles */
+    .producto:active {
+        transform: scale(0.98);
+    }
+
+    /* Aumenta el área táctil */
+    .producto {
+        padding: 5px;
+    }
+
+    .imagen-producto {
+        height: 200px;
+        /* Ajusta la altura para móviles */
+        /* Optimización para móviles */
+        loading: lazy;
+        aspect-ratio: 3/4;
+    }
+
+    /* Reduce animaciones para mejor rendimiento */
+    .producto:hover {
+        transform: none;
+    }
+
+    .imagen-seccion:hover img {
+        transform: none;
+    }
+
+    .modal-contenido {
+        flex-direction: column;
+        /* Cambia a columna en dispositivos pequeños */
+        width: 90%;
+        /* Ancho del 90% */
+        height: 85vh;
+        /* Mayor altura para el modal */
+        margin: 10% auto;
+        /* Margen superior aumentado */
+        max-height: 90vh;
+        overflow-y: hidden;
+        /* cambiado de auto*/
+    }
+
+    .modal-imagen {
+        flex: 0 0 50%;
+        /* 50% del modal para la imagen  antes none*/
+        ;
+        height: 50%;
+        /* antes 200*/
+        /* antes 250
+        /* Altura fija */
+        overflow: hidden;
+    }
+
+    .modal-imagen img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* Mantiene la proporción sin recortar */
+    }
+
+    .modal-info {
+        flex: 0 0 50%;
+        /* 50% del modal para la información antes none*/
+        /* Sin flex growing */
+        padding: 15px;
+        /* antes 20
+        /* Espaciado interno reducido */
+        overflow-y: auto;
+        /* Scroll para el texto si es necesario */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-nombre {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        /*font-size: 1.4rem;
+        /* antes 1.5
+        /* Tamaño de fuente reducido */
+    }
+
+    .modal-precio {
+        font-size: 1.2rem;
+        /* antes 1.3
+        /* Tamaño de fuente reducido */
+    }
+
+    .modal-descripcion {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        flex-grow: 1;
+        /* Permite que la descripción ocupe el espacio disponible */
+        /*font-size: 0.9rem;*/
+    }
+
+    .boton-contacto {
+        align-self: center;
+        width: 100%;
+        text-align: center;
+        margin-top: auto;
+        /* Empuja el botón hacia la parte inferior */
+    }
+
+    .modal-cerrar {
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Permite hacer scroll en el modal sin afectar la página detrás */
+    .modal-producto {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* interaccion tactil */
+
+
+
+/* Ajustes adicionales para móviles pequeños */
+@media (max-width: 480px) {
+    .grid-productos {
+        gap: 10px;
+    }
+
+    .imagen-producto {
+        height: 180px;
+    }
+
+    .info-producto {
+        padding: 15px;
+    }
+
+    .nombre-producto {
+        font-size: 1.2rem;
+    }
+
+    .descripcion-producto {
+        font-size: 0.9rem;
+    }
+
+    .modal-contenido {
+        height: 90vh;
+        /* Aún más altura en dispositivos pequeños */
+    }
+
+    .modal-imagen {
+        flex: 0 0 55%;
+        /* Más espacio para la imagen */
+    }
+
+    .modal-info {
+        flex: 0 0 45%;
+        /* Menos espacio para el texto */
+        padding: 10px;
+    }
+
+    .modal-nombre {
+        font-size: 1.2rem;
+    }
+
+    .modal-precio {
+        font-size: 1.1rem;
+    }
+}
