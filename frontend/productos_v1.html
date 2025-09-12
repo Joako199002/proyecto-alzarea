@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="css/styles_general.css">
     <!-- CSS específico de esta página -->
     <link rel="stylesheet" href="css/styles_productos.css">
-    <!-- Enlace a Google Fonts para Quicksand -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Enlace a Google Fonts para Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Iconos de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -24,10 +25,6 @@
             <div class="linea"></div>
             <div class="linea"></div>
         </div>
-
-        <!-- Icono de búsqueda a la izquierda -->
-        <a href="#" class="icono icono-busqueda-movil" id="icono-busqueda-movil"><i class="fas fa-search"></i></a>
-
 
         <!-- Logo centrado -->
         <div class="logo-superior-contenedor">
@@ -55,15 +52,20 @@
             <li><a href="index.html">Inicio</a></li>
             <li><a href="productos.html">Colección</a></li>
             <li><a href="Accesorios.html">Accesorios</a></li>
-            <li><a href="#newsletters">Servicios (Personalización / Upcycling)</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-            <li><a href="#newsletters">Blog</a></li>
+            <li class="menu-con-submenu">
+                <a href="#servicios">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="#personalizacion">Personalización</a></li>
+                    <li><a href="#upcycling">Upcycling</a></li>
+                </ul>
+            </li>
             <li><a href="#newsletters">Red mujeres ALZAREA</a></li>
-            <li><a href="quienes_somos.html">Quiénes somos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <!-- <li><a href="#newsletters">Blog</a></li> -->
         </ul>
     </div>
 
-    <!-- Header de la página -->
+    <!-- Header principal (modificado: ahora es el carrusel de index.html) -->
     <header class="header-contenido">
         <div class="contenedor">
             <!-- Mitad izquierda del encabezado con carrusel -->
@@ -71,13 +73,13 @@
                 <div class="carrusel" id="carruselIzquierda">
                     <div class="carrusel-inner">
                         <div class="carrusel-item">
-                            <img src="imagenes/zapatillas1.jpg" alt="Imagen 1" class="carrusel-imagen">
+                            <img src="imagenes/FRISO_FLOWER.jpg" alt="Imagen 1" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/zapatillas2.jpg" alt="Imagen 2" class="carrusel-imagen">
+                            <img src="imagenes/ALMENA.jpg" alt="Imagen 2" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/zapatillas3.jpg" alt="Imagen 3" class="carrusel-imagen">
+                            <img src="imagenes/SKIRT_BLACK.jpg" alt="Imagen 3" class="carrusel-imagen">
                         </div>
                     </div>
                     <button class="carrusel-control carrusel-prev">&#10094;</button>
@@ -91,13 +93,13 @@
                 <div class="carrusel" id="carruselDerecha">
                     <div class="carrusel-inner">
                         <div class="carrusel-item">
-                            <img src="imagenes/ANILLI_ALHELI.jpg" alt="Imagen 1" class="carrusel-imagen">
+                            <img src="imagenes/LIRIA_WHITE.jpg" alt="Imagen 1" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/pendientes_cala.jpg" alt="Imagen 2" class="carrusel-imagen">
+                            <img src="imagenes/LIRIA_STRIPS.jpg" alt="Imagen 2" class="carrusel-imagen">
                         </div>
                         <div class="carrusel-item">
-                            <img src="imagenes/pulsera_cala.jpg" alt="Imagen 3" class="carrusel-imagen">
+                            <img src="imagenes/SOPHIE.jpg" alt="Imagen 3" class="carrusel-imagen">
                         </div>
                     </div>
                     <button class="carrusel-control carrusel-prev">&#10094;</button>
@@ -117,84 +119,80 @@
         <!-- Grid de productos 3x3 -->
         <div class="grid-productos">
             <!-- Producto 1: CENEFA -->
-            <div class="producto" data-producto="zapatillas1">
-                <img src="imagenes/zapatillas1.jpg" alt="ZAR" class="imagen-producto">
+            <div class="producto" data-producto="cenefa">
+                <img src="imagenes/CENEFA.jpg" alt="Vestido CENEFA" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">ZAR</h3>
-                    <p class="descripcion-producto">Zapatos destalonados en tejido de fibra natural con rejilla
-                        semitransparente.</p>
+                    <h3 class="nombre-producto">CENEFA</h3>
+                    <p class="descripcion-producto">Elegante vestido con detalles únicos en acabados premium.</p>
                 </div>
             </div>
 
             <!-- Producto 2: FRISO -->
-            <div class="producto" data-producto="zapatillas2">
-                <img src="imagenes/zapatillas2.jpg" alt="ZAN" class="imagen-producto">
+            <div class="producto" data-producto="friso">
+                <img src="imagenes/FRISO_FLOWER.jpg" alt="FRISO" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">ZAN</h3>
-                    <p class="descripcion-producto">Zapatos en tejido natural bordado y detalles en raso negro.</p>
+                    <h3 class="nombre-producto">FRISO</h3>
+                    <p class="descripcion-producto">Diseño moderno con cortes innovadores y máxima comodidad.</p>
                 </div>
             </div>
 
             <!-- Producto 3: SOPHIE -->
-            <div class="producto" data-producto="zapatillas3">
-                <img src="imagenes/zapatillas3.jpg" alt="ZAB" class="imagen-producto">
+            <div class="producto" data-producto="sophie">
+                <img src="imagenes/SOPHIE.jpg" alt="Vestido SOPHIE" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">ZAB</h3>
-                    <p class="descripcion-producto">Sandalia de tacón ancho con tejido entramado y espiga dorada.
+                    <h3 class="nombre-producto">SOPHIE</h3>
+                    <p class="descripcion-producto">Vestido sofisticado con inspiración en tendencias contemporáneas.
                     </p>
                 </div>
             </div>
 
             <!-- Producto 4: LIRIA -->
-            <div class="producto" data-producto="clutch">
-                <img src="imagenes/clutch1.jpg" alt="CLUB" class="imagen-producto">
+            <div class="producto" data-producto="liria">
+                <img src="imagenes/LIRIA_WHITE.jpg" alt="LIRA" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">CLUB</h3>
-                    <p class="descripcion-producto">Clutch beige entretejido con hilos dorados en patrón de espiga.</p>
+                    <h3 class="nombre-producto">LIRIA</h3>
+                    <p class="descripcion-producto">Modelo clásico reinventado con un toque de modernidad.</p>
                 </div>
             </div>
 
             <!-- Producto 5: LOGO -->
-            <div class="producto" data-producto="pendiente-cala">
-                <img src="imagenes/pendientes_cala.jpg" alt="Pendientes-CALA" class="imagen-producto">
+            <div class="producto" data-producto="almena">
+                <img src="imagenes/ALMENA.jpg" alt="ALMENA" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">Pendientes CALA</h3>
-                    <p class="descripcion-producto">Pendientes CALA en plata de ley 925 y chapado en oro 18k.</p>
+                    <h3 class="nombre-producto">ALMENA</h3>
+                    <p class="descripcion-producto">Diseño exclusivo que representa la esencia de nuestra marca.</p>
                 </div>
             </div>
 
             <!-- Producto 6: CENEFA_2 -->
-            <div class="producto" data-producto="pulsera-cala">
-                <img src="imagenes/pulsera_cala.jpg" alt="Pulsera-Cala" class="imagen-producto">
+            <div class="producto" data-producto="skirt">
+                <img src="imagenes/SKIRT_BLACK.jpg" alt="Vestido CENEFA_2" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">Pulsera CALA</h3>
-                    <p class="descripcion-producto">Pulsera CALA en plata de ley 925 y chapado en oro 18k..</p>
+                    <h3 class="nombre-producto">SKIRT</h3>
+                    <p class="descripcion-producto">Variación del modelo CENEFA con detalles mejorados.</p>
                 </div>
             </div>
 
             <!-- Espacios vacíos para completar el grid 3x3 -->
-            <div class="producto" data-producto="anillo-alheli">
-                <img src="imagenes/ANILLI_ALHELI.jpg" alt="anillo-Alheli" class="imagen-producto">
+            <div class="producto" data-producto="weird">
+                <img src="imagenes/WEIRD.jpg" alt="weird" class="imagen-producto">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">Anillo ALHELI</h3>
-                    <p class="descripcion-producto">Anillo ALHELÍ en plata de ley 925 y chapado en oro 18k.</p>
+                    <h3 class="nombre-producto">WIERD</h3>
+                    <p class="descripcion-producto">Un diseno muy extrano.</p>
                 </div>
             </div>
 
-            <div class="producto" data-producto="colgante-alheli">
-                <img src="imagenes/COLLAR_ALHELI.jpg" alt="collar-Alheli" class="imagen-producto">
+            <div class="producto vacio">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">Colgante ALHELI</h3>
-                    <p class="descripcion-producto">Colgante ALHELÍ en plata de ley 925 y chapado en oro 18k (cadena de
-                        45cm).</p>
+                    <h3 class="nombre-producto">Próximamente</h3>
+                    <p class="descripcion-producto">Nuevos diseños en camino.</p>
                 </div>
             </div>
 
-            <div class="producto" data-producto="anillo-jacinta">
-                <img src="imagenes/ANILLO_JACINTA.jpg" alt="Anillo-Jacinta" class="imagen-producto">
+            <div class="producto vacio">
                 <div class="info-producto">
-                    <h3 class="nombre-producto">Anillo JACINTA</h3>
-                    <p class="descripcion-producto">Anillo JACINTA en plata de ley 925 y chapado en oro 18k (4x2cm).</p>
+                    <h3 class="nombre-producto">Próximamente</h3>
+                    <p class="descripcion-producto">Nuevos diseños en camino.</p>
                 </div>
             </div>
         </div>
@@ -218,16 +216,8 @@
 
     <!-- Footer -->
     <footer>
-        <div class="footer-left">
-            &copy; 2025 Alzárea. Todos los derechos reservados.
-        </div>
-        <div class="footer-right">
-            <a href="#">Aviso Legal y Privacidad</a>
-            <a href="#">Accesibilidad</a>
-            <a href="#">Política de cookies</a>
-        </div>
+        <p>&copy; 2025 Alzárea. Todos los derechos reservados.</p>
     </footer>
-
 
     <!-- Chatbot flotante -->
     <div class="chatbot-container">
@@ -251,8 +241,7 @@
 
     <!-- Scripts -->
     <script src="js/script.js"></script>
-    <script src="js/script_modal_accesorios.js"></script>
-
+    <script src="js/script_modal.js"></script>
 </body>
 
 </html>
