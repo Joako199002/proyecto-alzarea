@@ -1,0 +1,204 @@
+/* ===== ESTILOS ESPECÍFICOS PARA PÁGINA DE CONTACTO ===== */
+
+.header-contacto {
+    height: 60vh;
+    /* Altura del 30% del viewport */
+    width: 100%;
+    /* Ancho completo */
+    position: relative;
+    /* Posicionamiento relativo para elementos absolutos internos */
+    overflow: hidden;
+    /* Oculta cualquier desbordamiento */
+}
+
+/* Imagen del header */
+.header-contacto img {
+    width: 100%;
+    /* Ancho completo del contenedor */
+    height: 100%;
+    /* Alto completo del contenedor */
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
+    display: block;
+    /* Elimina espacio inferior inherente a las imágenes inline */
+}
+
+/* Leyenda superpuesta en el header */
+.leyenda-header {
+    position: absolute;
+    /* Posicionamiento absoluto respecto al header */
+    top: 50%;
+    /* Centrado vertical */
+    left: 50%;
+    /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    /* Ajuste fino para centrado perfecto */
+    color: white;
+    /* Color de texto blanco */
+    font-size: 3rem;
+    /* Tamaño de fuente grande */
+    font-weight: bold;
+    /* Texto en negrita */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    /* Sombra de texto para mejor legibilidad */
+    text-align: center;
+    /* Alineación centrada */
+    font-family: 'Quicksand', sans-serif;
+    /* Define la familia tipográfica */
+}
+
+/* Sección de descripción */
+.seccion-descripcion {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.contenedor-descripcion {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.seccion-descripcion h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #4b4b4b;
+}
+
+.seccion-descripcion p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Sección de contacto */
+.seccion-contacto {
+    padding: 60px 20px;
+    background-color: white;
+}
+
+.contenedor-contacto {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+/* Formulario de contacto (60%) */
+.formulario-contacto {
+    flex: 0 0 60%;
+}
+
+.campo-formulario {
+    margin-bottom: 25px;
+}
+
+.campo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #4b4b4b;
+}
+
+.campo-formulario input,
+.campo-formulario select,
+.campo-formulario textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.campo-formulario input:focus,
+.campo-formulario select:focus,
+.campo-formulario textarea:focus {
+    border-color: #a6a8a7;
+    outline: none;
+}
+
+.boton-enviar {
+    background-color: #4b4b4b;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.boton-enviar:hover {
+    background-color: #858585;
+}
+
+/* Sección de WhatsApp (40%) */
+.whatsapp-contacto {
+    flex: 0 0 40%;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.whatsapp-contacto h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #4b4b4b;
+}
+
+.boton-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #25D366;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.boton-whatsapp:hover {
+    background-color: #128C7E;
+}
+
+.boton-whatsapp span {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.boton-whatsapp i {
+    font-size: 1.5rem;
+}
+
+.descripcion-whatsapp p {
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contenedor-contacto {
+        flex-direction: column;
+    }
+
+    .formulario-contacto,
+    .whatsapp-contacto {
+        flex: 0 0 100%;
+    }
+
+    .seccion-descripcion,
+    .seccion-contacto {
+        padding: 40px 15px;
+    }
+
+    .seccion-descripcion h2 {
+        font-size: 1.7rem;
+    }
+}

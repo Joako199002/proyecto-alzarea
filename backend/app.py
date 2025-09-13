@@ -104,7 +104,7 @@ Si ya recibiste algo, avanza de manera natural al siguiente punto.
 El flujo ideal es este, pero puede darse en cualquier orden:  
 
 1.- Presentación (solo al inicio).  
-2.- Nombre del usuario (si no lo sabes aún).  
+2.- Nombre del usuario (si no lo sabes aún) y pronombre de preferencia.  
 3.- Imagen del usuario o, si no hay imagen, descripción física.  
 4.- Detalles del evento (tipo, fecha, lugar).  
 5.- Preferencias de estilo y cortes.  

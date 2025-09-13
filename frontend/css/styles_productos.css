@@ -359,6 +359,34 @@
 }
 
 @media (max-width: 768px) {
+
+    .header-contenido {
+        margin-top: 12vh;
+        height: 30vh;
+    }
+
+    /* Estilos para el carrusel en móviles */
+    .contenedor {
+        flex-direction: row;
+        height: 30vh;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .mitad {
+        width: 50%;
+        height: 100%;
+        min-width: 50%;
+        flex-shrink: 0;
+    }
+
+    .carrusel-control {
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
     .descripcion {
         padding: 30px 15px;
     }
@@ -467,28 +495,6 @@
     .modal-producto {
         -webkit-overflow-scrolling: touch;
     }
-
-    /* Estilos para el carrusel en móviles */
-    .contenedor {
-        flex-direction: row;
-        height: 100vh;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-    }
-
-    .mitad {
-        width: 50%;
-        height: 100%;
-        min-width: 50%;
-        flex-shrink: 0;
-    }
-
-    .carrusel-control {
-        width: 30px;
-        height: 30px;
-        padding: 5px;
-        font-size: 14px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -534,7 +540,13 @@
     }
 
     /* Estilos para el carrusel en móviles pequeños */
-    .contenedor {
-        height: 92vh;
+    .header-contenido {
+        margin-top: 8vh;
+        height: 30vh;
     }
+
+    /* .contenedor {
+        margin-top: 10vh;
+        height: 30vh;
+    } */
 }

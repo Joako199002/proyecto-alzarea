@@ -41,7 +41,20 @@ const productosData = {
         precio: "$315.000",
         descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
         imagen: "imagenes/WEIRD.jpg"
+    },
+    rojo: {
+        nombre: "ROJO",
+        precio: "$315.000",
+        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
+        imagen: "imagenes/ROJO.jpg"
+    },
+    vest: {
+        nombre: "VEST",
+        precio: "$315.000",
+        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
+        imagen: "imagenes/VEST.jpg"
     }
+
 };
 
 // Obtener elementos del DOM

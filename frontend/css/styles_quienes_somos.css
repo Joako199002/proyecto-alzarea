@@ -1,5 +1,5 @@
 /* Header de la página Quiénes Somos */
-.header-quienes-somos {
+.header-contacto {
     height: 45vh;
     /* Altura del 30% del viewport */
     width: 100%;
@@ -11,7 +11,7 @@
 }
 
 /* Imagen del header */
-.header-quienes-somos img {
+.header-contacto img {
     width: 100%;
     /* Ancho completo del contenedor */
     height: 100%;

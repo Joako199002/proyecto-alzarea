@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alzárea</title>
+    <title>Contacto - Alzárea</title>
     <!-- CSS común para todas las páginas -->
     <link rel="stylesheet" href="css/styles_general.css">
     <!-- CSS específico de esta página -->
-    <link rel="stylesheet" href="css/styles_inicio.css">
+    <link rel="stylesheet" href="css/styles_contacto.css">
     <!-- Enlace a Google Fonts para Raleway -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -18,36 +18,9 @@
 
 <body>
 
-    <!-- Pop-up de newsletter -->
-    <div class="newsletter-popup" id="newsletterPopup">
-        <div class="popup-content">
-            <span class="close-popup" id="closePopup">&times;</span>
-            <h2>¡Únete a nuestro Newsletter!</h2>
-            <p>Suscríbete para recibir las últimas novedades, promociones exclusivas y tendencias de moda.</p>
-            <form id="newsletterForm">
-                <input type="email" id="newsletterEmail" placeholder="Ingresa tu correo electrónico" required>
-                <button type="submit">Inscribirse</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Pop-up de agradecimiento -->
-    <div class="thankyou-popup" id="thankyouPopup">
-        <div class="popup-content">
-            <span class="close-popup" id="closeThankyouPopup">&times;</span>
-            <h2>¡Gracias por suscribirte!</h2>
-            <p>A partir de ahora recibirás nuestras actualizaciones y excelentes promociones directamente en tu correo.
-            </p>
-            <button id="acceptThankyou">Aceptar</button>
-        </div>
-    </div>
-
-    <!-- Fondo ensombrecido -->
-    <div class="overlay" id="overlay"></div>
-
-    <!-- NUEVA BARRA SUPERIOR CON MARGEN BLANCO -->
+    <!-- BARRA SUPERIOR -->
     <div class="barra-superior">
-        <!-- Menú hamburguesa (nuevo) -->
+        <!-- Menú hamburguesa -->
         <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
             <div class="linea"></div>
             <div class="linea"></div>
@@ -62,7 +35,7 @@
             <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
         </div>
 
-        <!-- Barra de búsqueda (oculta inicialmente) - MOVIDA DENTRO DE BARRA SUPERIOR -->
+        <!-- Barra de búsqueda (oculta inicialmente) -->
         <div class="barra-busqueda" id="barraBusqueda">
             <input type="text" placeholder="Buscar productos...">
             <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
@@ -96,71 +69,80 @@
         </ul>
     </div>
 
-    <!-- Header principal -->
-    <header class="header-contenido">
+    <!-- Header principal con imagen y leyenda -->
+    <header class="header-contacto">
         <div class="contenedor">
-            <!-- Contenedor del logo superpuesto -->
-            <div class="logo-contenedor">
-                <img src="imagenes/logo_5.png" alt="Logo" class="logo">
-            </div>
-            <img src="imagenes/COLECCION.jpg" alt="Header Productos">
-            <div class="leyenda-header">COLECCIÓN<br>SS26</div>
+            <img src="imagenes/designer.jpg" alt="Header Contacto">
+            <div class="leyenda-header">CONTACTO</div>
         </div>
     </header>
 
-    <!-- NUEVA SECCIÓN DE NEWSLETTER -->
-    <section class="seccion-newsletter">
-        <div class="contenedor-newsletter">
-            <h2>Únete a nuestra Red ALZÁREA y disfruta</h2>
-            <p>Suscríbete a nuestro newsletter para recibir las últimas novedades, beneficios, eventos y tendencias de
-                moda directamente en tu correo.</p>
-            <form class="formulario-newsletter">
-                <input type="email" class="campo-email" placeholder="Ingresa tu correo electrónico" required>
-                <button type="submit" class="boton-suscribir">Suscribirse</button>
-            </form>
+    <!-- Sección de descripción -->
+    <section class="seccion-descripcion">
+        <div class="contenedor-descripcion">
+            <h2>Contacto con uno de nuestros diseñadores</h2>
+            <p>Estamos aquí para ayudarte a crear la prenda perfecta que se adapte a tu estilo y necesidades. Completa
+                el formulario y nos pondremos en contacto contigo lo antes posible.</p>
         </div>
     </section>
 
-    <!-- Sección de descripción con tres columnas -->
-    <section class="descripcion-columnas">
-        <div class="columna">
-            <h2>Ayuda</h2>
-            <p>Contacto</p>
-            <p>Reserva tu cita</p>
-            <p>Tienda</p>
-            <p>Devoluciones</p>
-        </div>
+    <!-- Sección de contacto con formulario y WhatsApp -->
+    <section class="seccion-contacto">
+        <div class="contenedor-contacto">
+            <!-- Formulario (60% de ancho) -->
+            <div class="formulario-contacto">
+                <form id="formContacto">
+                    <div class="campo-formulario">
+                        <label for="nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
 
-        <div class="columna">
-            <h2>Nosotros</h2>
-            <p>Nuestra historia</p>
-            <p>Red Mujeres Alzárea</p>
-            <p>Prensa</p>
-            <p>Tarjeta de regalo</p>
-        </div>
+                    <div class="campo-formulario">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-        <div class="columna">
-            <h2>Síguenos en</h2>
-            <div class="redes-sociales">
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-                <a href="#"><i class="fab fa-pinterest"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+                    <div class="campo-formulario">
+                        <label for="diseno">Tipo de diseño</label>
+                        <select id="diseno" name="diseno" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="vestido">Vestido</option>
+                            <option value="blusa">Blusa</option>
+                            <option value="falda">Falda</option>
+                            <option value="pantalon">Pantalón</option>
+                            <option value="abrigo">Abrigo</option>
+                            <option value="personalizado">Diseño personalizado</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="color">Color preferido</label>
+                        <input type="text" id="color" name="color" placeholder="Ej: Azul marino, Rojo coral...">
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="mensaje">Mensaje adicional</label>
+                        <textarea id="mensaje" name="mensaje" rows="5"
+                            placeholder="Describe tu idea o consulta..."></textarea>
+                    </div>
+
+                    <button type="submit" class="boton-enviar">Enviar solicitud</button>
+                </form>
+            </div>
+
+            <!-- WhatsApp (40% de ancho) -->
+            <div class="whatsapp-contacto">
+                <h3>Contáctanos por WhatsApp</h3>
+                <div class="boton-whatsapp">
+                    <span>Chatear</span>
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="descripcion-whatsapp">
+                    <p>¿Prefieres una comunicación más directa? Escríbenos por WhatsApp y te atenderemos inmediatamente
+                        en nuestro horario de atención: Lunes a Viernes de 9:00 a 18:00.</p>
+                </div>
             </div>
         </div>
-
-        <div class="columna">
-            <h2>Aceptamos</h2>
-            <div class="payment-methods">
-                <i class="fab fa-cc-paypal" title="PayPal"></i>
-                <i class="fab fa-cc-visa" title="Visa"></i>
-                <i class="fab fa-cc-amex" title="American Express"></i>
-                <i class="fab fa-cc-mastercard" title="Mastercard"></i>
-            </div>
-        </div>
-        <!-- <div class="boton-container">
-                <a href="#contacto" class="boton">Más información</a>
-            </div> -->
     </section>
 
     <footer>
@@ -214,6 +196,25 @@
                         alert('¡Gracias por suscribirte! Hemos enviado un correo de confirmación a: ' + email);
                         this.reset();
                     }
+                });
+            }
+
+            // Funcionalidad para el formulario de contacto
+            const formContacto = document.getElementById('formContacto');
+            if (formContacto) {
+                formContacto.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+                    this.reset();
+                });
+            }
+
+            // Funcionalidad para el botón de WhatsApp
+            const botonWhatsApp = document.querySelector('.boton-whatsapp');
+            if (botonWhatsApp) {
+                botonWhatsApp.addEventListener('click', function () {
+                    alert('Redirigiendo a WhatsApp...');
+                    // En un caso real, aquí iría el enlace a WhatsApp
                 });
             }
         });

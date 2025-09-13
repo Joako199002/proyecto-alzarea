@@ -1,52 +1,132 @@
-/* Header de la página Productos */
-.header-productos {
-    height: 30vh;
-    /* Altura del 30% del viewport */
+/* ==================== HEADER CONTENIDO ==================== */
+.header-contenido {
+    margin-top: 12vh;
+    height: 88vh;
+}
+
+/* ==================== CARRUSEL ==================== */
+.contenedor {
+    display: flex;
+    height: 88vh;
     width: 100%;
-    /* Ancho completo */
     position: relative;
-    /* Posicionamiento relativo para elementos absolutos internos */
-    overflow: hidden;
-    /* Oculta cualquier desbordamiento */
 }
 
-/* Imagen del header */
-.header-productos img {
-    width: 100%;
-    /* Ancho completo del contenedor */
+.mitad {
+    width: 50%;
     height: 100%;
-    /* Alto completo del contenedor */
-    object-fit: cover;
-    /* Ajusta la imagen para cubrir el espacio manteniendo proporciones */
-    display: block;
-    /* Elimina espacio inferior inherente a las imágenes inline */
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Leyenda superpuesta en el header */
-.leyenda-header {
-    position: absolute;
-    /* Posicionamiento absoluto respecto al header */
-    top: 50%;
-    /* Centrado vertical */
-    left: 50%;
-    /* Centrado horizontal */
-    transform: translate(-50%, -50%);
-    /* Ajuste fino para centrado perfecto */
-    color: white;
-    /* Color de texto blanco */
-    font-size: 3.5rem;
-    /* Tamaño de fuente grande */
-    font-weight: 600;
-    /* Grosor de fuente semi-bold */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-    /* Sombra de texto para mejor legibilidad */
-    text-align: center;
-    /* Alineación centrada */
-    font-family: 'Quicksand', sans-serif;
-    /* Fuente Quicksand de Google Fonts */
-    letter-spacing: 1px;
-    /* Espaciado entre letras para mejor legibilidad */
+.izquierda {
+    background-color: #f5f5f5;
 }
+
+.derecha {
+    background-color: #f0f0f0;
+}
+
+.carrusel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carrusel-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+}
+
+.carrusel-item {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carrusel-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.carrusel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 100;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.carrusel-control:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Solo flecha izquierda para el carrusel izquierdo */
+#carruselIzquierda .carrusel-next {
+    display: none;
+}
+
+/* Solo flecha derecha para el carrusel derecho */
+#carruselDerecha .carrusel-prev {
+    display: none;
+}
+
+.carrusel-prev {
+    left: 10px;
+}
+
+.carrusel-next {
+    right: 10px;
+}
+
+.carrusel-indicadores {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+.carrusel-indicador {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.carrusel-indicador.active {
+    background-color: white;
+}
+
+/* ==================== SECCION PRODUCTOS ===========================*/
 
 /* Sección de productos */
 .seccion-productos {
@@ -432,8 +512,32 @@
 
 
 @media (max-width: 768px) {
+    .header-contenido {
+        /*margin-top: 10vh;
+        /* Reducido de 12vh */
+        height: 0vh;
+        /* Cambiado de 88vh a auto */
+    }
 
-    /* Estilos para móviles */
+    .contenedor {
+        flex-direction: column;
+        /* Cambiado de row a column */
+        height: auto;
+        /* Cambiado de 100vh a auto */
+        overflow-x: hidden;
+        /* Cambiado de auto a hidden */
+        flex-wrap: wrap;
+        /* Cambiado de nowrap a wrap */
+    }
+
+    .mitad {
+        width: 100%;
+        /* Cambiado de 50% a 100% */
+        height: 40vh;
+        /* Establecida altura fija para móviles */
+        min-width: 100%;
+        /* Aseguramos que ocupe todo el ancho */
+    }
 
     .descripcion {
         padding: 30px 15px;
@@ -585,6 +689,11 @@
 
 /* Ajustes adicionales para móviles pequeños */
 @media (max-width: 480px) {
+    .mitad {
+        height: 35vh;
+        /* Un poco más reducido en móviles pequeños */
+    }
+
     .grid-productos {
         gap: 10px;
     }
