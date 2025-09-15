@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzárea</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="css/styles_general.css">
+    <!-- CSS especifico para esta pagina -->
+    <link rel="stylesheet" href="css/styles_servicios.css">
+    <!-- Enlace a Google Fonts para Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- NUEVA BARRA SUPERIOR CON MARGEN BLANCO -->
+    <div class="barra-superior">
+        <!-- Menú hamburguesa (nuevo) -->
+        <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div>
+
+        <!-- Icono de búsqueda a la izquierda -->
+        <a href="#" class="icono icono-busqueda-movil" id="icono-busqueda-movil"><i class="fas fa-search"></i></a>
+
+        <!-- Logo centrado -->
+        <div class="logo-superior-contenedor">
+            <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
+        </div>
+
+        <!-- Barra de búsqueda (oculta inicialmente) - MOVIDA DENTRO DE BARRA SUPERIOR -->
+        <div class="barra-busqueda" id="barraBusqueda">
+            <input type="text" placeholder="Buscar productos...">
+            <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Iconos a la derecha -->
+        <div class="iconos-derecha">
+            <a href="#" class="icono" id="icono-busqueda"><i class="fas fa-search"></i></a>
+            <a href="#" class="icono"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="icono"><i class="fas fa-user"></i></a>
+            <a href="#" class="icono"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <!-- Opciones del menú hamburguesa -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="Accesorios.html">Accesorios</a></li>
+            <li class="menu-con-submenu">
+                <a href="servicios.html">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="personalizacion.html">Personalización</a></li>
+                    <li><a href="upcycling.html">Upcycling</a></li>
+                </ul>
+            </li>
+            <li><a href="red_muejres_alzarea.html">Red mujeres ALZAREA</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <!-- <li><a href="#newsletters">Blog</a></li> -->
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <main class="contenido-principal">
+        <div class="servicios-container">
+            <div class="servicios-destacados">
+                <a href="personalizacion.html" class="servicio-destacado">
+                    <img src="imagenes/PERSONALIZA.jpg" alt="Personalizacion">
+                    <!-- <img src="https://images.unsplash.com/photo-1566206091558-7f218b696731?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+                        alt="Personalización"> -->
+                    <div class="servicio-texto">Personalización</div>
+                </a>
+                <a href="upcycling.html" class="servicio-destacado">
+                    <!-- <img src="https://images.unsplash.com/photo-1603400521630-9f2de124b33b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+                        alt="Upcycling"> -->
+                    <img src="imagenes/UPCYCLING.jpg" alt="Upcycling">
+                    <div class="servicio-texto">Upcycling</div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            &copy; 2025 Alzárea. Todos los derechos reservados.
+        </div>
+        <div class="footer-right">
+            <a href="#">Aviso Legal y Privacidad</a>
+            <a href="#">Accesibilidad</a>
+            <a href="#">Política de cookies</a>
+        </div>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Tu Asistente de Moda
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, soy Alzárea ¿Lista para una expreriencia de moda?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del chatbot -->
+    <script src="js/script.js"></script>
+    <!-- Script para mejorar experiencia en móviles -->
+    <script src="js/script_mobile.js"></script>
+
+</body>
+
+</html>

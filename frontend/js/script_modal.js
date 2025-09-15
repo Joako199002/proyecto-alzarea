@@ -1,57 +1,57 @@
 // Datos de los productos (precios y descripciones detalladas)
 const productosData = {
-    cenefa: {
+    "cenefa": {
         nombre: "CENEFA",
-        precio: "$299.000",
-        descripcion: "Elegante vestido de noche con detalles únicos en acabados premium. Confeccionado con los mejores materiales para brindar comodidad y estilo. Ideal para eventos formales y ocasiones especiales.",
+        precio: "$1,139.00",
+        descripcion: "Vestido midi de silueta estilizada con godets.",
         imagen: "imagenes/CENEFA.jpg"
     },
-    friso: {
+    "friso": {
         nombre: "FRISO",
-        precio: "$275.000",
-        descripcion: "Diseño moderno con cortes innovadores que garantizan máxima comodidad y elegancia. Perfecto para quienes buscan un equilibrio entre tendencia y comodidad.",
+        precio: "$1,194.00",
+        descripcion: "Vestido largo hasta los tobillos con escote halter y espalda abierta.",
         imagen: "imagenes/FRISO_FLOWER.jpg"
     },
-    sophie: {
+    "sophie": {
         nombre: "SOPHIE",
-        precio: "$325.000",
-        descripcion: "Vestido sofisticado con inspiración en las tendencias contemporáneas más exclusivas. Destaca por su corte perfecto y materiales de primera calidad.",
+        precio: "$1,528.00",
+        descripcion: "Chaqueta estructurada de líneas limpias, diseñada para llevarse como prenda única.",
         imagen: "imagenes/SOPHIE.jpg"
     },
-    liria: {
+    "liria": {
         nombre: "LIRIA",
-        precio: "$285.000",
-        descripcion: "Modelo clásico reinventado con un toque de modernidad que no pasa desapercibido. La combinación perfecta entre tradición y vanguardia en diseño de moda.",
+        precio: "$673.00",
+        descripcion: "Pantalón de talle alto con cinturilla estructurada y pierna recta para un acabado clásico y versátil.",
         imagen: "imagenes/LIRIA_WHITE.jpg"
     },
-    almena: {
+    "almena": {
         nombre: "ALMENA",
-        precio: "$310.000",
-        descripcion: "Diseño exclusivo que representa la esencia y valores de nuestra marca. Un vestido que comunica elegancia y distinción en cada detalle.",
-        imagen: "imagenes/ALMENA.jpg"
-    },
-    skirt: {
-        nombre: "SKIRT",
-        precio: "$315.000",
-        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
-        imagen: "imagenes/SKIRT_BLACK.jpg"
-    },
-    weird: {
-        nombre: "WEIRD",
-        precio: "$315.000",
-        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
-        imagen: "imagenes/WEIRD.jpg"
-    },
-    rojo: {
-        nombre: "ROJO",
-        precio: "$315.000",
-        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
+        precio: "$1,184.00",
+        descripcion: "Vestido sin mangas con escote barco.",
         imagen: "imagenes/ROJO.jpg"
     },
-    vest: {
-        nombre: "VEST",
-        precio: "$315.000",
-        descripcion: "Variación mejorada del modelo CENEFA con detalles refinados y materiales de mayor calidad. La evolución de un clásico hacia la perfección.",
+    "afra": {
+        nombre: "AFRA",
+        precio: "$507.00",
+        descripcion: "Falda de talle alto con silueta limpia y fluida.",
+        imagen: "imagenes/SKIRT_BLACK.jpg"
+    },
+    "bruma": {
+        nombre: "BRUMA",
+        precio: "$1,150.00",
+        descripcion: "Top con volumen en el pecho y ajuste ceñido.",
+        imagen: "imagenes/WEIRD.jpg"
+    },
+    "raiz": {
+        nombre: "RAIZ",
+        precio: "$1,525.00",
+        descripcion: "Vestido asimétrico largo hasta los tobillos con diseño estructurado.",
+        imagen: "imagenes/ALMENA.jpg"
+    },
+    "dalia": {
+        nombre: "DALIA",
+        precio: "$1,296.00",
+        descripcion: "Chaleco estructurado de silueta limpia y elegante, diseñado como prenda única.",
         imagen: "imagenes/VEST.jpg"
     }
 

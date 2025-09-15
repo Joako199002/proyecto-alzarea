@@ -677,3 +677,23 @@ function initSubmenus() {
         }
     });
 }
+
+// ================================ SCRIPT SERVICIOS ==================================//
+
+document.addEventListener('DOMContentLoaded', function () {
+    const servicios = document.querySelectorAll('.servicio-destacado');
+
+    // Asegurar que las imágenes se carguen correctamente
+    servicios.forEach(servicio => {
+        const img = servicio.querySelector('img');
+
+        // Si la imagen no carga, mostrar un color de fondo alternativo
+        img.onerror = function () {
+            this.style.backgroundColor = '#f0f0f0';
+            this.parentElement.style.backgroundColor = '#f0f0f0';
+            const texto = this.nextElementSibling;
+            texto.style.color = '#333';
+            texto.style.textShadow = 'none';
+        };
+    });
+});

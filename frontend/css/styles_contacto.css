@@ -222,4 +222,11 @@
         font-size: 1.5rem;
         top: 50%;
     }
+
+    .header-contacto {
+        margin-top: 8vh;
+        height: 26vh;
+        overflow: hidden;
+        /* Oculta cualquier desbordamiento */
+    }
 }

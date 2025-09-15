@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalización - Alzárea</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="css/styles_general.css">
+    <!-- CSS especifico de la pagina-->
+    <link rel="stylesheet" href="css/styles_personalizacion.css">
+    <!-- Enlace a Google Fonts para Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- NUEVA BARRA SUPERIOR CON MARGEN BLANCO -->
+    <div class="barra-superior">
+        <!-- Menú hamburguesa (nuevo) -->
+        <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div>
+
+        <!-- Icono de búsqueda a la izquierda -->
+        <a href="#" class="icono icono-busqueda-movil" id="icono-busqueda-movil"><i class="fas fa-search"></i></a>
+
+        <!-- Logo centrado -->
+        <div class="logo-superior-contenedor">
+            <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
+        </div>
+
+        <!-- Barra de búsqueda (oculta inicialmente) - MOVIDA DENTRO DE BARRA SUPERIOR -->
+        <div class="barra-busqueda" id="barraBusqueda">
+            <input type="text" placeholder="Buscar productos...">
+            <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Iconos a la derecha -->
+        <div class="iconos-derecha">
+            <a href="#" class="icono" id="icono-busqueda"><i class="fas fa-search"></i></a>
+            <a href="#" class="icono"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="icono"><i class="fas fa-user"></i></a>
+            <a href="#" class="icono"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <!-- Opciones del menú (modificado para funcionar con el nuevo menú hamburguesa) -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="Accesorios.html">Accesorios</a></li>
+            <li class="menu-con-submenu">
+                <a href="servicios.html">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="personalizacion.html">Personalización</a></li>
+                    <li><a href="upcycling.html">Upcycling</a></li>
+                </ul>
+            </li>
+            <li><a href="red_muejres_alzarea.html">Red mujeres ALZAREA</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <!-- <li><a href="#newsletters">Blog</a></li> -->
+        </ul>
+    </div>
+
+    <!-- Imagen de cabecera -->
+    <div class="imagen-cabecera">
+        <img src="imagenes/PERSONALIZACION.jpg" alt="Personalizacion">
+        <div class="overlay">
+            <h1 class="titulo-cabecera">Personalización</h1>
+        </div>
+    </div>
+
+    <!-- Contenido principal de personalización -->
+    <main class="contenido-personalizacion">
+        <div class="contenedor-texto">
+            <h2 class="titulo-principal">Crea tu estilo único</h2>
+
+            <p class="descripcion">
+                En <span class="destacado">ALZÁREA</span> creemos que cada mujer merece una prenda que refleje su
+                esencia. Por eso, en nuestro atelier en Madrid, un equipo de profesionales del diseño y la
+                personalización transforma cada vestido en una pieza única, adaptada a tu estilo, tu silueta y tu
+                ocasión especial.
+            </p>
+
+            <p class="descripcion">
+                Además, ponemos a tu disposición a <span class="destacado">ALZÁREA</span>, tu asistente virtual de moda
+                disponible 24/7. Solo tienes que compartir una foto y la IA analizará tu estilo y perfil para
+                recomendarte las piezas de nuestra colección que mejor se adapten a ti.
+            </p>
+
+            <p class="descripcion">
+                ¿Quieres llevarlo un paso más allá? Desde el mismo asistente podrás agendar una cita con nuestros
+                expertos en el atelier, para que juntos demos vida a la prenda que mejor te represente.
+            </p>
+        </div>
+
+        <div class="informacion-contacto">
+            <h3 class="titulo-contacto">Contacto</h3>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:contacto@alzarea.es" class="enlace-contacto">contacto@alzarea.es</a>
+            </div>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+34675972643" class="enlace-contacto">675 972 643</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            &copy; 2025 Alzárea. Todos los derechos reservados.
+        </div>
+        <div class="footer-right">
+            <a href="#">Aviso Legal y Privacidad</a>
+            <a href="#">Accesibilidad</a>
+            <a href="#">Política de cookies</a>
+        </div>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Tu Asistente de Moda
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, soy Alzárea ¿Lista para una expreriencia de moda?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del chatbot -->
+    <script src="js/script.js"></script>
+    <!-- Script para mejorar experiencia en móviles -->
+    <script src="js/script_mobile.js"></script>
+
+</body>
+
+</html>

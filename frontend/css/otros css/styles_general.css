@@ -540,8 +540,6 @@ html {
     /* Grosor de fuente medium (500) */
 }
 
-
-
 /* ===== ESTILOS COMUNES DEL FOOTER ===== */
 
 /* Footer */
@@ -903,11 +901,10 @@ z .footer-right {
         z-index: 2;
     }
 
-}
-
-/* Para tablets en orientación vertical */
-@media (max-width: 768px) and (orientation: portrait) {
-    .chatbot-box {
-        height: 60vh;
+    /* Para tablets en orientación vertical */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .chatbot-box {
+            height: 60vh;
+        }
     }
 }

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcycling - Alzárea</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="css/styles_general.css">
+    <!-- CSS especifico de la pagina-->
+    <link rel="stylesheet" href="css/styles_personalizacion.css">
+    <!-- Enlace a Google Fonts para Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- NUEVA BARRA SUPERIOR CON MARGEN BLANCO -->
+    <div class="barra-superior">
+        <!-- Menú hamburguesa (nuevo) -->
+        <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div>
+
+        <!-- Icono de búsqueda a la izquierda -->
+        <a href="#" class="icono icono-busqueda-movil" id="icono-busqueda-movil"><i class="fas fa-search"></i></a>
+
+        <!-- Logo centrado -->
+        <div class="logo-superior-contenedor">
+            <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
+        </div>
+
+        <!-- Barra de búsqueda (oculta inicialmente) - MOVIDA DENTRO DE BARRA SUPERIOR -->
+        <div class="barra-busqueda" id="barraBusqueda">
+            <input type="text" placeholder="Buscar productos...">
+            <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Iconos a la derecha -->
+        <div class="iconos-derecha">
+            <a href="#" class="icono" id="icono-busqueda"><i class="fas fa-search"></i></a>
+            <a href="#" class="icono"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="icono"><i class="fas fa-user"></i></a>
+            <a href="#" class="icono"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <!-- Opciones del menú (modificado para funcionar con el nuevo menú hamburguesa) -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="Accesorios.html">Accesorios</a></li>
+            <li class="menu-con-submenu">
+                <a href="servicios.html">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="personalizacion.html">Personalización</a></li>
+                    <li><a href="upcycling.html">Upcycling</a></li>
+                </ul>
+            </li>
+            <li><a href="red_muejres_alzarea.html">Red mujeres ALZAREA</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <!-- <li><a href="#newsletters">Blog</a></li> -->
+        </ul>
+    </div>
+
+    <!-- Imagen de cabecera -->
+    <div class="imagen-cabecera">
+        <img src="imagenes/UPCYCLING.jpg" alt="Upcycling">
+        <div class="overlay">
+            <h1 class="titulo-cabecera">Upcycling</h1>
+        </div>
+    </div>
+
+    <!-- Contenido principal de upcycling -->
+    <main class="contenido-personalizacion">
+        <div class="contenedor-texto">
+            <h2 class="titulo-principal">Sostenibilidad con alma artesanal</h2>
+
+            <p class="descripcion">
+                Entendemos la sostenibilidad como una forma de honrar el pasado mientras cuidamos el futuro. Diseñamos y
+                producimos todas nuestras piezas en Madrid.
+            </p>
+
+            <p class="descripcion">
+                Lo artesanal es una fuente inagotable de inspiración que ha transformado nuestra forma de entender la
+                belleza: nos enseñó a valorar lo imperfecto, lo hecho a mano y lo que tiene historia. Su espiritualidad,
+                la artesanía nos recuerda que cada creación auténtica nace de la colaboración, la dedicación y el alma.
+            </p>
+
+            <p class="descripcion">
+                Trabajamos con aliados con los que colaboramos para tener piezas únicas y exclusivas en nuestro taller y
+                nos hemos asegurado que todo lo que llegue a tus manos, cumpla la misma responsabilidad social y
+                ambiental.
+            </p>
+
+            <p class="descripcion">
+                En <span class="destacado">ALZÁREA</span> creemos en la moda consciente. Junto a artistas, artesanos y
+                diseñadores de todo el mundo transformamos las piezas de nuestra colección a las que deseas dar un
+                segundo uso, incorporando prácticas de upcycling que prolongan su ciclo de vida.
+            </p>
+
+            <p class="descripcion">
+                Cada pieza rescata la esencia de la artesanía, el ecodiseño, respeta la tradición y promueve el Slow
+                Fashion. Trabajamos bajo demanda y con unidades limitadas, ajustando la producción a la demanda real
+                para evitar la sobreproducción y el exceso de stock, buscamos evitar devoluciones que impactarían en
+                nuestro medio ambiente, por ello, hacemos todo desde el corazón, con una atención personalizada en donde
+                podrás co-crear con nosotras y vivir la experiencia de un auténtico Atelier.
+            </p>
+        </div>
+
+        <div class="informacion-contacto">
+            <h3 class="titulo-contacto">Contacto</h3>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:contacto@alzarea.es" class="enlace-contacto">contacto@alzarea.es</a>
+            </div>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+34675972643" class="enlace-contacto">675 972 643</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            &copy; 2025 Alzárea. Todos los derechos reservados.
+        </div>
+        <div class="footer-right">
+            <a href="#">Aviso Legal y Privacidad</a>
+            <a href="#">Accesibilidad</a>
+            <a href="#">Política de cookies</a>
+        </div>
+    </footer>
+
+    <!-- Chatbot flotante -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle">💬</button>
+        <div class="chatbot-box">
+            <div class="chatbot-header">
+                Tu Asistente de Moda
+                <span class="chatbot-close">×</span>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hola, soy Alzárea ¿Lista para una expreriencia de moda?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="file" id="chatbot-image" accept="image/*" style="display:none" />
+                <button id="upload-button">📷 Subir Imagen</button>
+                <textarea id="chatbot-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="chatbot-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del chatbot -->
+    <script src="js/script.js"></script>
+    <!-- Script para mejorar experiencia en móviles -->
+    <script src="js/script_mobile.js"></script>
+
+</body>
+
+</html>

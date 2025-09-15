@@ -1,0 +1,177 @@
+        /* Estilos específicos para la página de personalización */
+        .imagen-cabecera {
+            width: 100%;
+            height: 45vh;
+            overflow: hidden;
+            margin-top: 12vh;
+            position: relative;
+        }
+
+        .imagen-cabecera img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .titulo-cabecera {
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .contenido-personalizacion {
+            padding: 60px 20px;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+
+        .contenedor-texto {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .titulo-principal {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #8a6d3b;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .titulo-principal::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #8a6d3b;
+        }
+
+        .descripcion {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 25px;
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        .destacado {
+            font-weight: 600;
+            color: #8a6d3b;
+        }
+
+        .informacion-contacto {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .titulo-contacto {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #8a6d3b;
+            margin-bottom: 20px;
+        }
+
+        .detalle-contacto {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .detalle-contacto i {
+            margin-right: 10px;
+            color: #8a6d3b;
+            font-size: 1.2rem;
+        }
+
+        .enlace-contacto {
+            color: #8a6d3b;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .enlace-contacto:hover {
+            color: #6b5430;
+            text-decoration: underline;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .imagen-cabecera {
+                margin-top: 10vh;
+                height: 35vh;
+            }
+
+            .titulo-cabecera {
+                font-size: 2.5rem;
+            }
+
+            .contenido-personalizacion {
+                margin-top: 0;
+                padding: 40px 15px;
+            }
+
+            .titulo-principal {
+                font-size: 2rem;
+            }
+
+            .descripcion {
+                font-size: 1rem;
+            }
+
+            .informacion-contacto {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .imagen-cabecera {
+                margin-top: 8vh;
+                height: 30vh;
+            }
+
+            .titulo-cabecera {
+                font-size: 2rem;
+            }
+
+            .contenido-personalizacion {
+                margin-top: 0;
+                padding: 30px 10px;
+            }
+
+            .titulo-principal {
+                font-size: 1.8rem;
+            }
+        }
