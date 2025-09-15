@@ -116,6 +116,13 @@
             font-size: 1.2rem;
         }
 
+        .detalle-contacto span {
+            color: #8a6d3b;
+            /* Mismo color que el texto de descripción */
+            font-size: 1.1rem;
+            /* Mismo tamaño que los otros elementos de contacto */
+        }
+
         .enlace-contacto {
             color: #8a6d3b;
             text-decoration: none;
