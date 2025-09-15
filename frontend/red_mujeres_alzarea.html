@@ -132,6 +132,7 @@
             line-height: 1.6;
             flex-grow: 1;
             position: relative;
+            text-align: center;
         }
 
         .testimonio-texto::before {
@@ -161,6 +162,7 @@
 
         .nodo {
             position: absolute;
+            display: none;
             width: 12px;
             height: 12px;
             background-color: #8a6d3b;
@@ -386,118 +388,224 @@
 
     <!-- Script para generar la red -->
     <script>
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const redContainer = document.getElementById('red-container');
+        //     const containerWidth = redContainer.offsetWidth;
+        //     const containerHeight = redContainer.offsetHeight;
+
+        //     // Datos de las mujeres de la red
+        //     const mujeres = [
+        //         {
+        //             nombre: "Elena Martínez",
+        //             rol: "Diseñadora de moda sostenible",
+        //             texto: "ALZÁREA me dio la oportunidad de convertir mi pasión por el diseño sostenible en una carrera. Hoy colaboro con artesanas de comunidades rurales preservando técnicas tradicionales.",
+        //             imagen: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-seedling",
+        //             top: -4,
+        //             left: 5
+        //         },
+        //         {
+        //             nombre: "Carmen Rodríguez",
+        //             rol: "Experta en corsetería",
+        //             texto: "Llevo 30 años dedicada al arte de la corsetería. En ALZÁREA he encontrado un espacio donde transmitir mis conocimientos a nuevas generaciones de diseñadoras.",
+        //             imagen: "https://images.unsplash.com/photo-1551847816-4247a5d960c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-vest",
+        //             top: -2,
+        //             left: 75
+        //         },
+        //         {
+        //             nombre: "Laura Méndez",
+        //             rol: "Emprendedora textil",
+        //             texto: "Gracias a la red de mujeres de ALZÁREA pude internacionalizar mi negocio de tejidos artesanales. El apoyo entre mujeres es fundamental para crecer profesionalmente.",
+        //             imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-globe",
+        //             top: 68,
+        //             left: 5
+        //         },
+        //         {
+        //             nombre: "Sofia Chen",
+        //             rol: "Consultora de moda circular",
+        //             texto: "Mi expertise en economía circular encontró en ALZÁREA el lugar perfecto para aplicar modelos de negocio sostenibles. Juntas estamos revolucionando la industria.",
+        //             imagen: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-recycle",
+        //             top: 70,
+        //             left: 75
+        //         },
+        //         {
+        //             nombre: "Isabel Gómez",
+        //             rol: "Master en patronaje",
+        //             texto: "Después de años trabajando para grandes marcas, encontré en ALZÁREA la libertad creativa que buscaba. Ahora enseño a otras mujeres las técnicas que he desarrollado.",
+        //             imagen: "https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-ruler",
+        //             top: 50,
+        //             left: 40
+        //         },
+        //         {
+        //             nombre: "Nadia Khan",
+        //             rol: "Especialista en tejidos tradicionales",
+        //             texto: "ALZÁREA me ha permitido rescatar y modernizar técnicas textiles de mi cultura que estaban en peligro de desaparecer. Nuestra colaboración enriquece a todas.",
+        //             imagen: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+        //             icono: "fas fa-rug",
+        //             top: -12,
+        //             left: 40
+        //         }
+        //     ];
+
+        //     // Generar tarjetas
+        //     mujeres.forEach((mujer, index) => {
+        //         const card = document.createElement('div');
+        //         card.className = 'testimonio-card';
+        //         card.style.top = `${mujer.top}%`;
+        //         card.style.left = `${mujer.left}%`;
+        //         card.innerHTML = `
+        //             <img src="${mujer.imagen}" alt="${mujer.nombre}" class="testimonio-imagen">
+        //             <h3 class="testimonio-nombre">${mujer.nombre}</h3>
+        //             <p class="testimonio-rol">${mujer.rol}</p>
+        //             <p class="testimonio-texto">${mujer.texto}</p>
+        //             <div class="testimonio-icono"><i class="${mujer.icono}"></i></div>
+        //         `;
+        //         redContainer.appendChild(card);
+
+        //         // Agregar nodo de conexión
+        //         const nodo = document.createElement('div');
+        //         nodo.className = 'nodo';
+        //         nodo.style.top = `${mujer.top + 7}%`;
+        //         nodo.style.left = `${mujer.left + 14}%`;
+        //         redContainer.appendChild(nodo);
+        //     });
+
+        //     // Generar conexiones entre nodos
+        //     for (let i = 0; i < mujeres.length; i++) {
+        //         for (let j = i + 1; j < mujeres.length; j++) {
+        //             // Solo conectar algunos nodos para no saturar
+        //             if (Math.random() > 0.4) {
+        //                 const x1 = mujeres[i].left + 14;
+        //                 const y1 = mujeres[i].top + 7;
+        //                 const x2 = mujeres[j].left + 14;
+        //                 const y2 = mujeres[j].top + 7;
+
+        //                 const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        //                 const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+        //                 const conexion = document.createElement('div');
+        //                 conexion.className = 'conexion';
+        //                 conexion.style.width = `${length}%`;
+        //                 conexion.style.height = '2px';
+        //                 conexion.style.top = `${y1}%`;
+        //                 conexion.style.left = `${x1}%`;
+        //                 conexion.style.transform = `rotate(${angle}deg)`;
+
+        //                 redContainer.appendChild(conexion);
+        //             }
+        //         }
+        //     }
+        // });
+
         document.addEventListener('DOMContentLoaded', function () {
             const redContainer = document.getElementById('red-container');
-            const containerWidth = redContainer.offsetWidth;
-            const containerHeight = redContainer.offsetHeight;
-
-            // Datos de las mujeres de la red
             const mujeres = [
                 {
-                    nombre: "Elena Martínez",
-                    rol: "Diseñadora de moda sostenible",
-                    texto: "ALZÁREA me dio la oportunidad de convertir mi pasión por el diseño sostenible en una carrera. Hoy colaboro con artesanas de comunidades rurales preservando técnicas tradicionales.",
-                    imagen: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-seedling",
-                    top: 15,
-                    left: 10
+                    nombre: "María López",
+                    rol: "Cliente satisfecha",
+                    texto: "Los corsés de ALZÁREA han transformado mi confianza. No solo defino mi figura, sino que recuperé la seguridad en mí misma. ¡Me siento poderosa!",
+                    imagen: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-heart"
                 },
                 {
-                    nombre: "Carmen Rodríguez",
-                    rol: "Experta en corsetería",
-                    texto: "Llevo 30 años dedicada al arte de la corsetería. En ALZÁREA he encontrado un espacio donde transmitir mis conocimientos a nuevas generaciones de diseñadoras.",
-                    imagen: "https://images.unsplash.com/photo-1551847816-4247a5d960c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-vest",
-                    top: 25,
-                    left: 70
+                    nombre: "Ana García",
+                    rol: "Amante de la moda sostenible",
+                    texto: "Admiro profundamente el compromiso de ALZÁREA con el medio ambiente. Sus materiales sustentables y procesos éticos hacen que me sienta bien con cada compra.",
+                    imagen: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-leaf"
                 },
                 {
-                    nombre: "Laura Méndez",
-                    rol: "Emprendedora textil",
-                    texto: "Gracias a la red de mujeres de ALZÁREA pude internacionalizar mi negocio de tejidos artesanales. El apoyo entre mujeres es fundamental para crecer profesionalmente.",
-                    imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-globe",
-                    top: 60,
-                    left: 25
+                    nombre: "Carmen Ruiz",
+                    rol: "Cliente de upcycling",
+                    texto: "¡Estoy maravillada! ALZÁREA le dio nueva vida a mi vestido favorito que ya no usaba. Ahora es una pieza única que refleja mi estilo personal.",
+                    imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-sync-alt"
                 },
                 {
-                    nombre: "Sofia Chen",
-                    rol: "Consultora de moda circular",
-                    texto: "Mi expertise en economía circular encontró en ALZÁREA el lugar perfecto para aplicar modelos de negocio sostenibles. Juntas estamos revolucionando la industria.",
-                    imagen: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-recycle",
-                    top: 50,
-                    left: 65
+                    nombre: "Elena Mendoza",
+                    rol: "Cliente personalizada",
+                    texto: "Quedé completamente satisfecha con la personalización de mi vestido. Cada detalle fue cuidado minuciosamente, superando todas mis expectativas.",
+                    imagen: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-star"
                 },
                 {
-                    nombre: "Isabel Gómez",
-                    rol: "Master en patronaje",
-                    texto: "Después de años trabajando para grandes marcas, encontré en ALZÁREA la libertad creativa que buscaba. Ahora enseño a otras mujeres las técnicas que he desarrollado.",
-                    imagen: "https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-ruler",
-                    top: 75,
-                    left: 45
+                    nombre: "Isabel Torres",
+                    rol: "Cliente frecuente",
+                    texto: "Como mujer con curvas, siempre batallé para encontrar ropa que me quedara bien. ALZÁREA no solo viste mi cuerpo, sino que celebra mi figura única.",
+                    imagen: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-venus"
                 },
                 {
-                    nombre: "Nadia Khan",
-                    rol: "Especialista en tejidos tradicionales",
-                    texto: "ALZÁREA me ha permitido rescatar y modernizar técnicas textiles de mi cultura que estaban en peligro de desaparecer. Nuestra colaboración enriquece a todas.",
-                    imagen: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
-                    icono: "fas fa-rug",
-                    top: 35,
-                    left: 45
+                    nombre: "Sofia Vargas",
+                    rol: "Defensora de moda consciente",
+                    texto: "No solo son prendas hermosas, cada pieza cuenta una historia de empoderamiento femenino y responsabilidad ambiental. ¡Orgullosa de apoyar esta iniciativa!",
+                    imagen: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-hands-helping"
                 }
             ];
 
-            // Generar tarjetas
-            mujeres.forEach((mujer, index) => {
+            const centerX = 50; // centro (porcentaje del contenedor)
+            const centerY = 50;
+            const radius = 35; // radio del círculo (%)
+            const angleStep = (2 * Math.PI) / mujeres.length;
+            const nodes = [];
+
+            mujeres.forEach((mujer, i) => {
+                const angle = i * angleStep;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
                 const card = document.createElement('div');
                 card.className = 'testimonio-card';
-                card.style.top = `${mujer.top}%`;
-                card.style.left = `${mujer.left}%`;
+                card.style.left = `${x}%`;
+                card.style.top = `${y}%`;
+                card.style.transform = "translate(-50%, -50%)"; // centrar
+
                 card.innerHTML = `
-                    <img src="${mujer.imagen}" alt="${mujer.nombre}" class="testimonio-imagen">
-                    <h3 class="testimonio-nombre">${mujer.nombre}</h3>
-                    <p class="testimonio-rol">${mujer.rol}</p>
-                    <p class="testimonio-texto">${mujer.texto}</p>
-                    <div class="testimonio-icono"><i class="${mujer.icono}"></i></div>
-                `;
+                <img src="${mujer.imagen}" alt="${mujer.nombre}" class="testimonio-imagen">
+                <h3 class="testimonio-nombre">${mujer.nombre}</h3>
+                <p class="testimonio-rol">${mujer.rol}</p>
+                <p class="testimonio-texto">${mujer.texto}</p>
+                <div class="testimonio-icono"><i class="${mujer.icono}"></i></div>
+            `;
                 redContainer.appendChild(card);
 
-                // Agregar nodo de conexión
                 const nodo = document.createElement('div');
                 nodo.className = 'nodo';
-                nodo.style.top = `${mujer.top + 7}%`;
-                nodo.style.left = `${mujer.left + 14}%`;
+                nodo.style.left = `${x}%`;
+                nodo.style.top = `${y}%`;
+                nodo.style.transform = "translate(-50%, -50%)";
                 redContainer.appendChild(nodo);
+
+                nodes.push({ x, y });
             });
 
-            // Generar conexiones entre nodos
-            for (let i = 0; i < mujeres.length; i++) {
-                for (let j = i + 1; j < mujeres.length; j++) {
-                    // Solo conectar algunos nodos para no saturar
-                    if (Math.random() > 0.4) {
-                        const x1 = mujeres[i].left + 14;
-                        const y1 = mujeres[i].top + 7;
-                        const x2 = mujeres[j].left + 14;
-                        const y2 = mujeres[j].top + 7;
+            // conectar en círculo limpio
+            for (let i = 0; i < nodes.length; i++) {
+                const j = (i + 1) % nodes.length;
+                const x1 = nodes[i].x;
+                const y1 = nodes[i].y;
+                const x2 = nodes[j].x;
+                const y2 = nodes[j].y;
 
-                        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-                        const conexion = document.createElement('div');
-                        conexion.className = 'conexion';
-                        conexion.style.width = `${length}%`;
-                        conexion.style.height = '2px';
-                        conexion.style.top = `${y1}%`;
-                        conexion.style.left = `${x1}%`;
-                        conexion.style.transform = `rotate(${angle}deg)`;
-
-                        redContainer.appendChild(conexion);
-                    }
-                }
+                const conexion = document.createElement('div');
+                conexion.className = 'conexion';
+                conexion.style.width = `${length}%`;
+                conexion.style.height = '2px';
+                conexion.style.left = `${x1}%`;
+                conexion.style.top = `${y1}%`;
+                conexion.style.transform = `rotate(${angle}deg)`;
+                redContainer.appendChild(conexion);
             }
         });
+
     </script>
 
     <!-- Script del chatbot -->
