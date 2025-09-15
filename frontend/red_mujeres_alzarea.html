@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Mujeres ALZÁREA</title>
+    <!-- CSS común para todas las páginas -->
+    <link rel="stylesheet" href="css/styles_general.css">
+    <!-- CSS especifico de la pagina-->
+    <link rel="stylesheet" href="css/styles_personalizacion.css">
+    <!-- Enlace a Google Fonts para Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para la página Red Mujeres */
+        .contenido-red {
+            padding: 60px 20px;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f9f9f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contenedor-texto-red {
+            max-width: 900px;
+            text-align: center;
+            margin-bottom: 60px;
+            z-index: 2;
+        }
+
+        .titulo-principal-red {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #8a6d3b;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .titulo-principal-red::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #8a6d3b;
+        }
+
+        .descripcion-red {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 25px;
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        .destacado-red {
+            font-weight: 600;
+            color: #8a6d3b;
+        }
+
+        /* Contenedor principal de la red */
+        .red-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 700px;
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        /* Tarjeta de testimonio */
+        .testimonio-card {
+            position: absolute;
+            width: 280px;
+            min-height: 350px;
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 3;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(138, 109, 59, 0.2);
+        }
+
+        .testimonio-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .testimonio-imagen {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            border: 3px solid #8a6d3b;
+        }
+
+        .testimonio-nombre {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8a6d3b;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .testimonio-rol {
+            font-size: 0.9rem;
+            color: #777;
+            text-align: center;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .testimonio-texto {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .testimonio-texto::before {
+            content: "" "";
+            font-size: 3rem;
+            color: rgba(138, 109, 59, 0.2);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            font-family: Georgia, serif;
+        }
+
+        .testimonio-icono {
+            text-align: center;
+            margin-top: 15px;
+            color: #8a6d3b;
+            font-size: 1.2rem;
+        }
+
+        /* Líneas de conexión */
+        .conexion {
+            position: absolute;
+            background-color: rgba(138, 109, 59, 0.4);
+            z-index: 1;
+            transform-origin: 0 0;
+        }
+
+        .nodo {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #8a6d3b;
+            border-radius: 50%;
+            z-index: 4;
+        }
+
+        /* Elementos decorativos de fondo */
+        .decoracion-fondo {
+            position: absolute;
+            opacity: 0.05;
+            z-index: 1;
+        }
+
+        .decoracion-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 8rem;
+            color: #8a6d3b;
+        }
+
+        .decoracion-2 {
+            bottom: 10%;
+            right: 5%;
+            font-size: 8rem;
+            color: #8a6d3b;
+        }
+
+        /* Información de contacto */
+        .informacion-contacto-red {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            margin-top: 50px;
+            z-index: 2;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 1024px) {
+            .red-container {
+                height: 1000px;
+            }
+
+            .testimonio-card {
+                width: 240px;
+                min-height: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contenido-red {
+                padding: 40px 15px;
+            }
+
+            .titulo-principal-red {
+                font-size: 2rem;
+            }
+
+            .descripcion-red {
+                font-size: 1rem;
+            }
+
+            .red-container {
+                height: 1600px;
+            }
+
+            .testimonio-card {
+                position: relative;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 40px;
+                min-height: auto;
+            }
+
+            .conexion,
+            .nodo {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contenido-red {
+                padding: 30px 10px;
+            }
+
+            .titulo-principal-red {
+                font-size: 1.8rem;
+            }
+
+            .informacion-contacto-red {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- BARRA SUPERIOR -->
+    <div class="barra-superior">
+        <!-- Menú hamburguesa -->
+        <div class="menu-hamburguesa-superior" id="menuHamburguesaSuperior">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div>
+
+        <!-- Icono de búsqueda a la izquierda -->
+        <a href="#" class="icono icono-busqueda-movil" id="icono-busqueda-movil"><i class="fas fa-search"></i></a>
+
+        <!-- Logo centrado -->
+        <div class="logo-superior-contenedor">
+            <img src="imagenes/logo_4.png" alt="Logo Alzárea" class="logo-superior">
+        </div>
+
+        <!-- Barra de búsqueda -->
+        <div class="barra-busqueda" id="barraBusqueda">
+            <input type="text" placeholder="Buscar productos...">
+            <button class="cerrar-busqueda" id="cerrarBusqueda"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Iconos a la derecha -->
+        <div class="iconos-derecha">
+            <a href="#" class="icono" id="icono-busqueda"><i class="fas fa-search"></i></a>
+            <a href="#" class="icono"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="icono"><i class="fas fa-user"></i></a>
+            <a href="#" class="icono"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <!-- OPCIONES MENÚ -->
+    <div class="opciones-menu" id="opcionesMenu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="Accesorios.html">Accesorios</a></li>
+            <li class="menu-con-submenu">
+                <a href="servicios.html">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="personalizacion.html">Personalización</a></li>
+                    <li><a href="upcycling.html">Upcycling</a></li>
+                </ul>
+            </li>
+            <li><a href="red_mujeres_alzarea.html">Red mujeres ALZAREA</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </div>
+
+    <!-- Imagen de cabecera -->
+    <div class="imagen-cabecera">
+        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80"
+            alt="Red de Mujeres Alzárea">
+        <div class="overlay">
+            <h1 class="titulo-cabecera">Red Mujeres ALZÁREA</h1>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <main class="contenido-red">
+        <!-- Elementos decorativos de fondo -->
+        <div class="decoracion-fondo decoracion-1">
+            <i class="fas fa-female"></i>
+        </div>
+        <div class="decoracion-fondo decoracion-2">
+            <i class="fas fa-hands-helping"></i>
+        </div>
+
+        <div class="contenedor-texto-red">
+            <h2 class="titulo-principal-red">Una comunidad que teje sueños</h2>
+
+            <p class="descripcion-red">
+                En <span class="destacado-red">ALZÁREA</span> creemos en el poder de la colaboración entre mujeres.
+                Nuestra red conecta emprendedoras, diseñadoras, artesanas y clientas en un ecosistema de apoyo mutuo
+                donde compartimos conocimientos, experiencias y oportunidades.
+            </p>
+
+            <p class="descripcion-red">
+                Conoce las historias inspiradoras de algunas de las mujeres extraordinarias que forman parte de nuestra
+                comunidad y descubre cómo juntas estamos transformando la industria de la moda.
+            </p>
+        </div>
+
+        <!-- Contenedor de la red -->
+        <div class="red-container" id="red-container">
+            <!-- Las tarjetas y conexiones se generan con JavaScript -->
+        </div>
+
+        <!-- Información de contacto -->
+        <div class="informacion-contacto-red">
+            <h3 class="titulo-contacto">¿Quieres unirte a nuestra red?</h3>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:redmujeres@alzarea.es" class="enlace-contacto">redmujeres@alzarea.es</a>
+            </div>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+34675972643" class="enlace-contacto">675 972 643</a>
+            </div>
+
+            <div class="detalle-contacto">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Madrid, España</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            &copy; 2025 Alzárea. Todos los derechos reservados.
+        </div>
+        <div class="footer-right">
+            <a href="#">Aviso Legal y Privacidad</a>
+            <a href="#">Accesibilidad</a>
+            <a href="#">Política de cookies</a>
+        </div>
+    </footer>
+
+    <!-- Script para generar la red -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const redContainer = document.getElementById('red-container');
+            const containerWidth = redContainer.offsetWidth;
+            const containerHeight = redContainer.offsetHeight;
+
+            // Datos de las mujeres de la red
+            const mujeres = [
+                {
+                    nombre: "Elena Martínez",
+                    rol: "Diseñadora de moda sostenible",
+                    texto: "ALZÁREA me dio la oportunidad de convertir mi pasión por el diseño sostenible en una carrera. Hoy colaboro con artesanas de comunidades rurales preservando técnicas tradicionales.",
+                    imagen: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-seedling",
+                    top: 15,
+                    left: 10
+                },
+                {
+                    nombre: "Carmen Rodríguez",
+                    rol: "Experta en corsetería",
+                    texto: "Llevo 30 años dedicada al arte de la corsetería. En ALZÁREA he encontrado un espacio donde transmitir mis conocimientos a nuevas generaciones de diseñadoras.",
+                    imagen: "https://images.unsplash.com/photo-1551847816-4247a5d960c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-vest",
+                    top: 25,
+                    left: 70
+                },
+                {
+                    nombre: "Laura Méndez",
+                    rol: "Emprendedora textil",
+                    texto: "Gracias a la red de mujeres de ALZÁREA pude internacionalizar mi negocio de tejidos artesanales. El apoyo entre mujeres es fundamental para crecer profesionalmente.",
+                    imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-globe",
+                    top: 60,
+                    left: 25
+                },
+                {
+                    nombre: "Sofia Chen",
+                    rol: "Consultora de moda circular",
+                    texto: "Mi expertise en economía circular encontró en ALZÁREA el lugar perfecto para aplicar modelos de negocio sostenibles. Juntas estamos revolucionando la industria.",
+                    imagen: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-recycle",
+                    top: 50,
+                    left: 65
+                },
+                {
+                    nombre: "Isabel Gómez",
+                    rol: "Master en patronaje",
+                    texto: "Después de años trabajando para grandes marcas, encontré en ALZÁREA la libertad creativa que buscaba. Ahora enseño a otras mujeres las técnicas que he desarrollado.",
+                    imagen: "https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-ruler",
+                    top: 75,
+                    left: 45
+                },
+                {
+                    nombre: "Nadia Khan",
+                    rol: "Especialista en tejidos tradicionales",
+                    texto: "ALZÁREA me ha permitido rescatar y modernizar técnicas textiles de mi cultura que estaban en peligro de desaparecer. Nuestra colaboración enriquece a todas.",
+                    imagen: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80",
+                    icono: "fas fa-rug",
+                    top: 35,
+                    left: 45
+                }
+            ];
+
+            // Generar tarjetas
+            mujeres.forEach((mujer, index) => {
+                const card = document.createElement('div');
+                card.className = 'testimonio-card';
+                card.style.top = `${mujer.top}%`;
+                card.style.left = `${mujer.left}%`;
+                card.innerHTML = `
+                    <img src="${mujer.imagen}" alt="${mujer.nombre}" class="testimonio-imagen">
+                    <h3 class="testimonio-nombre">${mujer.nombre}</h3>
+                    <p class="testimonio-rol">${mujer.rol}</p>
+                    <p class="testimonio-texto">${mujer.texto}</p>
+                    <div class="testimonio-icono"><i class="${mujer.icono}"></i></div>
+                `;
+                redContainer.appendChild(card);
+
+                // Agregar nodo de conexión
+                const nodo = document.createElement('div');
+                nodo.className = 'nodo';
+                nodo.style.top = `${mujer.top + 7}%`;
+                nodo.style.left = `${mujer.left + 14}%`;
+                redContainer.appendChild(nodo);
+            });
+
+            // Generar conexiones entre nodos
+            for (let i = 0; i < mujeres.length; i++) {
+                for (let j = i + 1; j < mujeres.length; j++) {
+                    // Solo conectar algunos nodos para no saturar
+                    if (Math.random() > 0.4) {
+                        const x1 = mujeres[i].left + 14;
+                        const y1 = mujeres[i].top + 7;
+                        const x2 = mujeres[j].left + 14;
+                        const y2 = mujeres[j].top + 7;
+
+                        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+                        const conexion = document.createElement('div');
+                        conexion.className = 'conexion';
+                        conexion.style.width = `${length}%`;
+                        conexion.style.height = '2px';
+                        conexion.style.top = `${y1}%`;
+                        conexion.style.left = `${x1}%`;
+                        conexion.style.transform = `rotate(${angle}deg)`;
+
+                        redContainer.appendChild(conexion);
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Script del chatbot -->
+    <script src="js/script.js"></script>
+    <!-- Script para mejorar experiencia en móviles -->
+    <script src="js/script_mobile.js"></script>
+
+</body>
+
+</html>

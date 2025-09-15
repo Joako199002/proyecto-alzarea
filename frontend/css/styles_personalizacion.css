@@ -134,6 +134,7 @@
             text-decoration: underline;
         }
 
+
         /* Estilos responsivos */
         @media (max-width: 768px) {
             .imagen-cabecera {
