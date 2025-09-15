@@ -25,7 +25,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="None",
     SESSION_COOKIE_SECURE=True,       # Requiere HTTPS
     PERMANENT_SESSION_LIFETIME=timedelta(
-        hours=12)  # Opcional: duración de la sesión
+        hours=.5)  # Opcional: duración de la sesión
 )
 
 # Configuración para subir imágenes
@@ -99,12 +99,15 @@ Nunca uses frases genéricas como "hecho con amor". Enfócate en:
 Debes preguntar solo por lo que falte, y hacerlo de manera orgánica, como una conversación humana.  
 No reinicies la conversación aunque el usuario entregue la información en desorden.  
 No repitas datos que ya tengas (nombre, imagen, evento, estilo, colores).  
-Si ya recibiste algo, avanza de manera natural al siguiente punto.  
+Si ya recibiste algo, avanza de manera natural al siguiente punto. 
+Si ya conoces el nombre, pronombre o características, NUNCA vuelvas a pedirlos ni los repitas.
+Haz una sola pregunta por turno. Nunca combines más de dos preguntas en un mismo mensaje.
+
 
 El flujo ideal es este, pero puede darse en cualquier orden:  
 
 1.- Presentación (solo al inicio).  
-2.- Nombre del usuario (si no lo sabes aún) y pronombre de preferencia.  
+2.- Nombre del usuario (si no lo sabes aún) y pronombre de preferencia. 
 3.- Imagen del usuario o, si no hay imagen, descripción física.  
 4.- Detalles del evento (tipo, fecha, lugar).  
 5.- Preferencias de estilo y cortes.  
@@ -118,6 +121,9 @@ El flujo ideal es este, pero puede darse en cualquier orden:
 - Pregunta solo una cosa a la vez, con tono humano.  
 - Nunca vuelvas al inicio del flujo aunque la información llegue en otro orden.  
 - Usa únicamente los diseños de la base de datos cargada.  
+- Responde con un máximo de 40–50 palabras por turno (excepto cuando describas un vestido completo, donde puedes extenderte más).
+- Tus respuestas deben ser breves, claras y elegantes, sin sonar abruptas ni incompletas.
+
 
 Base de vestidos y colores disponibles:
 {vestidos_formateados}
@@ -201,7 +207,7 @@ def chat():
             messages=historial,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
-            max_tokens=300,
+            max_tokens=150,
             top_p=1,
             stream=False
         )
